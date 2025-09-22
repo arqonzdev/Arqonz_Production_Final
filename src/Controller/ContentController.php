@@ -4324,8 +4324,8 @@ class ContentController extends BaseController
     {
         try {
             // Check if user is authenticated
-            $user = $security->getUser();
-            
+        $user = $security->getUser();
+        
 
             // Check if file was uploaded
             if (!$request->files->has('profilePicture')) {
@@ -4333,9 +4333,9 @@ class ContentController extends BaseController
                     'success' => false,
                     'message' => 'No file uploaded'
                 ], 400);
-            }
+        }
 
-            $uploadedFile = $request->files->get('profilePicture');
+        $uploadedFile = $request->files->get('profilePicture');
 
             // Validate file
             if (!$uploadedFile->isValid()) {
@@ -5067,7 +5067,7 @@ class ContentController extends BaseController
             $sort = $request->query->get('sort', 'date-desc');
             switch ($sort) {
                 case 'date-asc':
-                    $ProProjectsList->setOrderKey('creationDate');
+            $ProProjectsList->setOrderKey('creationDate');
                     $ProProjectsList->setOrder('asc');
                     break;
                 case 'name-asc':
@@ -5076,7 +5076,7 @@ class ContentController extends BaseController
                     break;
                 case 'name-desc':
                     $ProProjectsList->setOrderKey('ProjectName');
-                    $ProProjectsList->setOrder('desc');
+            $ProProjectsList->setOrder('desc');
                     break;
                 case 'location-asc':
                     $ProProjectsList->setOrderKey('Location');
@@ -14186,40 +14186,22 @@ public function ManufacturerlistingAction(
 
 
             $form = $this->createForm(AddProductFormType::class);
-            foreach ($form->all() as $formField) {
-            $fieldName = $formField->getName();
-
-            // Exclude fields
-            if ($fieldName === 'ProductImage' || $fieldName === '_submit' || $fieldName === 'InternationalBrand') {
-                continue;
-            }
-
-            // Handle special cases
-            switch ($fieldName) {
-                case 'ProductMaterial':
-                    $formField->setData($ProProduct->getMaterial());
-                    break;
-                case 'ProductName':
-                    $formField->setData($ProProduct->getProductName());
-                    break;
-                case 'ProductPrice':
-                    $formField->setData($ProProduct->getPrice());
-                    break;
-                case 'ProductUnit':
-                    $formField->setData($ProProduct->getUnit());
-                    break;
-                case 'ProductTags':
-                    $formField->setData($ProProduct->getTags());
-                    break;
-                default:
-                    // For all other fields, try the standard getter
-                    $formField->setData($ProProduct->{'get' . ucfirst($fieldName)}());
-                    break;
-            }
-        }
+            
+            // Set form data for all fields
+            $form->get('ProductName')->setData($ProProduct->getProductName());
+            $form->get('ProductDescription')->setData($ProProduct->getProductDescription());
+            $form->get('Specifications')->setData($ProProduct->getSpecifications());
+            $form->get('ProductBrand')->setData($ProProduct->getProductBrand());
+            $form->get('ProductMaterial')->setData($ProProduct->getMaterial());
+            $form->get('ProductPrice')->setData($ProProduct->getPrice());
+            $form->get('ProductUnit')->setData($ProProduct->getUnit());
+            $form->get('ProductTags')->setData($ProProduct->getTags());
+            $form->get('ParentCategory')->setData($ProProduct->getParentCategory());
+            $form->get('SubCategory')->setData($ProProduct->getSubCategory());
+            $form->get('SubSubCategory')->setData($ProProduct->getSubSubCategory());
             $form->handleRequest($request);
             
-            if ($customertype === 'Manufacturer' or  'Dealers' or 'Distributor' or 'Retailer' && $PortfolioActivate === 'true') {
+            if (in_array($customertype, ['Manufacturer', 'Dealer', 'Distributor', 'Retailer', 'Supplier']) && $PortfolioActivate === 'true') {
 
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
