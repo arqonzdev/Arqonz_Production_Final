@@ -287,9 +287,18 @@
             
             // Update file count display
             function updateFileCount() {
-                const existingItems = document.querySelectorAll('.existing-item');
-                const count = files.length + existingItems.length - deletedImages.length - deletedVideos.length;
+                const existingItems = document.querySelectorAll('.existing-item:not([style*="display: none"])');
+                const count = files.length + existingItems.length;
                 fileCount.textContent = count === 1 ? '1 file selected' : `${count} files selected`;
+                
+                // Debug logging
+                console.log('File count update:', {
+                    newFiles: files.length,
+                    existingItems: existingItems.length,
+                    totalCount: count,
+                    deletedImages: deletedImages.length,
+                    deletedVideos: deletedVideos.length
+                });
             }
             
             // Render previews
@@ -330,38 +339,35 @@
                     } 
                     else if (file.type.match('video.*')) {
                         // Handle video preview
-                        const previewItem = document.createElement('div');
-                        previewItem.className = 'preview-item';
-                        
-                        const videoPreview = document.createElement('div');
-                        videoPreview.className = 'video-preview';
-                        
-                        const icon = document.createElement('i');
-                        icon.className = 'fas fa-video';
-                        
-                        const mediaBadge = document.createElement('div');
-                        mediaBadge.className = 'media-type-badge';
-                        mediaBadge.textContent = 'Video';
-                        
-                        const removeBtn = document.createElement('button');
-                        removeBtn.className = 'remove-btn';
-                        removeBtn.innerHTML = '&times;';
-                        removeBtn.addEventListener('click', () => removeFile(index));
-                        
-                        videoPreview.appendChild(icon);
-                        previewItem.appendChild(videoPreview);
-                        previewItem.appendChild(mediaBadge);
-                        previewItem.appendChild(removeBtn);
-                        previewContainer.appendChild(previewItem);
-                        
-                        // Create video element preview if needed
+                        const reader = new FileReader();
                         reader.onload = function(e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            
+                            const videoPreview = document.createElement('div');
+                            videoPreview.className = 'video-preview';
+                            
                             const video = document.createElement('video');
                             video.src = e.target.result;
                             video.controls = true;
-                            videoPreview.innerHTML = '';
+                            video.style.width = '100%';
+                            video.style.height = '100%';
+                            video.style.objectFit = 'cover';
+                            
+                            const mediaBadge = document.createElement('div');
+                            mediaBadge.className = 'media-type-badge';
+                            mediaBadge.textContent = 'Video';
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'remove-btn';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.addEventListener('click', () => removeFile(index));
+                            
                             videoPreview.appendChild(video);
-                            videoPreview.appendChild(mediaBadge);
+                            previewItem.appendChild(videoPreview);
+                            previewItem.appendChild(mediaBadge);
+                            previewItem.appendChild(removeBtn);
+                            previewContainer.appendChild(previewItem);
                         };
                         reader.readAsDataURL(file);
                     }
@@ -394,20 +400,37 @@
             const deletedVideosInput = document.getElementById('deleted-videos');
 
             // Remove existing video
-            // Update the removeExistingVideo function
             window.removeExistingVideo = function(videoPath) {
+                console.log('Removing video:', videoPath);
                 deletedVideos.push(videoPath);
                 const item = document.querySelector(`.existing-item[data-path="${videoPath}"]`);
                 if (item) {
                     item.style.display = 'none';
+                    console.log('Video item hidden');
+                } else {
+                    console.log('Video item not found');
                 }
-                deletedVideosInput.value = deletedVideos.join(','); // Use the correct variable
+                deletedVideosInput.value = deletedVideos.join(',');
+                console.log('Deleted videos:', deletedVideos);
                 updateFileCount();
             }
 
             
             // Initial file count
             updateFileCount();
+            
+            // Add a periodic check to ensure file count is accurate
+            setInterval(function() {
+                const visibleExistingItems = document.querySelectorAll('.existing-item:not([style*="display: none"])');
+                const expectedCount = files.length + visibleExistingItems.length;
+                const currentCountText = fileCount.textContent;
+                const currentCount = parseInt(currentCountText.match(/\d+/)[0]) || 0;
+                
+                if (expectedCount !== currentCount) {
+                    console.log('File count mismatch detected, updating...');
+                    updateFileCount();
+                }
+            }, 1000);
         });
     </script>
 {% endblock %}
