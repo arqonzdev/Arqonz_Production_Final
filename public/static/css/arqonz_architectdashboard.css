@@ -1,0 +1,123 @@
+/* arqonz_architectdashboard.css */
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.dashboard-container h2{
+    font-size: 30px;
+    line-height: 50px;
+}
+
+
+/* Left Column */
+.left-column {
+    width: 40%; /* Adjust as needed */
+    box-sizing: border-box;
+    margin-right: 5px;
+}
+
+/* Right Column */
+.right-column {
+    width: 60%; /* Adjust as needed */
+    box-sizing: border-box;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+}
+
+/* Profile Details */
+.profile-details{
+    margin-bottom: 20px;
+    padding:0px;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+}
+.architect-profile-details {
+    padding:0px;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+}
+
+/* Architect Projects */
+.architect-projects {
+    max-height: 600px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+/* Architect Project Table */
+.architect-projects table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Architect Project Table Header */
+.architect-projects th {
+    padding: 5px;
+    text-align: left;
+    background-color: #f4fcfc;
+    border: 1px solid #ccc;
+}
+
+/* Architect Project Table Rows */
+.architect-projects td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.sectionheading{
+    background-color: #f4fcfc;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.details{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.Add-project-button{
+    max-width: 300px;
+    margin: 15px;
+}
+
+#endorsement_request_form__submit{
+    max-width: 12rem;
+}
+
+
+/* ExcelData Table Styling */
+.excel-data-table {
+    margin-top: 20px;
+}
+
+.excel-data-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.excel-data-table th, .excel-data-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.excel-data-table th {
+    background-color: #f2f2f2;
+}
+
+
+/* Responsive Design - Adjust as needed */
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .left-column, .right-column {
+        width: 100%;
+    }
+    .right-column {
+        margin-top: 20px;
+    }
+}

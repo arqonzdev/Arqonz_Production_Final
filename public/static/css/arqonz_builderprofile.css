@@ -1,0 +1,326 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* Add general styles here */
+body {
+    margin: 0;
+    
+    
+
+}
+body h2{
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+}
+body h1{
+    font-size: 35px !important;
+    line-height: 47px !important;
+    margin-bottom: 15px !important;
+}
+
+/* Two-column layout for larger screens */
+main{
+background-color: #ffffff !important;
+
+}
+/* Add this CSS to your existing stylesheet or create a new one */
+.hero-section{
+    display: flex;
+    justify-content: center;
+    gap:40px;
+    margin-top: 25px;
+    align-items: center;
+   
+    
+}
+
+.profile-image {
+    border-radius: 20px;
+}
+
+
+.portfolio-attributes{
+    display: flex;
+    gap:10px;
+    margin-top: 10px;
+}
+.attributebox p{
+    margin-bottom: 0px !important;
+    font-size: 15px;
+    color: #828898;
+}
+.profile-details{
+    
+    font-family: 'Poppins', sans-serif !important;
+}
+.profile-details p{
+    
+    margin-bottom: 20px !important;
+}
+.builder-profile h2{ 
+    font-size: 32px !important;
+}
+.Builder-description{
+   margin-top: 15px;
+}
+.portfolio-projects{
+    width: 100% !important;
+    background-color: #f3fbfb;
+    padding: 15px;
+    margin-top: 30px;
+}
+
+.project-list{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 15px;
+    max-width: 70%;
+}
+@media (max-width: 768px) {
+    .project-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+    }
+}
+.project-item {
+     /* Two columns with a small gap */
+    background-color: #f0f0f0; /* Background color for each card */
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.project-item h3{
+   font-size: 22px !important;
+   margin:0px;
+   line-height: 23px !important;
+}
+.project-item a{
+    text-decoration: none;
+ }
+
+.project-item a:hover{
+    text-decoration: none;
+ }
+.project-item img{
+    margin-bottom: 10px;
+ }
+
+.cities-served{
+    margin-top: 10px;
+}
+ 
+.citylist{
+    display:flex;
+    flex-wrap: wrap;
+    gap:6px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 80%;
+}
+.citytagbox{
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:6px;
+    padding-bottom:6px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    
+}
+.citytagbox p{
+    margin:0px;
+    font-size: 18px !important;
+}
+
+.skills{
+    margin-bottom: 20px;
+    width:80%;
+    margin-top: 20px;
+}
+.skillslist{
+    display:flex;
+    flex-wrap: wrap;
+    gap:6px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.skills p{
+    font-size: 20px !important;
+    margin:10px;
+}
+.skilltagbox{
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:6px;
+    padding-bottom:6px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    
+}
+.container {
+    max-width:100% !important;
+}
+.col-md-12{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+
+/* Custom Pagination Styles */
+.custom-pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.pagination-item {
+    margin: 0 5px;
+}
+
+.pagination-item a,
+.pagination-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px; /* Change this to make the shape square */
+    background-color: #48a89e;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.pagination-item.active span {
+    background-color: var(--dark-purple);
+}
+
+.pagination-item a:hover {
+    text-decoration: none;
+    color: #fff;
+    background-color: #8e8e8e;
+}
+.pagination-item:hover{
+    border-radius: 5px;
+}
+.pagination-item.prev a,
+.pagination-item.next a {
+    width: auto;
+    padding: 5px 10px; /* Add padding to Previous and Next */
+    border-radius: 5px; /* Adjust this to match the border-radius of the squares */
+}
+.pagination-item.prev a:hover,
+.pagination-item.next a:hover {
+    background-color: #8e8e8e;
+}
+.enquiry-section{
+    background-color: #f5f5f5;
+}
+.form-control{
+    box-shadow:  -1px 0 10px 2px rgb(0 0 0 / 19%);
+}
+
+.enquiryform{
+    display: flex;
+    align-items: center;
+    gap:15px;
+    margin: 30px auto;
+    padding-top: 42px;
+    padding-bottom: 36px;
+    justify-content: center;
+}
+#builder_enquiry_form{
+    display: flex;
+    gap:15px;
+}
+input.form-control {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+}
+#requirementsbox{
+    display:flex;
+    gap:10px;
+}
+@media (max-width: 768px) {
+    #requirementsbox {
+        display: grid;
+        max-width: 100%;
+        gap: 10px;
+    }
+}
+.requirement-item{
+    background-color: #F0F0F0;
+    max-width: 30vw;
+    padding:1vw;
+
+}
+.requirement-item a{
+    text-decoration: none;
+    font-size: 23px;
+}
+.requirement-item h3{
+    text-decoration: none;
+    line-height: 1 !important;
+}
+
+.requirement-item a:hover{
+    text-decoration: none;
+}
+
+.Builder-description, .portfolio-projects, .cities-served, .skills{
+    padding: 20px 55px;
+}
+
+
+@media (max-width:500px){
+    .profile-image img{
+        max-width: 300px;
+    }
+    .project-item img{
+        max-width: 300px;
+    }
+    .requirement-item {
+        max-width: 74vw;
+    }
+    .profile-details{
+        padding:0px 20px;
+        max-width: 100%;
+    }
+    #builder_enquiry_form {
+        flex-direction: column;
+        gap:0;
+    }
+    .inside-content h2{
+        padding:0;
+        margin:0;
+        text-align: center;
+    }
+    
+}
+
+@media (max-width: 992px) {
+
+    .hero-section{
+        flex-direction: column;
+    }
+
+    .Builder-description, .portfolio-projects, .cities-served, .skills{
+        padding: 20px 10px;
+    }
+    .requirementsbox{
+        flex-direction: column;
+    }
+    .enquiry-section h2{
+        display:block;
+    }
+}
+
+
+
+
+
+

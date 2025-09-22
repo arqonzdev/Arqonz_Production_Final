@@ -1,0 +1,546 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Poppin theme classes */
+.poppins-thin {
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.poppins-extralight {
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.poppins-light {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.poppins-medium {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.poppins-semibold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.poppins-bold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.poppins-extrabold {
+    font-family: "Poppins", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.Urbanist-Bold {
+    font-family: "Urbanist", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.urbanist-normal {
+    font-family: "Urbanist", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #333;
+}
+
+.FullContentheight {
+    /* background: linear-gradient(
+        186deg, 
+        rgba(134, 0, 167, 0.00) 10.88%, 
+        rgba(134, 0, 167, 0.80) 16.24%, 
+        #5100A7 21.79%, 
+        #0097A7 82.02%
+      ); */
+
+
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Hero Section */
+.hero-section {
+    background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 70vh;
+    position: relative;
+    top: -7rem;
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: linear-gradient(180deg, rgba(81, 0, 167, 0.00) 0%, rgba(81, 0, 167, 0.30) 100%);
+}
+
+/* Navigation CSS */
+.navbar {
+    background: rgb(0 0 0 / 9%);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: white !important;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 17rem;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.btn-contact {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white !important;
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-contact:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    color: white !important;
+}
+
+/* Bootstrap navbar toggler styling for dark background */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Main Content */
+.main-content {
+    background: white;
+    margin-top: -100px;
+    position: relative;
+    z-index: 10;
+    border-radius: 20px 20px 0 0;
+
+}
+
+/* Company Profile Section */
+
+.company-profile {
+    position: relative;
+}
+
+.company-logo {
+    width: 200px;
+
+    border-radius: 50%;
+    background: #2d5016;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    position: absolute;
+    top: -4%;
+
+}
+
+.company-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: linear-gradient(94deg, #6B78FF 8.34%, #404899 98.08%);
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.nav-pills {
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 2rem;
+}
+
+.nav-pills .nav-link {
+    color: #6c757d;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    padding: 1rem 0;
+    margin-right: 2rem;
+    background: none;
+    font-weight: 500;
+}
+
+.nav-pills .nav-link.active {
+    background: none;
+    color: #000;
+    border-bottom-color: #000;
+}
+
+/* Key Milestones */
+.milestone-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.milestone-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.milestone-icon.orange {
+    background: #fff3e0;
+    color: #f57c00;
+
+    border-radius: 10px;
+    background: #FFB1B2;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25) inset, 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.milestone-icon.teal {
+    border-radius: 10px;
+    background: #FFD0B1;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25) inset, 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.milestone-icon.yellow {
+    border-radius: 10px;
+    background: #FFC2B1;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25) inset, 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.milestone-icon.blue {
+    border-radius: 10px;
+    background: #B1FFD1;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25) inset, 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* Project Gallery */
+.project-nav {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.project-nav-item {
+    color: #6c757d;
+    text-decoration: none;
+    padding: 1rem 0;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+}
+
+.project-nav-item.active {
+    color: #000;
+    border-bottom-color: #000;
+}
+
+.project-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-card img {
+    width: 100%;
+    height: 438px;
+    object-fit: cover;
+}
+
+.project-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 2rem 1.5rem 1.5rem;
+}
+
+.project-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.project-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+/* Footer Styles */
+.footertitle {
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.48px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        margin: 0.5rem 0;
+    }
+
+    .btn-contact {
+        margin-top: 1rem;
+        display: inline-block;
+    }
+
+    .company-tags {
+        justify-content: center;
+    }
+
+    .nav-pills .nav-link {
+        margin-right: 1rem;
+    }
+
+    .project-nav {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .project-nav-item {
+        padding: 0.5rem 0;
+    }
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+}
+
+p {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+a {
+    font-family: "Poppins", sans-serif;
+}
+
+li {
+    font-family: "Poppins", sans-serif;
+}
+
+
+
+/* Booking Tab Styles */
+.booking-modal {
+    background: white;
+    border-radius: 15px;
+    
+    padding: 30px;
+    position: relative;
+    
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.time-slots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.time-slot {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #eee;
+}
+
+.time-slot.available {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+}
+
+.time-slot.unavailable {
+    background-color: #ffebee;
+    border-color: #f44336;
+    cursor: not-allowed;
+}
+
+.time-slot.selected {
+    background-color: #bbdefb;
+    border-color: #2196f3;
+}
+
+.time-slot.break {
+    background-color: #fff3e0;
+    border-color: #ffa726;
+    grid-column: 1 / -1;
+}
+
+.confirm-booking-btn {
+    background: linear-gradient(45deg, #2196F3, #0d8aee);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.confirm-booking-btn.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.booking-form {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    display: none;
+}
+
+.booking-form.active {
+    display: block;
+}
+/* Booking tab Slides */
+
+
+
+/* Responsive */
+
+@media (max-width: 856px) {
+    .ProfileImageCont {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3rem;
+    }
+}

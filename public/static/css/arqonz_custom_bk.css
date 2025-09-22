@@ -1,0 +1,769 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+
+
+/*Custom CSS*/
+.architect-list {
+    /* display: flex; */
+    flex-wrap: wrap;
+    
+    
+}
+
+.architect-item {
+    border: 1px solid #ccc; /* Add a border with a light gray color */
+    border-radius: 8px; /* Optional: Add border-radius for rounded corners */
+    background-color: #ffffff;; /* Set a white background color */
+    padding: 15px; /* Add padding for better spacing */
+    box-sizing: border-box;
+    /* width: calc(33.33% - 20px); Adjust the width and margin as needed */
+    margin: 20px; 
+}
+
+.product-img {
+    margin-top: 20px;
+}
+
+.details {
+    margin-top: 30px;
+}
+
+/* .bio,
+.year-established,
+.price,
+.phone-number,
+.city {
+    margin-top: 30px;
+} */
+
+.Pageheading {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-top:20px;
+}
+
+.Pageheading h1{
+    line-height: 30px;
+}
+
+.imageupload {
+    border:solid 1px;
+    border-color: #b2beca;
+    padding-top: 20px;
+    margin-bottom: 30px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.control-label{
+    font-weight:500 ;
+}
+
+.signupbutton{
+    max-width: 300px;
+    align-items: center;
+}
+.btn.btn-lg.btn-block.btn-success.btn{
+    align-items: center;
+    background-color:#23262f;
+    border-color: #23262f;
+}
+.btn.btn-lg.btn-block.btn-success.btn:hover{
+    align-items: center;
+    background-color:#515253;
+    border-color: #23262f;
+}
+.btn.btn-lg.btn-block.btn-success.btn:focus{
+    box-shadow: none;
+}
+
+
+/* This Is the card Custom Css */
+
+.cardbox{
+    padding:10px;
+    display:flex;
+    justify-content: space-between;
+    background-color: aliceblue;
+    border-radius: 10px;
+
+}
+.parentbox{
+    background-color: aquamarine;
+    padding:15px;
+}
+
+.Featureimage img{
+    max-width:200px;
+    margin:10px;
+    border-radius: 10px;
+}
+
+.FeatureTitle{
+    display:flex;
+}
+.EstYear{
+    margin-right:15px;
+}
+
+
+
+body, h1, h2, h3, p, a, ul, li {
+    margin: 0;
+    padding: 0;
+    
+}
+
+h3{
+    font-family: "Poppins", sans-serif !important;
+    /* font-family: 'Poppins', sans-serif !important; */
+    font-size: xx-large;
+}
+.ProfileTitle h3{
+    font-size: 35;
+}
+
+.yearprojects{
+    display:flex;
+    /* margin-top: 30px; */
+}
+
+/* Basic styling for the custom icon box */
+.custom-icon-box {
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #f8f8f8; */
+    border-radius: 10px;
+    /* padding: 20px; */
+    
+}
+
+.custom-icon {
+    text-decoration: none;
+    color: #333;
+}
+
+.custom-icon i {
+    font-size: 24px;
+}
+
+.custom-icon-box-content {
+    margin-left: 20px;
+}
+
+.custom-icon-box-title {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.custom-icon-box-description {
+    font-size: 14px;
+    color: #ffffff;
+}
+.ImageandTitle{
+    display:flex;
+}
+.TitleDescriptionContact{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 20px;
+    margin-right: 10px;
+    max-width: 700px;
+}
+.YearStarsReadmore{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* margin-top: 20px; */
+}
+
+.TitleDescriptionContact a, p{
+    color: #2f2f2f;
+    text-decoration: none;
+}
+.TitleDescriptionContact a:hover{
+    text-decoration: none;
+    color: #525252;
+}
+.StarRating{
+    text-align: right;
+}
+.fab.fa-whatsapp{
+    margin-right: 5px;
+}
+.fa.fa-calendar{
+    margin-right: 5px;
+}
+.fa.fa-rocket{
+    margin-right: 5px;
+}
+main h2, p{
+    /* margin-left: 20px; */
+    /* font-family:'Times New Roman', Times, serif; */
+    font-family: 'Poppins', sans-serif !important;
+    color: #2f2f2f;
+    margin-bottom: 10px;
+}
+main h1{
+    font-family: "Playfair Display", serif;
+}
+.ArchitectListingcontentSection a{
+    max-width: 20px;
+}
+.ArchitectListingcontentSection h1{
+    letter-spacing: 0px;
+    font-size: 40px;
+    margin-top: 20px;
+}
+.viewarchitect a{
+    border-radius: 50px;
+    font-size:18px;
+}
+.fa.fa-eye{
+    margin-right: 5px;
+}
+.architectbelowtitle{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-bottom: 30px;
+}
+
+/* For AddProject Page */
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.preview-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 5px;
+}
+.help-block li{
+    color: red; /* Set the desired color */
+    font-weight: bold; /* Optionally, you can make the text bold */
+    margin-top:5px;
+    margin-left:5px;
+}
+.select2-results__option--highlighted{
+	    background-color: #ddd !important;
+}
+
+.FilterForm {
+    display:flex;
+    gap:20px;
+    align-items: center;
+    justify-content: right;
+    padding: 0px 20px;
+}
+
+#filter_form__submit{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+/* Notification button css */
+
+.icon-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #333333;
+    background: #dddddd;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    top:4px; 
+  }
+  .icon-button a{
+
+    color: #333333;
+    text-decoration: none;
+    
+  }
+  
+  .icon-button:hover {
+    cursor: pointer;
+    background-color:#cfcfcf;
+  }
+  
+  .icon-button:active {
+    background: #cccccc;
+  }
+  
+  .icon-button__badge {
+    position: absolute;
+    top: -15px;
+    right: -16px;
+    width: 31px;
+    height: 27px;
+    background: red;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: smaller;
+    font-weight: 700;
+  }
+
+  .viewarchitect a{
+    padding-top:0px;
+  }
+
+  /* Notification Card */
+
+  .Notification{
+    display:flex;
+    gap:5px;
+    margin-bottom: 5px;
+  }
+  .notification-item{
+    padding:15px;
+    background-color: #f2f1f1;
+    margin:10px 0;
+    border-radius: 26px;
+    max-width: 800px;
+  }
+  .Date p{
+    color:#767676;
+  }
+
+  #pro_endorsement_form_Profession{
+    width:100%;
+    /* min-height: 36px; */
+    padding:.375rem .75rem;
+    font-size: 1rem;
+    border:1px solid #ced4da;
+    color:#495057;
+    font-weight: 400;
+    border-radius: .25rem;
+
+  }
+
+  /* Enquiry Form page */
+
+  .enquirybox{
+    display:flex;
+    justify-content: center;
+    padding:0px 30px;
+    
+  }
+
+  .enquirycontent{
+    background-color: #fff;
+    margin: 50px 0;
+    padding:10px;
+    font-size: larger;
+  }
+
+  .enquirycontent a{
+    margin: 20px 0;
+  }
+
+  .EnquiryField{
+    display:flex;
+    gap:10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hiddenfield{
+    min-width: 50vw;
+    min-height: 38px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #a0a0a0c7;
+    border-radius: 14px;
+  }
+
+  /* For Pagination */
+
+/* Custom Pagination Styles */
+.custom-pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.pagination-item {
+    margin: 0 5px;
+}
+
+.pagination-item a,
+.pagination-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px; /* Change this to make the shape square */
+    background-color: #48a89e;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.pagination-item.active span {
+    background-color: purple;
+}
+
+.pagination-item a:hover {
+    text-decoration: none;
+    color: #fff;
+    background-color: #8e8e8e;
+}
+.pagination-item:hover{
+    border-radius: 5px;
+}
+.pagination-item.prev a,
+.pagination-item.next a {
+    width: auto;
+    padding: 5px 10px; /* Add padding to Previous and Next */
+    border-radius: 5px; /* Adjust this to match the border-radius of the squares */
+}
+.pagination-item.prev a:hover,
+.pagination-item.next a:hover {
+    background-color: #8e8e8e;
+}
+
+.profilepagination{
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+/* Image gallery Section CSS */
+.gallerycontainer{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+    padding:43px 10px;
+    background-color: #f5f5f5;
+    border-radius: 7px;
+}
+
+.thumbnail-container{
+    padding:5px;
+    background-color: #fff;
+    box-shadow: -4px 5px 5px #484848;
+}
+
+
+.arqonz-nav{
+    display:flex;
+}
+.arqonz-nav ul li{
+    position: relative;
+    float:left;
+    list-style: none;
+    width: 100%;
+}
+.arqonz-nav a{
+    color: #000000;
+    font-size: 1.15rem;
+}
+.arqonz-nav ul li a{
+    padding:7px 25px;
+}
+
+.menu-icon{
+    position: absolute;
+    right:10%;
+    
+    font-size: 1.5rem;
+    cursor: pointer;
+    display:none;
+}
+
+.arqonz-nav a:hover{
+    background-color: #A7E7F6;
+    /* border-radius: 20%; */
+}
+.arqonz-nav ul li ul{
+    position: absolute;
+    right:0;
+    background-color: #EFF1F3;
+    display:none;
+    z-index: 99999;
+}
+/* .arqonz-nav ul li:hover ul{
+    display:block;
+} */
+.arqonz-nav ul li ul li{
+    position: relative;
+    width:100%;
+    border:1px solid #d3d3d3;
+}
+
+.navbar-toggler {
+    display:none;
+}
+
+/* Footer Starts from here */
+
+#footer{
+    background-color: #eff8f8;
+    padding-top: 3vw;
+    padding-left: 10vw;
+    padding-right: 10vw;
+    padding-bottom: 1px;
+}
+#footer p{
+    color:#747a7f;
+}
+#footer a{
+    color:#747a7f;
+}
+#footer a:hover{
+    color:#747a7f;
+    text-decoration: none;
+}
+#footer-logo img{
+    margin-bottom: 7px;
+    width: 200px;
+}
+#footersections{
+    display:flex;
+    gap:10px;
+    justify-content: space-between;
+}
+#footersections h3{
+    color:#23262f;
+    font-family: "Noto Serif", serif !important;
+    font-size: 23px;
+    letter-spacing: 0px;
+    line-height: 33px;
+    margin-bottom: 16px;
+}
+.col1{
+    flex:25%;
+}
+.col2{
+    flex:0 0 40%;
+}
+
+
+.copyrighttext{
+    text-align: center;
+    margin:50px 0;
+}
+
+#footer li{
+    list-style: none;
+    margin-bottom: 5px;
+}
+#registration_form_customertype{
+    padding-left: 20px;
+}
+
+.hint-text {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.hint:hover + .hint-text {
+    display: block;
+}
+
+#logobar{
+    max-width: 1091px;
+}
+#notificationcontainer{
+    position:relative;
+}
+.badge{
+    position: absolute;
+    top:0;
+    background-color: red;
+}
+.notifications{
+    display:none;
+    position: absolute;
+    right: 0;
+    width: 26rem;
+    top: 100%;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 99999;
+}
+.notifications a{
+    padding:0 !important;
+}
+.Notificationscontainer  [href="javascript:void(0);"] {
+
+    display:none;
+} 
+
+.DashboardGo {
+    display: flex;
+    justify-content: center;
+}
+.DashboardGo a {
+    background-color: #00A79D;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    position: relative;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 20px;
+    text-decoration: none;
+}
+
+
+
+
+@media (max-width: 40000px) {
+    .arqonz-nav{
+        display:flex;
+    }
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .pagination-item {
+        margin: 5px;
+    }
+
+    .gallerycontainer{
+        flex-direction: column;
+        gap:20px;
+    }
+    .FilterForm{
+        flex-direction: column;
+        gap:0;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .menu-icon{
+        display:inline-flex;
+    }
+
+    .arqonz-nav{
+        position: absolute;
+        top:100%;
+        left:0;
+        width:100%;
+        display:none;
+        background-color: #EFF1F3;
+        padding:0;
+        margin:0;
+    }
+
+    .arqonz-nav a{
+        /* font-size: 2rem; */
+        text-align: center;
+    }
+    .ArchitectListingcontentSection{
+        text-align: center;
+    }
+    .ArchitectListingcontentSection h1{
+        font-size: 28px;
+    }
+    .FilterForm select{
+        max-width: 40vw;
+    }
+    .js-select-cities {
+        width: 100%; /* Set a fixed width or a percentage width */
+        /* Add any additional styling as needed */
+    }
+    #logobar{
+        margin:0;
+    }
+    #close-icon{
+        display:none;
+    }
+    .ImageandTitle{
+        flex-direction: column;
+        gap: 11px;
+    }
+    .YearStarsReadmore{
+        justify-content: center;
+        gap:10px;
+    }
+    .custom-icon-box{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .Featureimage{
+        text-align: center;
+    }
+    .yearprojects{
+        justify-content: center;
+    }
+    .StarsRating{
+        text-align: center;
+    }
+    .ProfileContact{
+        display:none;
+    }
+    .p-left-row{
+        margin-top: 15px;
+        width:100%;
+    }
+    .attributebox{
+        padding:2px;
+        min-width: 100px;
+    }
+    .portfolio-content{
+        flex-direction: column;
+    }
+    .secondary-attributes{
+        flex-direction: column;
+    }
+    .portfolio-attributes{
+        justify-content: center;
+    }
+    .attributebox b{
+        font-size: 15px;
+    }
+    .arqonz-nav a:hover{
+        
+        border-radius: 0%;
+    }
+    .arqonz-nav ul li ul{
+        position: relative;
+        left:0;
+    }
+    .arqonz-nav ul li ul a{
+        background-color: #F3FBFB;
+    }
+    .TitleAndDescription h3{
+        line-height: 36px !important;
+        font-size: 25px;
+    }
+    #footersections{
+        flex-direction: column;
+    }
+
+    .notifications{
+        position: relative;
+
+    }
+    .viewarchitect a {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

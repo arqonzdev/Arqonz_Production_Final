@@ -1,0 +1,118 @@
+
+.requirements-table{
+    width:100%;
+}
+.requirement-item h3 a{
+    text-decoration: none;
+    color: #000;
+}
+.requirement-item h3{
+    font-size: 22px;
+}
+
+
+/* GPT STyles */
+/* General styles for the listing section */
+
+
+/* Table styles */
+.requirements-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.requirements-table th, .requirements-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.requirements-table th {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.requirements-table td {
+    border-bottom: 1px solid #dee2e6;
+    color: #495057;
+}
+
+.requirements-table tr:last-child td {
+    border-bottom: none;
+}
+
+.requirements-table tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* Additional styles for table rows and columns */
+.requirements-table .requirement-item h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #007bff;
+}
+
+
+.requirements-table .requirement-item .project-location {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* View Button */
+.requirements-table .requirement-item .details-button {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.requirements-table .requirement-item .details-button:hover {
+    background-color: #0056b3;
+}
+
+/* Pagination styles */
+.pagination.profilepagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination.profilepagination a {
+    color: #007bff;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.pagination.profilepagination a:hover {
+    background-color: #007bff;
+    color: #ffffff;
+    border-color: #007bff;
+}
+
+.pagination.profilepagination .active a {
+    background-color: #007bff;
+    color: #ffffff;
+    border-color: #007bff;
+}
+
+.portfolio-content .p-left-row {
+    width:100% !important;
+}
+
+.requirement-item {
+    background-color: #fff;
+}

@@ -1,0 +1,691 @@
+:root {
+    --Primary-font: Poppins, sans-serif;
+}
+/* Website Layout CSS */
+.loginsignUp {
+    display: flex;
+    gap: 17px;
+    margin: 0px 35px;
+}
+.loginsignUp .Register a {
+    background-color: #00A79D;
+    padding: 8px 17px;
+    border-radius: 25px;
+    color: #fff;
+    text-decoration: none;
+}
+.loginsignUp a {
+    color: #fff;
+}
+.loginsignUp .login a{
+    color: #000;
+    text-decoration: none;
+}
+.DashboardRow {
+    border-bottom: none;
+    /* align-items: center; */
+}
+.homeheroSection {
+    height: 60rem;
+    background: linear-gradient(242deg, #00A79D -8.21%, #F0F9F9 90.7%);
+    position: relative;
+    overflow: hidden;
+}
+.DashboardRow {
+    z-index: 999;
+}
+.DashRowCol1 {
+    flex: 0 0 19% !important;
+}
+.DashRowCol2 { 
+    gap:4px;
+}
+.DashMainNav1 .dashboard_navigation {
+    background-color: transparent;
+}
+.search-container {
+    border: 0px;
+}
+.homeheroSection .heroCircle {
+    border-radius: 977px;
+    border: 305px solid rgba(0, 167, 157, 0.60);
+    opacity: 0.2;
+    position: absolute;
+    top: -75%;
+    left: -48%;
+    padding: 300px;
+}
+.homeheroSection .HeroSectionImage img {
+    max-width: 70%;
+    position: absolute;
+    top: 16%;
+    right: -25%;
+    box-shadow: 8px 8px 55px 2px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+}
+.HeroSectionTextCOntent .heroTitle {
+    margin-top: 0%;
+    width: 55%;
+    margin-left: 6%;
+}
+.homeheroSection {
+    display: flex;
+    align-items: center;
+}
+.HeroSectionTextCOntent .heroTitle h2 {
+    font-size: 48px;
+    font-family: var(--Primary-font);
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+.HeroSectionTextCOntent .heroTitle p {
+    font-size: 18px;
+}
+.HeroSectionTextCOntent {
+    position: relative;
+    z-index: 15;
+}
+.HeroSearch {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    padding: 0px 0px 0px 13px;
+    border-radius: 8px;
+    gap: 10px;
+    background-color: #fff;
+    width: 94%;
+}
+/* 
+.HeroSearch {
+    display: flex;
+    margin-left: 6%;
+    width: 61%;
+    position: relative;
+    z-index: 2;
+    padding: 11px;
+    border-radius: 15px;
+    gap: 10px;
+    background-color: #fff;
+    box-shadow: 8px 8px 55px 2px rgba(0, 0, 0, 0.25);
+    margin-top: 39px;
+    margin-bottom: 39px;
+} */
+.HeroSearch .searchoptions {
+    display: flex;
+    align-items: center;
+    flex: 0 0 88%;
+    padding: 2px 0px;
+    gap: 13px;
+    
+}
+.HeroSearch input {
+    height: 44px;
+}
+.HeroSearch select {
+    height: 44px;
+    font-family: var(--Primary-font);
+    font-size: 18px;
+    width: 100%;
+    border: 0px;
+}
+.searchoptions .SearchCOl1 {
+    flex: 0 0 27%;
+    display: flex;
+    justify-content: space-around;
+    gap: 9px;
+}
+.searchoptions .SearchCOl2 {
+    width: 100%;
+}
+.HeroSearch .SearchCOl3 {
+    width: 100%;
+}
+.searchoptions .SearchCOl2 input {
+    width: 100%;
+    font-family: var(--Primary-font);
+    font-size: 18px;
+    padding: 7px 9px;
+    border:0px
+}
+#HerosearchButton {
+    height: 100%;
+    font-family: var(--Primary-font);
+    font-size: 18px;
+    background: #00A79D;
+    border: 0px;
+    color: #fff;
+    border-radius: 0px 7px 7px 0px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 8px;
+}
+.HeroSearch .SearchCOl3 {
+    display: flex;
+    justify-content: end;
+}
+.HomeProductsSection {
+    padding: 29px 50px;
+    background: #FCFCFD;
+}
+.HomeProductsWrapper {
+    background: rgba(35, 38, 47, 0.05);
+    border-radius: 25px;
+    padding: 23px 40px;
+}
+.ProductsHeadingSection .HomeSectiontitle {
+    font-family: var(--Primary-font);
+    font-size: 38px;
+    font-weight: 800;
+}
+.ProductsHeadingSection .HomeSectionSubtitle {
+    color: rgba(35, 38, 47, 0.60);
+    font-size: 18px;
+    font-weight: 500;
+}
+.ProductsTopSection {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.ProductsExplore {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    padding-right: 1cm;
+    gap: 8px;
+}
+.ProductsExplore img {
+    width: 24px;
+}
+.ProductsExplore p {
+    font-size: 18px;
+    font-weight: 600;
+}
+.FeaturedUnSelected img {
+    filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+}
+.Professionalfeatured {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+.ProfessionalFeaturedSection {
+    display: flex;
+    gap: 29px;
+}
+.FeaturedSelected {
+    padding: 5px 12px;
+    background: #23262F;
+    border-radius: 25px;
+}
+.FeaturedSelected p {
+    color: #fff;
+}
+.HomeProfessionalList .ProfessionalImageCon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+}
+.HomeProfessionalList .ProfessionalImageCon img{
+    width: 100%;
+}
+.HomeProfessionalList {
+    margin: 40px 0px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+.HomeProfessionalList .Row1 {
+    display: flex;
+    justify-content: space-between;
+}
+.ProfessionalStatsCon {
+    display: flex;
+    gap: 10px;
+    width: 177px;
+}
+.ProjectimgContainer img {
+    width: 100%;
+    height: 100%;
+}
+.ProjectimgContainer {
+    width: 265px;
+    height: 175px;
+    position: relative;
+    border-radius: 14.795px;
+    overflow: hidden;
+}
+.HomeProfessionalCard {
+    width: 586px;
+    background: #fff;
+    padding: 27px 13px;
+    border-radius: 23.688px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.HomeProfessionalCard .Row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 27px;
+}
+.ProfessionalImageCon .imgCOnt {
+    width: 87px;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.ProfessionalImageCon .imgCOnt img {
+    width: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    height: 80px;
+
+}
+.ProfessionalStatsCon .ProfessionalStat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.ProfessionalStatsCon .ProfessionalStat .label {
+    font-size: 12px;
+    color: rgba(35, 38, 47, 0.60);
+}
+.ProfessionalProfileDesc p {
+    color: rgba(35, 38, 47, 0.60);
+    font-family: var(--Primary-font);
+    font-size: 15.161px;
+    font-weight: 500;
+}
+.ProfessionalProfileDesc {
+    min-height: 47px;
+}
+.seeMoreProf {
+    color: #00A79D;
+}
+.ProjCount p {
+    font-size: 15px;
+    font-weight: 600;
+}
+.ProjectimgContainer .HomeProjectName {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(15 15 15 / 90%) 100%);
+    width: 100%;
+    padding: 5px;
+
+}
+.HomeProjectName h3 {
+    color: #fff;
+    font-size: 18px;
+    font-family: var(--Primary-font);
+
+}
+.HomeProjectName p {
+    color: #fff;
+    font-size: 13px;
+}
+.ProfessionalProjects {
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+}
+.Arqfooter {
+    display: flex;
+    justify-content: space-between;
+    padding: 65px 55px;
+}
+.ArqFootercol {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.FooterLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.ProjectsList {
+    display: flex;
+    gap: 22px;
+    justify-content: space-between;
+}
+.loccityWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 7px;
+}
+.ProfessionalStat .stat {
+    font-weight: 600;
+}
+.ProfName h3 {
+    font-size: 26px;
+}
+p{
+    margin-bottom: 0;
+}
+
+/* Products Page CSS */
+
+.maincontent {
+    padding: 54px 50px;
+}
+.ProdPageHeading h2 {
+    font-family: var(--Primary-font);
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 800;
+}
+.ProdPageSubHeading p{
+    color: #777E90;
+    font-size: 18px;
+    font-weight: 500;
+}
+.HomeProductCard {
+    color: #F4F5F6;
+}
+.ProductCategoriesSection {
+    display: grid;
+    
+    gap: 30px 30px;
+    justify-content: start;
+    align-items: center;
+    margin: 40px 0px;
+}
+.CategoriesContainer {
+    width:100%;
+    overflow-x: scroll;
+    position: relative;
+}
+.CategoriesContainer::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar */
+} 
+/* .ProductCategoriesSection {
+    display: flex;
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: 20px 0;
+    gap: 30px;
+} */
+.PageProductsList {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px 30px;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0px;
+}
+
+
+
+/* .PageProductCard .ProductFeaImg img {
+    width: 100%;
+} */
+
+.ProductFeaImg {
+    height: 250px;
+    display: flex;
+    justify-content: center;
+}
+.PageProductCard .ProductFeaImg img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* Calculators CSS */
+
+.TileCalculatorMain {
+    display: flex;
+    padding: 50px 65px;
+    border-bottom: 1px solid #0000001a;
+
+}
+.TilecalculatorLeft {
+    flex: 0 0 37%;
+}
+.TilecalculatorRight {
+    flex: 0 0 50%;
+    padding: 0px 40px;
+}
+.CalcHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.CalcheaderRight h1 {
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 2.4rem;
+}
+.calchowtoheader {
+    display: flex;
+    gap: 9px;
+}
+.TilecalculatorLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-right: 40px;
+}
+.CalcHowtoSteps ul li {
+    list-style: none;
+    color: #666;
+}
+.CalcHowtoSteps ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12px;
+}
+.calchowtoheader h2 {
+    font-size: 16px;
+}
+.calchowtoDownsection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.calchowtoDownsection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #F5F5F5;
+}
+#tile-calculator .FormField {
+    display: flex;
+    flex-direction: column;
+}
+@media screen and (max-width: 768px) {
+    #tile-calculator .FormFieldgroup {
+        display: grid;
+        gap: 10px;
+    }
+}
+
+
+#tile-calculator .FormFieldgroup input {
+    flex: 0 0 100%;
+}
+
+#tile-calculator {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+}
+#tile-calculator .FormField select {
+    padding: 10px 11px;
+}
+#tile-calculator .FormField input {
+    padding: 10px 11px;
+}
+#calculate-btn {
+    padding: 13px 32px;
+    background-color: #E6E6E6;
+    border: 0px;
+    color: #808080;
+}
+#reset-btn {
+    padding: 13px 32px;
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #01A79E;
+    font-weight: 600;
+}
+#tile-calculator #resultssection {
+    display:none;
+    padding: 30px 30px;
+    background-color: #F5F5F5;
+}
+#tile-calculator #result {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#tile-calculator #result p span{
+    border: 1px solid #e6e6e6;
+    padding: 10px 19px;
+    background: #fff;
+    border-radius: 4px;
+}
+.CalculateButtons button {
+    cursor: pointer;
+}
+/* Calculators CSS Ends */
+
+
+/* Email Verification CSS */
+
+.EmailVerificationMain {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 476px;
+    
+}
+.verificationmessage {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Top Verification Bar */
+/* Email Verification Banner Styling */
+.email-verify-notice {
+    background-color: #ffefef; /* Light red for a softer notification */
+    color: #d9534f;
+    padding: 15px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--Primary-font);
+  }
+  
+  /* Close Button Styling */
+  .email-verify-close-btn {
+    margin-left: 20px;
+    color: #d9534f;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .email-verify-close-btn:hover {
+    color: #f5c6cb;
+  }
+  
+  /* Message Text and Link Styling */
+  .email-verify-text {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .email-verify-link {
+    color: #007bff;
+    text-decoration: underline;
+  }
+  
+  .email-verify-link:hover {
+    color: #0056b3;
+  }
+/* Top Verification Ends */
+
+/* Email verification CSS Ends */
+
+/* Products CSS */
+.PageProductCard {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(35, 38, 47, 0.10);
+    border-radius: 25px;
+    overflow: hidden;
+}
+.ProductPropertiesSection {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 10px;
+    gap: 7px;
+}
+.ProdName .ProductCardName {
+    font-family: var(--primary-font);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0px 0px;
+}
+.ProductcardPrice {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+}
+.ProdPriceRs {
+    color: #23262F;
+    font-family: var(--Primary-font);
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+.PriceUnits {
+    font-size: 12.25px;
+    padding-top:15px;
+}
+.ProdEnquire .ProdCardEnquire {
+    padding: 1px 20px;
+    background-color: #23262F;
+    color: #fff;
+    border-radius: 8px;
+}
+.ProductPropertiesSection .ProdName {
+    min-height: 74px;
+}
+.Productsmain {
+    padding: 50px 65px;
+}
+.RelatedProductsH {
+    display: flex;
+    justify-content: center;
+}
+.RelatedProductsH h2 {
+    margin-bottom: 30px;
+}
+/* Products CSS Ends */

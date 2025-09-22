@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --mobile-para: 14px;
+    --mobile-small-para: 10px;
+    --mobile-heading-2: 28px;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
+}
+
+p, h2, h3, h1, h4, a {
+    font-family: "Poppins", sans-serif;
+    color: #202224;
+    letter-spacing: 0.3px;
+}
+
+#chat-container {
+    padding: 10px;
+    height: 86%;
+    overflow-y: scroll;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+}
+
+#chat-container {
+    background-image: url('/static/images/Chat-BG.jpeg');
+    background-size: cover; /* Ensures the image covers the entire container */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; 
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.AQIQsidebar .AQIcon img {
+    max-width: 37px;
+}
+
+.AQIQsidebar .AQIcon p {
+    font-size: 26px;
+    font-weight: 700;
+    color: #01A79E;
+}
+
+.AQIQsidebar .AQIcon {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 42px;
+    padding: 0px 21px;
+}
+
+.AQIcon img {
+    cursor: pointer;
+}
+.chatTitle img {
+    cursor: pointer;
+}
+
+.AQIQMain {
+    display: flex;
+    height: 100vh;
+    padding: 13px;
+}
+.AQIQsidebar {
+    transform: translateX(0); /* Initially visible */
+    transition: transform 0.3s ease; /* Smooth transition */
+    /* Other styles you have */
+}
+
+.AQIQsidebar {
+    flex: 0 0 293px;
+    border-radius: 20px;
+    box-shadow: 6px 6px 54px 0px rgba(0, 0, 0, 0.07);
+}
+
+.AQIQMainWindow {
+    width: 100%;
+}
+
+.historyheader {
+    display: flex;
+    gap: 5px;
+}
+
+.LogoArea {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: #E9EDF7 solid 1px;
+}
+
+.AQHistory {
+    padding: 20px;
+}
+
+.ChatHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatTitle {
+    padding: 9px 20px;
+    display: flex;
+    gap: 20px;
+}
+.chatTitle img {
+    max-height: 45px;
+    
+}
+
+
+.chatTitle h2 {
+    font-size: 34px;
+    font-weight: 600;
+    color: #01A79E;
+}
+
+.ChatTools {
+    display: flex;
+    gap: 13px;
+    padding: 5px 10px;
+}
+
+.chatprofilepic {
+    border-radius: 100%;
+}
+
+#chat-container input {
+    width: 300px;
+    padding: 9px;
+    border: 1px solid #718096;
+    border-radius: 45px;
+    flex: 0 0 80%;
+}
+
+#send-message-btn {
+    border: 0px;
+    padding: 9px;
+    border-radius: 45px;
+    width: 100px;
+    background: linear-gradient(4deg, #02A89F, #fff);
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    width: 100%;
+}
+
+#chat-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#start-conversation-btn{
+    border: 0px;
+    padding: 9px;
+    border-radius: 45px;
+    background: linear-gradient(4deg, #02A89F, #fff);
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+}
+
+#chat-container form {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex: 0 0 94%;
+}
+.chat-window ul, ol{
+    padding-left: 25px;
+}
+.chat-window p{
+    padding: 14px 0px;
+}
+
+.ChatFooter p {
+    font-size: 14px;
+    color: #718096;
+}
+
+#conversation {
+    width: 79%;
+    height: 88%;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.historycontent {
+    margin: 25px 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.historycontent p {
+    padding: 10px;
+}
+
+.ChatFooter {
+    padding: 0px 22px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 31px;
+    height: 31px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #01A79E;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#chat-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.chatHistoryElement {
+    text-decoration: none;
+    padding: 14px 7px;
+}
+
+.chatHistoryElement:hover {
+    background: #f7f7f7;
+}
+
+.chat-window {
+    overflow-y: scroll;
+}
+
+/* Wrapper to position the ribbon */
+.ribbon-wrapper {
+    position: fixed; /* Stay at the top */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Appear above other elements */
+  }
+  
+  /* Styling for the ribbon */
+  .ribbon {
+    position: relative;
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: rotate(-45deg);
+    width: 92px;
+    top: -12px;
+    left: -28px;
+    height: 40px;
+  }
+  .ribbon p {
+    position: absolute;
+    top: 19px;
+    left: 21px;
+    color: white;
+  }
+
+
+@media (max-width: 500px) {
+    p , a, div{
+        font-size: var(--mobile-para) !important;
+    }
+    .AQIQsidebar {
+        flex: 0 0 197px;
+        border-radius: 20px;
+        box-shadow: 6px 6px 54px 0px rgba(0, 0, 0, 0.07);
+        position: absolute;
+        background-color: #fff;
+        height: 100vh;
+    }
+    .AQHistory {
+        padding: 4px;
+    }
+    #chat-container input { 
+        width: 229px;
+        flex: 0 0 62%;
+    }
+    #chat-form {
+        flex-direction: column;
+    }
+    #chat-container form {
+        flex-direction: column;
+    }
+    #conversation {
+        width:100%;
+    }
+    .chatTitle img {
+        max-height: 34px;
+    }
+}
+
+@media (max-width: 800px) {
+    .AQIQsidebar {
+        border-radius: 20px;
+        box-shadow: 6px 6px 54px 0px rgba(0, 0, 0, 0.07);
+        position: absolute;
+        background-color: #fff;
+        height: 100vh;
+    }
+
+}

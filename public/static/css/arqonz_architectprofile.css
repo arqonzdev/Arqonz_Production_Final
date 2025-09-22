@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* Add general styles here */
+body {
+    margin: 0;
+}
+body h2{
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+}
+body h3{
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+}
+body b{
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    color:#000000;
+}
+
+/* Two-column layout for larger screens */
+
+.profile-image {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.profile-details {
+    flex: 2;
+}
+
+/* Add this CSS to your existing stylesheet or create a new one */
+.architect-profile {
+    position: relative;
+}
+
+.profile-image {
+    position: relative;
+    width: 100%;
+    margin-top: 25px;
+}
+
+.over-image {
+    position: absolute;
+    margin-top:-107px;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+    background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+    /* background-color: rgba(0, 0, 0, 0.5); 50% transparent black */
+    padding: 10px; /* Adjust padding as needed */
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.company-name h1{
+    color:white;
+    margin-bottom: 0px !important; 
+    margin-top: 0px !important; 
+    font-size: 35px !important;
+    line-height: 47px !important;
+}
+.company-name p{
+    color:white;
+}
+.architectcity {
+    margin-left:5px;
+}
+
+.Stars{
+    background-color: #48a89e;
+    padding:10px;
+    font-size: 10px !important;
+    margin-bottom: 0px;
+    line-height: 10px;
+    padding-bottom: 10px;
+    border-radius: 50px;
+}
+.Stars p{
+    font-size: 13px !important;
+}
+
+.portfolio-content{
+    display: flex;
+    margin-top: 20px;
+    gap:40px;
+}
+.p-left-row{
+    width: 65%;
+}
+.p-right-row{
+    width: 35%;
+}
+.portfolio-attributes{
+    display: flex;
+    justify-content: space-between;
+    gap:10px;
+    
+}
+.attributebox{
+    border:2px solid #baf6f2;
+    text-align: center;
+    padding:20px;
+    font-size: 22px;
+    border-radius: 17px;
+    margin-bottom:20px;
+    min-width: 199px;
+}
+.attributebox p{
+    color:#828898;
+    font-size: 20px;
+}
+.attributebox i{
+    color:#4aaaa0;;
+}
+.attributebox b{
+    color:#4aaaa0;
+    font-size: 24px;
+}
+.enquiry-form{
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 14px;
+}
+main{
+    background-color: #ffffff !important;
+}
+main p{
+    font-size: 16px !important;
+    font-family: 'Poppins', sans-serif !important;
+}
+.secondary-attributes{
+    display: flex;
+    margin-top: 20px;
+    gap:20px;
+    margin-bottom: 30px;
+}
+.Lrow{
+    width: 30%;
+    min-width: 250px;
+}
+.Rrow{
+    width: 70%;
+    min-width: 302px;
+}
+.citylist{
+    display:flex;
+    flex-wrap: wrap;
+    gap:6px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.citytagbox{
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:6px;
+    padding-bottom:6px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    
+}
+.skills{
+    margin-bottom: 30px;
+}
+.skills p{
+    font-size: 20px !important;
+}
+.Architect-description{
+    margin-bottom: 30px;
+}
+.skilltagbox{
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:12px;
+    padding-bottom:6px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    
+}
+.citytagbox p{
+    margin:0px;
+    font-size: 14px !important;
+}
+.project-list{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 15px;
+}
+.project-item {
+     /* Two columns with a small gap */
+    background-color: #f0f0f0; /* Background color for each card */
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.project-item h3{
+   font-size: 22px !important;
+   margin:0px;
+   line-height: 23px !important;
+}
+.project-item a{
+    text-decoration: none;
+ }
+
+.project-item a:hover{
+    text-decoration: none;
+}
+
+.project-item img{
+    margin-bottom: 10px;
+ }
+.project-location{
+    margin-top: 0px;
+}
+.enquiry-form h2{
+    font-size: 23px !important;
+    line-height: 29px !important;
+    font-weight: 600 !important;
+}
+.enquiry-title{
+    margin-bottom: 35px;
+}
+
+#requirementsbox{
+    display:flex;
+    gap:10px;
+}
+.requirement-item{
+    background-color: #F0F0F0;
+    max-width: 30vw;
+    padding:1vw;
+
+}
+.requirement-item a{
+    text-decoration: none;
+    font-size: 23px;
+}
+.requirement-item h3{
+    text-decoration: none;
+    line-height: 1 !important;
+}
+
+.requirement-item a:hover{
+    text-decoration: none;
+}
+
+
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .architect-profile {
+        flex-direction: column;
+    }
+
+    .profile-details {
+        width: 100%;
+        margin-right: 0;
+    }
+    .profile-image
+    {
+        min-height: 200px;
+    }
+    .over-image {
+        flex-direction: column;
+    }
+    .custom-pagination {
+        flex-wrap: wrap;
+    }
+    .p-right-row{
+        width: 100%;
+    }
+    .over-image{
+        flex-direction: column;
+    }
+
+}
+

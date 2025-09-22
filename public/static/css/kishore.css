@@ -1,0 +1,421 @@
+@media (max-width: 724px) {
+    .DashRowCol2 {
+        width: 32% !important;
+    }
+}
+@media (max-width: 395px) {
+    h1, h2, h3, p {
+        font-size: smaller !important;  
+    }
+}
+h1 {
+    font-size: 8vw; /* Scales with screen width */
+}
+p {
+    font-size: 1.2rem; /* More readable across devices */
+}
+
+
+       
+    
+
+@media (max-width: 767px) {
+    .BannerHomepag {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 21rem;
+    }
+  }
+  
+
+
+
+
+
+@media (max-width: 768px) {
+    .TileCalculatorMain {
+        display: flex;
+        flex-direction: column; /* Stack elements in a column */
+        align-items: center; /* Center items horizontally */
+        justify-content: center; /* Center content */
+        padding: 10px; /* Reduce padding for smaller screens */
+        max-width: 100%;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        margin-top: 21px;
+    }
+
+    .TileCalculatorMain img {
+        max-width: 100%;
+        height: auto; /* Ensures image is not stretched */
+        display: block;
+    }
+
+    .how-to-use {
+        width: 100%;
+        max-width: 100%; /* Full width for mobile */
+        text-align: center; /* Center text */
+        padding: 10px;
+        box-sizing: border-box; /* Prevents width overflow */
+    }
+}
+
+
+
+
+
+
+
+
+
+@media (max-width: 767px) {
+    .PageProductsList {
+      display: grid;
+      grid-auto-columns: min-content;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px 30px;
+      justify-content: center;
+      align-items: center;
+      margin: 30px -62px;
+      padding: 0 20px;  /* Increased horizontal padding for better spacing on mobile */
+    }
+  }
+  
+
+
+
+
+
+
+
+@media (max-width: 767px) { 
+    .ProdDescriptionEnquiry {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 20px;
+    }
+  }
+  
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .ProductsHero {
+      flex-direction: column;
+      gap: 24px; /* You can adjust this value as needed */
+    }
+}
+@media (max-width: 768px) {
+    .productReviewForm .form-group > input {
+      min-width: 0;  /* Remove desktop-specific min-width */
+      width: 100%;   /* Allow the input to fill its container */
+    }
+  }
+
+
+
+
+
+
+
+/* Mobile-first: stack items full-width */
+.ProductDetailsMenu {
+  display: flex;
+  flex-wrap: wrap;           /* Allows items to wrap on small screens */
+  gap: 8px;                  /* Space between items */
+  justify-content: center;   /* Center the items horizontally */
+  box-sizing: border-box;
+}
+
+.ProductDetailsMenu a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 0;
+  border-radius: 25px;
+  color: #000;
+  gap: 4px;
+  text-decoration: none;     /* Removes underlines for links */
+  width: 100%;               /* Full width on mobile */
+  box-sizing: border-box;
+}
+
+/* For larger screens, revert to a fixed width if you want */
+@media (min-width: 768px) {
+  .ProductDetailsMenu a {
+    width: 175px;
+  }
+}
+
+
+
+
+/* Only apply this styling on mobile screens */
+@media (max-width: 767px) {
+    .AdminqueriesSection {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 22px;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .company-name h1 {
+        color: white !important;
+        margin-bottom: 0px !important;
+        margin-top: 0px !important;
+        font-size: 27px !important;
+        line-height: 30px !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+  .Featureimage img {
+      max-width: 183px !important;
+      margin: -8px !important;
+      border-radius: 12px !important;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .over-image {
+      position: relative;
+      margin-top: -73px;
+      width: 99%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+      padding: 1px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column; /* Mobile devices typically stack items vertically */
+      justify-content: space-between;
+      align-items: center;
+  }
+}
+
+
+
+
+
+
+
+@media screen and (max-width: 768px) {
+  .company-name h1 {
+      color: white !important;
+      margin-bottom: 0px !important;
+      margin-top: 0px !important;
+      font-size: 29px !important;
+      line-height: 15px !important;
+  }
+}
+
+
+
+
+
+
+@media screen and (max-width: 768px) {
+  .ArchitectListingcontentSection, 
+  .Featureimage, 
+  .StarsRating, 
+  .arqonz-nav a {
+      text-align: center !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-details {
+      font-size: 12px; /* Smaller font size for mobile */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #tile-calculator .FormFieldgroup {
+      display: grid;
+      gap: 10px;
+  }
+}
+
+@media (max-width: 724px) {
+  .Parent-Menu {
+      flex-direction: column;
+      width: 100%;
+      background-color: #eff8f8;
+      display: none;
+  }
+}
+@media (max-width: 768px) {
+    .HeroSearch {
+        display: none; /* Initially hidden */
+        position: absolute; /* Ensures it stays above other elements */
+        z-index: 999; /* High z-index to keep it above other elements */
+        top: 50px; /* Adjust position as needed */
+        left: 50%;
+        transform: translateX(-50%); /* Center alignment */
+        padding: 10px; /* Adjust padding for better spacing */
+        border-radius: 8px;
+        gap: 10px;
+        background-color: #fff;
+        width: 90%; /* Slightly reduced for better responsiveness */
+        max-width: 350px; /* Prevents it from being too wide on larger mobile screens */
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for better visibility */
+    }
+}
+@media (max-width: 768px) {
+  .CalcHeader {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+  }
+
+  .CalcHeader img {
+      width: 40px; /* Adjust size for mobile */
+      height: auto;
+      max-height: 40px;
+  }
+}
+@media (max-width: 768px) {
+  .your-element-class { 
+      width: 100%; /* Adjust width for mobile */
+      max-width: 266px; /* Ensure it doesn't exceed this */
+  }
+}
+@media (max-width: 768px) {
+  #tile-calculator .FormField {
+      display: flex;
+      width: 100%; /* Makes it responsive */
+      max-width: 292px; /* Ensures it doesn't exceed 250px */
+      flex-direction: column;
+      margin: 0 auto; /* Centers it */
+  }
+}
+@media (max-width: 768px) {
+  #tile-calculator #result p span {
+      border: 1px solid #e6e6e6;
+      padding: 5px 20px; /* Adjusted padding */
+      background: #fff;
+      border-radius: 4px;
+      font-size: 14px; /* Optional: Adjust text size for mobile */
+      display: inline-block; /* Ensures proper spacing */
+      text-align: center;
+  }
+}
+.TermsTextContainer {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box; /* Includes padding and border in element's total width */
+  margin: 0 auto; /* Centers the container if it has a fixed width */
+  padding: 0; /* Reset padding unless needed */
+}
+
+/* If you need to style the element's inline style specifically */
+element[style] {
+  max-width: 100% !important; /* !important should be used sparingly */
+  /* Add other properties if needed */
+}
+
+@media screen and (max-width: 767px) {
+  .Contact-Right form .FormRow1,
+  .Contact-Right form .FormRow2 {
+      flex-direction: column;
+  }
+}
+@media screen and (max-width: 767px) {
+  .Contact-Main {
+      flex-direction: column;
+      gap: 40px; /* Reduced gap for mobile */
+      margin: 40px 0; /* Adjusted margin for mobile */
+  }
+}
+@media (max-width: 768px) {
+  .Contact-Left {
+      width: 320px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .login {
+      display: block;
+      width: 44px;
+  }
+}
+@media (max-width: 602px) {
+  .arqonzlogo {
+      padding-left: 20px; /* Increased for better spacing */
+      max-width: 100%; /* Ensures logo doesn't overflow */
+      height: auto; /* Maintains aspect ratio */
+      display: block; /* Prevents inline spacing issues */
+  }
+}
+@media (max-width: 602px) {
+  .arqonzlogo {
+      padding-left: 20px;
+      position: relative; /* Ensures proper stacking */
+      z-index: 10; /* Brings logo above other elements */
+  }
+}
+@media (max-width: 602px) {
+  .arqonzlogo {
+      padding-left: 4px;
+      width: 120px; /* Fixed width (adjust as needed) */
+      height: auto; /* Prevents distortion */
+  }
+} 
+@media (max-width: 768px) {
+  .DashRowCol1 {
+      flex: 0 0 37% !important;
+  }
+}
+@media (max-width: 768px) { /* Adjust breakpoint as needed */
+  .portfolio-attributes {
+      display: flex;
+      gap: 4px;
+      margin-top: 27px;
+  }
+}
+@media (min-width: 768px) {
+  .ProductsMainSection {
+   display: flex;
+  flex-direction: column;
+  gap: 25px;
+  }
+}
+@media (max-width: 767px) {
+  .ProductsPageListSection .SortbyBar {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+      border-radius: 15px;
+      background-color: rgba(35, 38, 47, 0.05);
+      height: 63px;
+      align-items: center;
+  }
+}
+@media (max-width: 768px) {
+  #titleEffects {
+    display: grid;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0 16px;
+    max-width: 100%;
+    width: 100%;
+    user-select: none;
+    word-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: 700;
+    font-size: clamp(22px, 6vw, 36px);
+    overflow-wrap: break-word;
+  }
+}
