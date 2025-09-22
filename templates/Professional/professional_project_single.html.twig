@@ -120,6 +120,7 @@
                                         <div class="thumbnail-container">
                                             <a href="{{ image.getThumbnail('galleryLightbox')|raw }}" data-lightbox="project-gallery" class="thumbnail">
                                                 <img src="{{ image.getThumbnail('ProjectGalleryThumbnail') }}" alt="Gallery Thumbnail">
+                                                <div class="image-badge">Image</div>
                                             </a>
                                         </div>
                                     {% endfor %}
@@ -200,10 +201,57 @@
         </div>
 
         <style>
+            /* Modern Gallery Container */
+            .gallerycontainer {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                padding: 30px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 12px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Consistent Thumbnail Container */
+            .thumbnail-container {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .thumbnail-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Image Thumbnails */
+            .thumbnail-container .thumbnail {
+                display: block;
+                width: 100%;
+                height: 100%;
+                text-decoration: none;
+            }
+
+            .thumbnail-container .thumbnail img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .thumbnail-container:hover .thumbnail img {
+                transform: scale(1.05);
+            }
+
             /* Video Thumbnail Styles */
             .video-thumbnail {
                 position: relative;
-                cursor: pointer;
             }
 
             .video-thumbnail-wrapper {
@@ -211,7 +259,7 @@
                 width: 100%;
                 height: 100%;
                 overflow: hidden;
-                border-radius: 5px;
+                border-radius: 12px;
             }
 
             .video-thumbnail-preview {
@@ -231,26 +279,54 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
                 color: white;
-                font-size: 48px;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+                font-size: 40px;
+                text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
                 transition: all 0.3s ease;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(5px);
             }
 
             .video-thumbnail-wrapper:hover .video-play-overlay {
                 color: #007bff;
                 transform: translate(-50%, -50%) scale(1.1);
+                background: rgba(0, 123, 255, 0.2);
             }
 
             .video-badge {
                 position: absolute;
-                top: 5px;
-                right: 5px;
-                background: rgba(0,0,0,0.7);
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #007bff, #0056b3);
                 color: white;
-                padding: 2px 6px;
-                border-radius: 3px;
-                font-size: 10px;
-                font-weight: bold;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Image Badge for consistency */
+            .image-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
 
             /* Video Modal Styles */
@@ -299,13 +375,48 @@
 
             /* Responsive adjustments */
             @media (max-width: 768px) {
+                .gallerycontainer {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 15px;
+                    padding: 20px;
+                }
+                
+                .thumbnail-container {
+                    height: 180px;
+                }
+                
                 .video-play-overlay {
-                    font-size: 36px;
+                    font-size: 32px;
+                    width: 50px;
+                    height: 50px;
+                }
+                
+                .video-badge, .image-badge {
+                    font-size: 10px;
+                    padding: 3px 6px;
                 }
                 
                 #modalVideo {
                     max-width: 95%;
                     max-height: 400px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .gallerycontainer {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                    padding: 15px;
+                }
+                
+                .thumbnail-container {
+                    height: 160px;
+                }
+                
+                .video-play-overlay {
+                    font-size: 28px;
+                    width: 45px;
+                    height: 45px;
                 }
             }
         </style>
