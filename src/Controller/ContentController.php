@@ -2979,12 +2979,8 @@ class ContentController extends BaseController
                 $unit = $minPriceUnit;
                 $logger->info('Unit price and unit before ChatGPT', ['unitPrice' => $unitPrice]);
 
-                $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-                $apiKey = $openAIConfig['api_key'];
-                
-                if (empty($apiKey)) {
-                    throw new \Exception('OpenAI API key not configured');
-                }
+                $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+                $apiKey = $openaiConfig['api_key'];
                 $logger->info('Checking condition for unitPrice', ['unitPrice' => $unitPrice]);
 
 
@@ -4164,8 +4160,6 @@ class ContentController extends BaseController
         return $this->render('Architect/NotLogged_signup.html.twig');
     }
 
-    
-
 
 
     /**
@@ -4324,114 +4318,60 @@ class ContentController extends BaseController
     }
 
     /**
-     * @Route("/account/profile-picture/upload", name="account_profile_picture_upload", methods={"POST"})
+     * @Route("/account/Profile/upload-picture", name="upload-profile-picture", methods={"POST"})
      */
     public function uploadProfilePictureAction(Request $request, Security $security): JsonResponse
     {
+        $user = $security->getUser();
+        
+        if (!$user || !$this->isGranted('ROLE_USER')) {
+            return new JsonResponse(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $uploadedFile = $request->files->get('profilePicture');
+        if (!$uploadedFile) {
+            return new JsonResponse(['success' => false, 'message' => 'No file uploaded'], 400);
+        }
+
         try {
-            // Check if user is authenticated
-            $user = $security->getUser();
-            
-
-            // Check if file was uploaded
-            if (!$request->files->has('profilePicture')) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'No file uploaded'
-                ], 400);
+            // Validate the uploaded file
+            if ($uploadedFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                return new JsonResponse(['success' => false, 'message' => 'File size exceeds 5MB limit'], 400);
             }
 
-            $uploadedFile = $request->files->get('profilePicture');
-
-            // Validate file
-            if (!$uploadedFile->isValid()) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Invalid file upload'
-                ], 400);
-            }
-
-            // Validate file type
             $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!in_array($uploadedFile->getMimeType(), $allowedMimeTypes)) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Only JPEG, PNG, GIF, and WebP images are allowed'
-                ], 400);
-            }
-
-            // Validate file size (max 5MB)
-            if ($uploadedFile->getSize() > 5 * 1024 * 1024) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'File size must be less than 5MB'
-                ], 400);
-            }
-
-            // Create asset for the profile picture
-            $parentFolder = Asset\Folder::getByPath('/user-profile-pictures');
-            if (!$parentFolder) {
-                $parentFolder = new Asset\Folder();
-                $parentFolder->setParent(Asset::getById(1));
-                $parentFolder->setFilename('user-profile-pictures');
-                $parentFolder->save();
+                return new JsonResponse(['success' => false, 'message' => 'Invalid file type'], 400);
             }
 
             // Generate unique filename
-            $filename = 'profile-picture-' . $user->getId() . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
 
-            // Create and save the asset
-            $asset = new Asset\Image();
-            $asset->setParent($parentFolder);
-            $asset->setFilename($filename);
-            $asset->setData(file_get_contents($uploadedFile->getPathname()));
-            $asset->save();
+            // Create or get the target folder
+            $targetFolder = \Pimcore\Model\Asset\Service::createFolderByPath('/CustomerProfilePictures');
 
-            // Update user's profile picture reference
-            $user->setProfilePicture($asset);
+            // Create new asset
+            $newAsset = new \Pimcore\Model\Asset\Image();
+            $newAsset->setFilename($newFilename);
+            $newAsset->setParent($targetFolder);
+            $newAsset->setData(file_get_contents($uploadedFile->getPathname()));
+            $newAsset->save();
+
+            // Update user's profile picture
+            $user->setProfilePicture($newAsset);
             $user->save();
-
-            // Generate thumbnail URL
-            $thumbnail = $asset->getThumbnail('profile');
-            $thumbnailUrl = $thumbnail->getPath();
 
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Profile picture uploaded successfully',
-                'thumbnailUrl' => $thumbnailUrl,
-                'assetId' => $asset->getId()
+                'thumbnail' => $newAsset->getThumbnail('galleryCarousel')->getPath(),
+                'message' => 'Profile picture updated successfully'
             ]);
 
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Error uploading profile picture: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * @Route("/account/profile-picture/delete", name="account_profile_picture_delete", methods={"POST"})
-     */
-    public function deleteProfilePictureAction(Request $request, Security $security): JsonResponse
-    {
-        try {
-            $user = $security->getUser();
-            
-
-            // Remove profile picture reference
-            $user->setProfilePicture(null);
-            $user->save();
-
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Profile picture removed successfully'
-            ]);
-
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error removing profile picture: ' . $e->getMessage()
+                'message' => 'Error uploading file: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -5070,8 +5010,33 @@ class ContentController extends BaseController
             $ProProjectsList = new \Pimcore\Model\DataObject\ProProject\Listing();
             $ProProjectsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
 
-            $ProProjectsList->setOrderKey('creationDate');
-            $ProProjectsList->setOrder('desc');
+            // Handle sorting
+            $sort = $request->query->get('sort', 'date-desc');
+            switch ($sort) {
+                case 'date-asc':
+                    $ProProjectsList->setOrderKey('creationDate');
+                    $ProProjectsList->setOrder('asc');
+                    break;
+                case 'name-asc':
+                    $ProProjectsList->setOrderKey('ProjectName');
+                    $ProProjectsList->setOrder('asc');
+                    break;
+                case 'name-desc':
+                    $ProProjectsList->setOrderKey('ProjectName');
+                    $ProProjectsList->setOrder('desc');
+                    break;
+                case 'location-asc':
+                    $ProProjectsList->setOrderKey('Location');
+                    $ProProjectsList->setOrder('asc');
+                    break;
+                case 'location-desc':
+                    $ProProjectsList->setOrderKey('Location');
+                    $ProProjectsList->setOrder('desc');
+                    break;
+                default: // date-desc
+                    $ProProjectsList->setOrderKey('creationDate');
+                    $ProProjectsList->setOrder('desc');
+            }
 
             $ProProjects = $ProProjectsList->load();
 
@@ -5081,6 +5046,7 @@ class ContentController extends BaseController
                     'customer' => $customer,
                     'ProProjects' => $ProProjects,
                     'MaincustType' => $MainCustomerType,
+                    'currentSort' => $sort
                 
                 ]);
             
@@ -9542,97 +9508,69 @@ class ContentController extends BaseController
  * @Route("/manufacturers/listing", name="Manufacturers-Listing")
  */
 public function ManufacturerlistingAction(
-    Request $request,
-    LoggerInterface $logger,
-    Security $security,
-    PaginatorInterface $paginator
+    Request $request, 
+    LoggerInterface $logger, 
+    Security $security, 
+    PaginatorInterface $paginator, 
+    \Doctrine\DBAL\Connection $connection
 ) {
-    // Pimcore ProProfile objects (Manufacturers)
-    $ProProfileList = new \Pimcore\Model\DataObject\ProProfile\Listing();
-    $ProProfileList->addConditionParam("PortfolioType = ?", "Manufacturer");
+    // ---- 1. Load Pimcore Manufacturer Objects ----
+        $ProProfileList = new \Pimcore\Model\DataObject\ProProfile\Listing();
+        $ProProfileList->addConditionParam("PortfolioType = ?", "Manufacturer");
 
-    $form = $this->createForm(FilterFormType::class);
-    $form->handleRequest($request);
+        $form = $this->createForm(FilterFormType::class);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $FilterCity = $form->get('FilterCity')->getData();
-        $ProProfileList->addConditionParam("FIND_IN_SET(?, CitiesServed) > 0", $FilterCity);
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $FilterCity = $form->get('FilterCity')->getData();
+            $ProProfileList->addConditionParam("FIND_IN_SET(?, CitiesServed) > 0", $FilterCity);
+        }
 
-    // Load all Pimcore ProProfiles
-    $ProProfiles = $ProProfileList->load();
+        $ProProfiles = $ProProfileList->load();
 
-    // Prepare sortable array
-    $sortableProfiles = [];
-    foreach ($ProProfiles as $profile) {
-        try {
+        $sortableProfiles = [];
+        foreach ($ProProfiles as $profile) {
+            try {
             \Pimcore\Model\DataObject::setGetInheritedValues(true);
-            $rating = (float) $profile->getCalculatedRating();
-            $sortableProfiles[] = [
-                'rating' => $rating,
+                $rating = (float) $profile->getCalculatedRating();
+                $sortableProfiles[] = [
+                    'rating' => $rating,
                 'object' => $profile,
                 'type'   => 'pimcore'
-            ];
-        } catch (\Throwable $e) {
-            $logger->error('Rating fetch failed: ' . $e->getMessage());
+                ];
+            } catch (\Throwable $e) {
+                $logger->error('Rating fetch failed: ' . $e->getMessage());
+            }
         }
+
+    // ---- 2. Load Supplier Table Data ----
+    $supplierRows = $connection->fetchAllAssociative("SELECT * FROM supplier");
+    foreach ($supplierRows as $row) {
+        $sortableProfiles[] = [
+            'rating' => 0, // suppliers don’t have rating
+            'object' => $row,
+            'type'   => 'supplier'
+        ];
     }
 
-    // Sort ProProfiles by rating (DESC)
-    usort($sortableProfiles, fn($a, $b) => $b['rating'] <=> $a['rating']);
-    $sortedProProfiles = array_column($sortableProfiles, 'object');
+    // ---- 3. Sort by rating DESC ----
+        usort($sortableProfiles, fn($a, $b) => $b['rating'] <=> $a['rating']);
 
-    // ✅ Fetch Supplier data from MySQL
-    try {
-        $dsn = 'mysql:host=localhost;dbname=pimcore;charset=utf8mb4';
-        $username = 'pimcoreuser';
-        $password = 'G0H0me@T0day';
+    // ---- 4. Pagination ----
+        $pagination = $paginator->paginate(
+        $sortableProfiles,
+            $request->query->getInt('page', 1),
+            10
+        );
 
-        $pdo = new \PDO($dsn, $username, $password);
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        $sql = "SELECT * FROM supplier";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-        $suppliers = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        // Normalize suppliers into unified objects
-        $normalizedSuppliers = [];
-        foreach ($suppliers as $supplier) {
-            $normalizedSuppliers[] = (object) [
-                'isSupplier'      => true,
-                'key'             => $supplier['id'] ?? null,
-                'companyName'     => $supplier['company_name'] ?? '',
-                'description'     => $supplier['description'] ?? '',
-                'yearEstablished' => $supplier['year_established'] ?? '',
-                'productsNumber'  => $supplier['products_count'] ?? 0,
-                'rating'          => $supplier['rating'] ?? 0,
-                'profileImage'    => $supplier['logo'] ?? null,
-            ];
-        }
-    } catch (\Throwable $e) {
-        $logger->error("Supplier fetch failed: " . $e->getMessage());
-        $normalizedSuppliers = [];
+        return $this->render('Professional/professional_listing.html.twig', [
+            'ProProfiles' => $pagination,
+            'form' => $form->createView(),
+            'customertype' => 'Manufacturer',
+            'filterform' => '1',
+            'paginationVariables' => $pagination->getPaginationData(),
+        ]);
     }
-
-    // Merge ProProfiles with Suppliers
-    $finalProfiles = array_merge($sortedProProfiles, $normalizedSuppliers);
-
-    // Paginate merged data
-    $pagination = $paginator->paginate(
-        $finalProfiles,
-        $request->query->getInt('page', 1),
-        10
-    );
-
-    return $this->render('Professional/professional_listing.html.twig', [
-        'ProProfiles' => $pagination,
-        'form' => $form->createView(),
-        'customertype' => 'Manufacturer',
-        'filterform' => '1',
-        'paginationVariables' => $pagination->getPaginationData(),
-    ]);
-}
 
 
         
@@ -12423,7 +12361,7 @@ public function ManufacturerlistingAction(
         $razorpaySecret = $razorpayConfig['key_secret'];
         
         if (empty($razorpayKey) || empty($razorpaySecret)) {
-            throw new \Exception('Razorpay credentials not configured');
+            throw new \Exception('Razorpay API credentials not configured');
         }
         
         $api = new Api($razorpayKey, $razorpaySecret);
@@ -12464,9 +12402,8 @@ public function ManufacturerlistingAction(
         $razorpaySecret = $razorpayConfig['key_secret'];
         
         if (empty($razorpayKey) || empty($razorpaySecret)) {
-            throw new \Exception('Razorpay credentials not configured');
+            throw new \Exception('Razorpay API credentials not configured');
         }
-        
         $api = new Api($razorpayKey, $razorpaySecret);
 
     
@@ -12534,9 +12471,8 @@ public function ManufacturerlistingAction(
         $razorpaySecret = $razorpayConfig['key_secret'];
         
         if (empty($razorpayKey) || empty($razorpaySecret)) {
-            throw new \Exception('Razorpay credentials not configured');
+            throw new \Exception('Razorpay API credentials not configured');
         }
-        
         $api = new Api($razorpayKey, $razorpaySecret);
 
     
@@ -12645,14 +12581,8 @@ public function ManufacturerlistingAction(
             $paymentCurrency = 'USD';
         }
 
-        $razorpayConfig = \App\Service\EnvironmentConfigService::getRazorpayConfig();
-        $razorpayKey = $razorpayConfig['key_id'];
-        $razorpaySecret = $razorpayConfig['key_secret'];
-        
-        if (empty($razorpayKey) || empty($razorpaySecret)) {
-            throw new \Exception('Razorpay credentials not configured');
-        }
-        
+        $razorpayKey = 'rzp_live_lHiuTO7zDrXx97'; 
+        $razorpaySecret = 'pnZHy4LlAVFM1DgRyZiMfBOg'; 
         $api = new Api($razorpayKey, $razorpaySecret);
 
         try {
@@ -12714,9 +12644,8 @@ public function ManufacturerlistingAction(
             $razorpaySecret = $razorpayConfig['key_secret'];
             
             if (empty($razorpayKey) || empty($razorpaySecret)) {
-                throw new \Exception('Razorpay credentials not configured');
+                throw new \Exception('Razorpay API credentials not configured');
             }
-            
             $api = new Api($razorpayKey, $razorpaySecret);
 
             $amount = 0;
@@ -12778,14 +12707,8 @@ public function ManufacturerlistingAction(
             $customertype = $customer->getcustomertype();
             $ProProfiles = $customer->getPortfolio();
             $ProProfile = $ProProfiles[0];
-            $razorpayConfig = \App\Service\EnvironmentConfigService::getRazorpayConfig();
-            $razorpayKey = $razorpayConfig['key_id'];
-            $razorpaySecret = $razorpayConfig['key_secret'];
-            
-            if (empty($razorpayKey) || empty($razorpaySecret)) {
-                throw new \Exception('Razorpay credentials not configured');
-            }
-            
+            $razorpayKey = 'rzp_live_lHiuTO7zDrXx97';
+            $razorpaySecret = 'pnZHy4LlAVFM1DgRyZiMfBOg';
             $api = new Api($razorpayKey, $razorpaySecret);
 
             // Check if payment is successful
@@ -15200,13 +15123,9 @@ public function ManufacturerlistingAction(
 
     private function createThread(LoggerInterface $logger)
     {
-        $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
-        $apiUrl = $openAIConfig['api_url'];
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
+        $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+        $apiKey = $openaiConfig['api_key'];
+        $apiUrl = 'https://api.openai.com/v1/threads';
         $client = new Client();
 
         try {
@@ -15231,13 +15150,9 @@ public function ManufacturerlistingAction(
 
     private function addMessageToThread($threadId, $userMessage, LoggerInterface $logger)
     {
-        $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
+        $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+        $apiKey = $openaiConfig['api_key'];
         $apiUrl = 'https://api.openai.com/v1/threads/' . $threadId . '/messages';
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
         $client = new Client();
 
         try {
@@ -15363,12 +15278,12 @@ public function ManufacturerlistingAction(
     
         if ($user && $this->isGranted('ROLE_USER')) {
             $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
-            $apiUrl = 'https://api.openai.com/v1/threads';
+            $apiKey = $openAIConfig['api_key'];
+            $apiUrl = $openAIConfig['api_url'];
+            
+            if (empty($apiKey)) {
+                throw new \Exception('OpenAI API key not configured');
+            }
             $client = new \GuzzleHttp\Client();
 
             try {
@@ -15505,12 +15420,8 @@ public function ManufacturerlistingAction(
 
                 $logger->info('threadId: ' . $threadId);
 
-                $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
+                $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+                $apiKey = $openaiConfig['api_key'];  // Replace with your actual API key
                 $apiUrl = 'https://api.openai.com/v1/threads/' . $threadId . '/messages';
                 $client = new Client();
 
@@ -15945,11 +15856,16 @@ public function ManufacturerlistingAction(
 
     private function sendZemchEventWhatsAppMessage($phoneNumber, $firstName, $admitId, $templateID)
     {
-        // Gupshup API credentials
-        $apiUrl = 'https://api.gupshup.io/wa/api/v1/template/msg';
-        $apiKey = 'ldustlsxhtrboifgqgbtgd2k7lh0qsig';  // Use your API key
-        $source = '919150002745';  // Your Gupshup WhatsApp number
-        $srcName = 'FbYFVM7hFAffmvWMKfgHGCsb';  // Your Gupshup source name
+        // Get Gupshup API credentials from environment
+        $gupshupConfig = \App\Service\EnvironmentConfigService::getGupshupConfig();
+        $apiUrl = $gupshupConfig['api_url'];
+        $apiKey = $gupshupConfig['api_key'];
+        $source = $gupshupConfig['source_number'];
+        $srcName = $gupshupConfig['source_name'];
+        
+        if (empty($apiKey) || empty($source) || empty($srcName)) {
+            throw new \Exception('Gupshup WhatsApp API credentials not configured');
+        }
         $templateId = $templateID;  // Your template ID
         
         // Prepare the template with params (e.g., $firstName)
@@ -16001,11 +15917,16 @@ public function ManufacturerlistingAction(
 
     private function GupsendWhatsAppMessage($phoneNumber, $firstName, $templateID)
     {
-        // Gupshup API credentials
-        $apiUrl = 'https://api.gupshup.io/wa/api/v1/template/msg';
-        $apiKey = 'ldustlsxhtrboifgqgbtgd2k7lh0qsig';  // Use your API key
-        $source = '919150002745';  // Your Gupshup WhatsApp number
-        $srcName = 'FbYFVM7hFAffmvWMKfgHGCsb';  // Your Gupshup source name
+        // Get Gupshup API credentials from environment
+        $gupshupConfig = \App\Service\EnvironmentConfigService::getGupshupConfig();
+        $apiUrl = $gupshupConfig['api_url'];
+        $apiKey = $gupshupConfig['api_key'];
+        $source = $gupshupConfig['source_number'];
+        $srcName = $gupshupConfig['source_name'];
+        
+        if (empty($apiKey) || empty($source) || empty($srcName)) {
+            throw new \Exception('Gupshup WhatsApp API credentials not configured');
+        }
         $templateId = $templateID;  // Your template ID
         
         // Prepare the template with params (e.g., $firstName)
@@ -16231,7 +16152,6 @@ public function ManufacturerlistingAction(
                     'customerType' => $customerType,
                     'customerID' => $customerID,
                     'subscriptionStart' => $Customer->getSubscriptionStart() ? $Customer->getSubscriptionStart()->format('Y-m-d') : null,
-                    'phoneCountry' => $Customer->getPhoneCountry(),
 
 
 
@@ -18696,12 +18616,8 @@ public function ManufacturerlistingAction(
                 $unit = $minPriceUnit;
                 $logger->info('Unit price and unit before ChatGPT', ['unitPrice' => $unitPrice]);
 
-                $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-                $apiKey = $openAIConfig['api_key'];
-                
-                if (empty($apiKey)) {
-                    throw new \Exception('OpenAI API key not configured');
-                }
+                $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+                $apiKey = $openaiConfig['api_key'];
                 $logger->info('Checking condition for unitPrice', ['unitPrice' => $unitPrice]);
 
 
@@ -19695,11 +19611,11 @@ public function ManufacturerlistingAction(
         
         $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
         $apiKey = $openAIConfig['api_key'];
+        $apiUrl = $openAIConfig['api_url'];
         
         if (empty($apiKey)) {
             throw new \Exception('OpenAI API key not configured');
         }
-        $apiUrl = 'https://api.openai.com/v1/threads';
         $client = new \GuzzleHttp\Client();
 
         try {
@@ -19781,12 +19697,8 @@ public function ManufacturerlistingAction(
         $proProfile = $proProfiles[0];
 
 
-        $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
+        $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+        $apiKey = $openaiConfig['api_key'];
         $apiUrl = 'https://api.openai.com/v1/threads';
         $client = new \GuzzleHttp\Client();
 
@@ -19936,12 +19848,8 @@ public function ManufacturerlistingAction(
 
             $logger->info('threadId: ' . $threadId);
 
-            $openAIConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
-        $apiKey = $openAIConfig['api_key'];
-        
-        if (empty($apiKey)) {
-            throw new \Exception('OpenAI API key not configured');
-        }
+            $openaiConfig = \App\Service\EnvironmentConfigService::getOpenAIConfig();
+        $apiKey = $openaiConfig['api_key'];
             $apiUrl = 'https://api.openai.com/v1/threads/' . $threadId . '/messages';
             $client = new Client();
 
@@ -20027,84 +19935,60 @@ public function ManufacturerlistingAction(
     /**
      * @Route("/mobile-create-order", name="mobile_create_order", methods={"POST"})
      */
-    public function MobilecreateOrder(Request $request, Security $security, \App\Service\CurrencyConversionService $currencyService)
+    public function MobilecreateOrder(Request $request, Security $security)
     {
+        // $user = $security->getUser();
+        // if (!$user || !$this->isGranted('ROLE_USER')) {
+        //     return $this->json(['error' => 'User not authenticated'], 401);
+        // }
+
         $requestData = json_decode($request->getContent(), true);
         $plan = $requestData['plan'] ?? null;
         $includeAnnualFee = $requestData['includeAnnualFee'] ?? null;
-        
-       
-        // Find customer
-        $customerList = new \Pimcore\Model\DataObject\Customer\Listing();
-        $customerList->addConditionParam("email = ?", $requestData['user']);
-        $customers = $customerList->load();
+        // $plan = $request->request->get('plan');
+        $amount = 0;
 
-        if (empty($customers)) {
-            return new JsonResponse(['success' => false, 'message' => 'Invalid credentials'], 401);
-        }
-
-        $user = $customers[0];
-
-        // Determine if customer is from India
-        $phoneCountry = $user->getPhoneCountry();
-        $isIndianCustomer = $currencyService->isIndianCustomer($phoneCountry);
-        $currencyCode = $currencyService->getCurrencyCode($phoneCountry);
-        $taxLabel = $currencyService->getTaxLabel($phoneCountry);
-        
-        // Base amounts in INR (in paise)
-        $baseAmountInr = 0;
         switch ($plan) {
             case 'Standard':
-                $baseAmountInr = 50000;
+                $amount = 50000;
                 break;
             case 'Silver':
-                $baseAmountInr = 150000;
+                $amount = 150000;
                 break;
             case 'Gold':
-                $baseAmountInr = 300000;
+                $amount = 300000;
                 break;
             case 'Platinum':
-                $baseAmountInr = 600000;
+                $amount = 600000;
+                // $amount = 100;
                 break;
             default:
                 return $this->json(['error' => 'Invalid plan selected'], 400);
         }
-        
+
         // Add annual fee if applicable
         if ($includeAnnualFee == "true") {
-            $baseAmountInr += 50000; // 500 Rs in paise
+            $amount += 50000; // 500 Rs in paise
+            // $amount += 100;
+
         }
 
-        // Apply tax (18% GST for India, 18% VAT for others)
-        $taxAmount = $baseAmountInr * 0.18;
-        $totalAmountInr = $baseAmountInr + $taxAmount;
-        $totalAmountInr = round($totalAmountInr); // Ensure we have a whole number
+        // Apply 18% GST to the total amount
+        $gstAmount = $amount * 0.18;
+        $totalAmount = $amount + $gstAmount;
+        $totalAmount = round($totalAmount); // Ensure we have a whole number for the payment gateway
 
-        // Convert to appropriate currency for payment
-        if ($isIndianCustomer) {
-            $paymentAmount = $totalAmountInr;
-            $paymentCurrency = 'INR';
-        } else {
-            // For non-Indian customers, convert to USD (multiply by 100 for cents)
-            $totalAmountUsd = $currencyService->convertInrToUsd($totalAmountInr / 100) * 100;
-            $paymentAmount = round($totalAmountUsd);
-            $paymentCurrency = 'USD';
-        }
 
-        $razorpayConfig = \App\Service\EnvironmentConfigService::getRazorpayConfig();
-        $razorpayKey = $razorpayConfig['key_id'];
-        $razorpaySecret = $razorpayConfig['key_secret'];
-        
-        if (empty($razorpayKey) || empty($razorpaySecret)) {
-            throw new \Exception('Razorpay credentials not configured');
-        }
-        
+        $razorpayKey = 'rzp_live_lHiuTO7zDrXx97'; 
+        $razorpaySecret = 'pnZHy4LlAVFM1DgRyZiMfBOg'; 
         $api = new Api($razorpayKey, $razorpaySecret);
+
+        
 
         try {
             $orderData = [
-                'amount' => $paymentAmount,
-                'currency' => $paymentCurrency,
+                'amount' => $totalAmount, // Amount in paisa
+                'currency' => 'INR',
                 'receipt' => 'order_' . time(),
                 'payment_capture' => 1
             ];
@@ -20113,24 +19997,21 @@ public function ManufacturerlistingAction(
             // Description should indicate if annual fee is included
             $description = "Payment for $plan Plan";
             if ($includeAnnualFee == "true") {
+                // $description .= " with Annual Subscription Fee";
                 $description .= " with Annual Subscription Fee";
             }
-            $description .= " (Incl. 18% $taxLabel)";
-            
+            $description .= " (Incl. 18% GST)";
+
+            // Construct hosted checkout URL
+            $paymentUrl = "https://api.razorpay.com/v1/checkout/embedded?order_id=" . $razorpayOrder['id'];
+
             return $this->json([
                 'orderId' => $razorpayOrder['id'],
-                'amount' => $paymentAmount,
-                'baseAmount' => $baseAmountInr,
-                'taxAmount' => $taxAmount,
-                'currency' => $paymentCurrency,
+                'amount' => $amount,
                 'razorpayKey' => $razorpayKey,
+                'paymentUrl' => $paymentUrl,
                 'name' => 'Arqonz Global Pvt. Ltd.',
-                'description' => $description,
-                'includeAnnualFee' => $includeAnnualFee,
-                'customerName' => $user->getfirstname() . ' ' . $user->getlastname(),
-                'customerEmail' => $user->getemail(),
-                'customerPhone' => $user->getphone(),
-                'isIndianCustomer' => $isIndianCustomer
+                'description' => "Payment for $plan Plan",
             ]);
         } catch (\Exception $e) {
             return $this->json(['error' => 'Razorpay order creation failed'], 500);
@@ -21475,6 +21356,205 @@ public function ManufacturerlistingAction(
     
     }
 
+
+    /**
+     * @Route("/what-is-mycountry", name="What-is-mycountry")
+     */
+    public function whatIsMyCountry(Request $request, LoggerInterface $logger)
+    {
+        // Get client IP address
+        $clientIP = $this->getClientIP($request);
+        
+        // Initialize location data
+        $locationData = [
+            'ip' => $clientIP,
+            'country' => 'Unknown',
+            'city' => 'Unknown',
+            'countryCode' => '',
+            'region' => '',
+            'timezone' => '',
+            'isp' => '',
+            'error' => null
+        ];
+
+        try {
+            // Try ip-api.com first (free, no API key required)
+            $locationData = $this->getLocationFromIpApi($clientIP, $logger);
+            
+            // If ip-api fails, try ipapi.co as fallback
+            if ($locationData['country'] === 'Unknown') {
+                $locationData = $this->getLocationFromIpApiCo($clientIP, $logger);
+            }
+            
+        } catch (\Exception $e) {
+            $logger->error('Error getting location data: ' . $e->getMessage());
+            $locationData['error'] = 'Unable to detect location. Please try again later.';
+        }
+
+        return $this->render('Professional/what_is_mycountry.html.twig', [
+            'locationData' => $locationData
+        ]);
+    }
+
+    /**
+     * Get client IP address, considering proxies and load balancers
+     */
+    private function getClientIP(Request $request): string
+    {
+        // Check for IP from various headers in order of preference
+        $ipHeaders = [
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($ipHeaders as $header) {
+            $ip = $request->server->get($header);
+            
+            if (!empty($ip) && $ip !== 'unknown') {
+                // Handle comma-separated list of IPs
+                if (strpos($ip, ',') !== false) {
+                    $ip = trim(explode(',', $ip)[0]);
+                }
+                
+                // Validate IP address
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    return $ip;
+                }
+            }
+        }
+
+        // Fallback to REMOTE_ADDR
+        return $request->getClientIp() ?: '127.0.0.1';
+    }
+
+    /**
+     * Get location data from ip-api.com (free service)
+     */
+    private function getLocationFromIpApi(string $ip, LoggerInterface $logger): array
+    {
+        $locationData = [
+            'ip' => $ip,
+            'country' => 'Unknown',
+            'city' => 'Unknown',
+            'countryCode' => '',
+            'region' => '',
+            'timezone' => '',
+            'isp' => '',
+            'error' => null
+        ];
+
+        try {
+            // ip-api.com endpoint with specific fields
+            $url = "http://ip-api.com/json/{$ip}?fields=status,message,country,countryCode,region,regionName,city,timezone,isp,query";
+            
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 10,
+                    'user_agent' => 'Mozilla/5.0 (compatible; PimcoreLocationDetector/1.0)'
+                ]
+            ]);
+
+            $response = file_get_contents($url, false, $context);
+            
+            if ($response === false) {
+                throw new \Exception('Failed to fetch data from ip-api.com');
+            }
+
+            $data = json_decode($response, true);
+            
+            if ($data && $data['status'] === 'success') {
+                $locationData['country'] = $data['country'] ?? 'Unknown';
+                $locationData['city'] = $data['city'] ?? 'Unknown';
+                $locationData['countryCode'] = $data['countryCode'] ?? '';
+                $locationData['region'] = $data['regionName'] ?? '';
+                $locationData['timezone'] = $data['timezone'] ?? '';
+                $locationData['isp'] = $data['isp'] ?? '';
+                
+                $logger->info('Successfully retrieved location from ip-api.com', [
+                    'ip' => $ip,
+                    'country' => $locationData['country'],
+                    'city' => $locationData['city']
+                ]);
+            } else {
+                $error = $data['message'] ?? 'Unknown error from ip-api.com';
+                $logger->warning('ip-api.com returned error: ' . $error);
+                $locationData['error'] = $error;
+            }
+            
+        } catch (\Exception $e) {
+            $logger->error('Error with ip-api.com: ' . $e->getMessage());
+            $locationData['error'] = $e->getMessage();
+        }
+
+        return $locationData;
+    }
+
+    /**
+     * Get location data from ipapi.co (fallback service)
+     */
+    private function getLocationFromIpApiCo(string $ip, LoggerInterface $logger): array
+    {
+        $locationData = [
+            'ip' => $ip,
+            'country' => 'Unknown',
+            'city' => 'Unknown',
+            'countryCode' => '',
+            'region' => '',
+            'timezone' => '',
+            'isp' => '',
+            'error' => null
+        ];
+
+        try {
+            // ipapi.co endpoint
+            $url = "https://ipapi.co/{$ip}/json/";
+            
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 10,
+                    'user_agent' => 'Mozilla/5.0 (compatible; PimcoreLocationDetector/1.0)'
+                ]
+            ]);
+
+            $response = file_get_contents($url, false, $context);
+            
+            if ($response === false) {
+                throw new \Exception('Failed to fetch data from ipapi.co');
+            }
+
+            $data = json_decode($response, true);
+            
+            if ($data && !isset($data['error'])) {
+                $locationData['country'] = $data['country_name'] ?? 'Unknown';
+                $locationData['city'] = $data['city'] ?? 'Unknown';
+                $locationData['countryCode'] = $data['country_code'] ?? '';
+                $locationData['region'] = $data['region'] ?? '';
+                $locationData['timezone'] = $data['timezone'] ?? '';
+                $locationData['isp'] = $data['org'] ?? '';
+                
+                $logger->info('Successfully retrieved location from ipapi.co', [
+                    'ip' => $ip,
+                    'country' => $locationData['country'],
+                    'city' => $locationData['city']
+                ]);
+            } else {
+                $error = $data['reason'] ?? 'Unknown error from ipapi.co';
+                $logger->warning('ipapi.co returned error: ' . $error);
+                $locationData['error'] = $error;
+            }
+            
+        } catch (\Exception $e) {
+            $logger->error('Error with ipapi.co: ' . $e->getMessage());
+            $locationData['error'] = $e->getMessage();
+        }
+
+        return $locationData;
+    }
 
     
 
