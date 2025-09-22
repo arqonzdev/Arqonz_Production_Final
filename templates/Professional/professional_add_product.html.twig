@@ -651,22 +651,95 @@ $(document).ready(function() {
 
 {# Script to Fetch options on category #}
 
+<style>
+/* Style for disabled dropdowns */
+select:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+select:disabled option {
+    color: #999;
+}
+</style>
+
 <script>
     $(document).ready(function() {
         // Function to populate dropdown options
         function populateDropdown(dropdown, options) {
+            // Store the current selected value
+            const currentValue = dropdown.val();
             dropdown.empty().append('<option value="">Choose an option</option>');
             options.forEach(option => {
                 dropdown.append(`<option value="${option.name}">${option.name}</option>`);
             });
+            // Restore the selected value if it exists
+            if (currentValue) {
+                dropdown.val(currentValue);
+            }
         }
+
+        // Function to disable/enable dropdown
+        function setDropdownState(dropdown, enabled, clearValue = true) {
+            dropdown.prop('disabled', !enabled);
+            if (!enabled && clearValue) {
+                dropdown.val('');
+            }
+        }
+
+        // Initialize dropdown states
+        const parentCategoryDropdown = $('#add_product_form_ParentCategory');
+        const subCategoryDropdown = $('#add_product_form_SubCategory');
+        const subSubCategoryDropdown = $('#add_product_form_SubSubCategory');
 
         // Fetch JSON data and populate parent category dropdown
         fetch('/static/files/Product-Categories.json')
             .then(response => response.json())
             .then(data => {
-                const parentCategoryDropdown = $('#add_product_form_ParentCategory');
                 populateDropdown(parentCategoryDropdown, data.categories);
+                
+                // Check if we're in edit mode (parent category has a value)
+                if (parentCategoryDropdown.val()) {
+                    // Enable sub-category dropdown for edit mode
+                    setDropdownState(subCategoryDropdown, true);
+                    
+                    // Populate sub-categories based on existing parent category
+                    const selectedParentCategoryName = parentCategoryDropdown.val();
+                    const selectedParentCategory = data.categories.find(category => category.name === selectedParentCategoryName);
+                    
+                    if (selectedParentCategory && selectedParentCategory.subcategories) {
+                        populateDropdown(subCategoryDropdown, selectedParentCategory.subcategories);
+                        
+                        // Check if sub-category has a value (for edit mode)
+                        if (subCategoryDropdown.val()) {
+                            // Enable sub-sub-category dropdown for edit mode
+                            setDropdownState(subSubCategoryDropdown, true);
+                            
+                            // Populate sub-sub-categories based on existing sub-category
+                            const selectedSubCategoryName = subCategoryDropdown.val();
+                            const selectedSubCategory = selectedParentCategory.subcategories.find(subcategory =>
+                                subcategory.name === selectedSubCategoryName
+                            );
+                            
+                            if (selectedSubCategory && selectedSubCategory.subcategories) {
+                                populateDropdown(subSubCategoryDropdown, selectedSubCategory.subcategories);
+                            }
+                        } else {
+                            // Disable sub-sub-category if no sub-category value (don't clear value in edit mode)
+                            setDropdownState(subSubCategoryDropdown, false, false);
+                        }
+                    } else {
+                        // Disable sub-categories if no sub-categories available (don't clear values in edit mode)
+                        setDropdownState(subCategoryDropdown, false, false);
+                        setDropdownState(subSubCategoryDropdown, false, false);
+                    }
+                } else {
+                    // New product mode - disable sub-categories initially (clear values for new products)
+                    setDropdownState(subCategoryDropdown, false, true);
+                    setDropdownState(subSubCategoryDropdown, false, true);
+                }
             })
             .catch(error => console.error('Error fetching JSON:', error));
 
@@ -675,47 +748,92 @@ $(document).ready(function() {
             const selectedParentCategoryName = $(this).val();
             const subCategoryDropdown = $('#add_product_form_SubCategory');
             const subSubCategoryDropdown = $('#add_product_form_SubSubCategory');
+            
+            // Store current values before clearing
+            const currentSubCategoryValue = subCategoryDropdown.val();
+            const currentSubSubCategoryValue = subSubCategoryDropdown.val();
+            
+            // Clear sub-categories
             subCategoryDropdown.empty().append('<option value="">Choose an option</option>');
             subSubCategoryDropdown.empty().append('<option value="">Choose an option</option>');
+            
+            // Disable sub-sub-category
+            setDropdownState(subSubCategoryDropdown, false);
 
-            // Populate subcategory dropdown based on selected parent category
-            fetch('/static/files/Product-Categories.json')
-                .then(response => response.json())
-                .then(data => {
-                    const selectedParentCategory = data.categories.find(category => category.name === selectedParentCategoryName);
-                    if (selectedParentCategory && selectedParentCategory.subcategories) {
-                        populateDropdown(subCategoryDropdown, selectedParentCategory.subcategories);
-                    }
-                })
-                .catch(error => console.error('Error fetching JSON:', error));
+            if (selectedParentCategoryName) {
+                // Enable sub-category dropdown
+                setDropdownState(subCategoryDropdown, true);
+                
+                // Populate subcategory dropdown based on selected parent category
+                fetch('/static/files/Product-Categories.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const selectedParentCategory = data.categories.find(category => category.name === selectedParentCategoryName);
+                        if (selectedParentCategory && selectedParentCategory.subcategories) {
+                            populateDropdown(subCategoryDropdown, selectedParentCategory.subcategories);
+                            // Restore subcategory value if it exists
+                            if (currentSubCategoryValue) {
+                                subCategoryDropdown.val(currentSubCategoryValue);
+                                // Trigger subcategory change to populate sub-sub-categories
+                                subCategoryDropdown.trigger('change');
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error fetching JSON:', error));
+            } else {
+                // Disable sub-category dropdown if no parent category selected
+                setDropdownState(subCategoryDropdown, false);
+            }
         });
 
         // Handle subcategory change event
         $('#add_product_form_SubCategory').change(function() {
             const selectedSubCategoryName = $(this).val();
             const subSubCategoryDropdown = $('#add_product_form_SubSubCategory');
+            
+            // Store current value before clearing
+            const currentSubSubCategoryValue = subSubCategoryDropdown.val();
+            
+            // Clear sub-sub-category
             subSubCategoryDropdown.empty().append('<option value="">Choose an option</option>');
 
-            // Populate sub-subcategory dropdown based on selected subcategory
-            fetch('/static/files/Product-Categories.json')
-                .then(response => response.json())
-                .then(data => {
-                    const selectedParentCategory = data.categories.find(category =>
-                        category.subcategories && category.subcategories.find(subcategory =>
-                            subcategory.name === selectedSubCategoryName ||
-                            (subcategory.subcategories && subcategory.subcategories.find(subsubcategory => subsubcategory.name === selectedSubCategoryName))
-                        )
-                    );
-                    if (selectedParentCategory && selectedParentCategory.subcategories) {
-                        const selectedSubCategory = selectedParentCategory.subcategories.find(subcategory =>
-                            subcategory.name === selectedSubCategoryName
+            if (selectedSubCategoryName) {
+                // Populate sub-subcategory dropdown based on selected subcategory
+                fetch('/static/files/Product-Categories.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const selectedParentCategory = data.categories.find(category =>
+                            category.subcategories && category.subcategories.find(subcategory =>
+                                subcategory.name === selectedSubCategoryName ||
+                                (subcategory.subcategories && subcategory.subcategories.find(subsubcategory => subsubcategory.name === selectedSubCategoryName))
+                            )
                         );
-                        if (selectedSubCategory && selectedSubCategory.subcategories) {
-                            populateDropdown(subSubCategoryDropdown, selectedSubCategory.subcategories);
+                        if (selectedParentCategory && selectedParentCategory.subcategories) {
+                            const selectedSubCategory = selectedParentCategory.subcategories.find(subcategory =>
+                                subcategory.name === selectedSubCategoryName
+                            );
+                            if (selectedSubCategory && selectedSubCategory.subcategories) {
+                                // Enable sub-sub-category dropdown
+                                setDropdownState(subSubCategoryDropdown, true);
+                                populateDropdown(subSubCategoryDropdown, selectedSubCategory.subcategories);
+                                // Restore sub-subcategory value if it exists
+                                if (currentSubSubCategoryValue) {
+                                    subSubCategoryDropdown.val(currentSubSubCategoryValue);
+                                }
+                            } else {
+                                // Disable sub-sub-category if no sub-sub-categories available
+                                setDropdownState(subSubCategoryDropdown, false);
+                            }
+                        } else {
+                            // Disable sub-sub-category if no sub-sub-categories available
+                            setDropdownState(subSubCategoryDropdown, false);
                         }
-                    }
-                })
-                .catch(error => console.error('Error fetching JSON:', error));
+                    })
+                    .catch(error => console.error('Error fetching JSON:', error));
+            } else {
+                // Disable sub-sub-category if no subcategory selected
+                setDropdownState(subSubCategoryDropdown, false);
+            }
         });
     });
 </script>
