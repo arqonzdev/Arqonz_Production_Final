@@ -1,0 +1,303 @@
+{# /var/www/pimcore/templates/Professional/ProProductSinglePage.html.twig #}
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+
+<div class="productsPageMain">
+    <div class="ProductsHero">
+        <div class="productGallery">
+            <div class="productSlider">
+                <div class="slide">
+                    {% if ProProject.getProductImage() %}
+                        <img src="{{ ProProject.getProductImage().getThumbnail('galleryCarousel') }}" alt="Product Image">
+                    {% else %}
+                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Product Image">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="productMainDetails">
+            <h2>{{ ProProject.ProductName() }}</h2>
+            <div class="ProdReviewRatings">
+                <img src="/static/icons/ProdStars.svg" alt="">
+                <p>(24 Reviews)</p>
+            </div>
+            
+            {% if ProProject.getPrice() %}
+            <div class="productPrice">
+                <p class="ProductcardPrice" style="justify-content: left;">
+                    <span class="ProdPriceRs">
+                        <span class="RupeeSymbol">₹</span> 
+                        <span class="ProductPriceAmt">{{ ProProject.getPrice() }}</span>
+                        <span class="PriceUnits">{{ ProProject.getUnit() }}</span>
+                    </span>
+                </p>
+            </div>
+            {% endif %}
+            
+            <div class="ProdDescSnippet">
+                <p>{{ ProProject.getProductDescription()|length > 231 ? ProProject.getProductDescription()|slice(0, 231) ~ '...' : ProProject.getProductDescription() }}</p>
+            </div>
+            <div class="ProdManufacturer">
+                <img src="/static/icons/ProdManufacturer.svg" alt="">
+                <p>{{ architectProfile.getCompanyName() }}</p>
+            </div>
+            <div class="ProdStarSpecifications">
+                {% if ProProject.getProductBrand() %}
+                    <p><span class="specLable">Brand</span><span class="SpecValue"> : {{ ProProject.getProductBrand() }}</span></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="ProdDescriptionEnquiry">
+        <div class="ProductinfDescription">
+            <div class="ProductDetailsMenu">
+                <a href="" class="Description selected">
+                    <img class="DetMenuImage" src="/static/icons/ProductsDescription.svg" alt="">
+                    <span class="DetmenuName">Description</span>
+                </a>
+
+                <a href="" class="Specification">
+                    <img class="DetMenuImage" src="/static/icons/Specifications.svg" alt="">
+                    <span class="DetmenuName">Specifications</span>
+                </a>
+            </div>
+            <p class="ProdDataDescription">{{ ProProject.getProductDescription() }}</p>
+            <div class="ProdComplSpecifications" style="display: none;">
+                <p>{{ ProProject.getSpecifications() }}</p>
+            </div>
+
+            <div class="productReviewForm">
+                <h3>Rate this Product</h3>
+                <form id="productReviewForm">
+                    <div class="rating">
+                        <label for="rating">Rating:</label>
+                        <div class="stars">
+                            {% for i in 5..1 %}
+                                <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required />
+                                <label for="star{{ i }}" title="{{ i }} stars">
+                                    &#9733;
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="review">
+                        <label for="review">Review:</label>
+                        <textarea id="review" name="review" rows="4" placeholder="Write your review here..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName">Full Name :</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter Name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" name="email" placeholder="Enter Email" class="form-control" 
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+                            title="Enter a valid email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone :</label>
+                        <input type="text" id="phone" name="phone" placeholder="Enter Phone Number" class="form-control" 
+                            pattern="\d{10}" title="Enter exactly 10 digits" maxlength="10"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="Submit Review">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="ProductEnquiryForm">
+            <h3>Enquire About This Product</h3>
+            <div class="ProdsellerInfo">
+                <div class="SellerImage">
+                    {% if architectProfile.getProfileImage() %}
+                        <img src="{{ architectProfile.getProfileImage().getThumbnail('galleryCarousel') }}" alt="Profile Image">
+                    {% else %}
+                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Profile Image">
+                    {% endif %}
+                </div>
+                <div class="sellerInfo">
+                    <p class="SellerInfoTag">Seller Information</p>
+                    <p class="SellerInfoName">{{ architectProfile.getCompanyName() }}</p>
+                    <p class="SellerInfoDescription">{{ architectProfile.getCity() }}</p>
+                </div>
+            </div>
+
+            {# Original Enquiry Form #}
+            <div class="ProdEnquiryFormFields">
+                {{ form_start(form) }}
+                    {{ form_row(form.fullname, {
+                        'attr': {
+                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
+                            'placeholder': 'Enter Full Name'
+                        }
+                    }) }}
+                    
+                    {{ form_row(form.Phone, {
+                        'attr': {
+                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
+                            'placeholder': 'Enter Phone Number',
+                            'pattern': '\\d{10}',
+                            'title': 'Enter exactly 10 digits',
+                            'maxlength': '10',
+                            'oninput': "this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+                        }
+                    }) }}
+                    
+                    {{ form_row(form.Email, {
+                        'attr': {
+                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
+                            'placeholder': 'Enter Email Address',
+                            'pattern': '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+                            'title': 'Enter a valid email address'
+                        }
+                    }) }}
+                    
+                    {{ form_row(form.Message, {
+                        'attr': {
+                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
+                            'placeholder': 'Enter Your Message'
+                        }
+                    }) }}
+                    
+                    {% if form.City is defined %}
+                        {{ form_row(form.City, {
+                            'attr': {
+                                'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
+                                'placeholder': 'Enter Your City'
+                            }
+                        }) }}
+                    {% endif %}
+                    
+                    
+                    <style>
+                        #pro_enquiry_form__submit {
+                            background-color: #23262F; color: #fff; font-size: 16px; cursor: pointer; margin-top: 12px; width: 100%; padding: 10px; border: none;
+                        }
+                        #pro_enquiry_form_Message {
+                            padding: 18px 16px;
+                            border: 0px;
+                            border-radius: 6px;
+                            width: 100%;
+                        }
+                        .ProdEnquiryFormFields form input {
+                            
+                            width: 100%;
+                        }
+                    </style>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <hr style="border-top: 1px solid #EEF2F5; border-bottom: 0px; margin: 50px 0px;">
+
+    <div class="AdminqueriesSection">
+        <div class="AdminEmailSection">
+            <div class="AdminQueriesIcon">
+                <img src="/static/icons/AdminQueriesEmail.svg" alt="">
+            </div>
+            <div class="AdminQueriesDetails">
+                <p class="AdminQueryLabel">admin@arqonz.com</p>
+                <p class="AdminQueryValue">Have query? Mail us.</p>
+            </div>
+        </div>
+        <div class="AdminPhoneSection">
+            <div class="AdminQueriesIcon">
+                <img src="/static/icons/AdminQueriesPhone.svg" alt="">
+            </div>
+            <div class="AdminQueriesDetails">
+                <p class="AdminQueryLabel">+91 79000 85000 </p>
+                <p class="AdminQueryValue">24/7 available</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Toggle Description and Specification Javascript #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const descriptionLink = document.querySelector('.ProductDetailsMenu .Description');
+        const specificationLink = document.querySelector('.ProductDetailsMenu .Specification');
+        const prodDataDescription = document.querySelector('.ProdDataDescription');
+        const prodComplSpecifications = document.querySelector('.ProdComplSpecifications');
+
+        function updateSelection(selectedLink) {
+            // Remove 'selected' class from both links
+            descriptionLink.classList.remove('selected');
+            specificationLink.classList.remove('selected');
+
+            // Add 'selected' class to the clicked link
+            selectedLink.classList.add('selected');
+        }
+
+        function toggleContent(selectedLink) {
+            if (selectedLink.classList.contains('Description')) {
+                // Show the description and hide the specifications
+                prodDataDescription.style.display = 'block';
+                prodComplSpecifications.style.display = 'none';
+            } else if (selectedLink.classList.contains('Specification')) {
+                // Show the specifications and hide the description
+                prodDataDescription.style.display = 'none';
+                prodComplSpecifications.style.display = 'block';
+            }
+        }
+
+        // Event listeners for the description and specification links
+        descriptionLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            updateSelection(descriptionLink);
+            toggleContent(descriptionLink);
+        });
+
+        specificationLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            updateSelection(specificationLink);
+            toggleContent(specificationLink);
+        });
+
+        // Review form validation
+        document.getElementById('productReviewForm')?.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const phoneNumber = document.getElementById('phone')?.value;
+            if (phoneNumber && phoneNumber.length !== 10) {
+                alert("Phone number must be exactly 10 digits.");
+                return;
+            }
+
+            const email = document.getElementById('email')?.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (email && !emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            const formData = new FormData(this);
+            formData.append('productUrl', window.location.href);
+
+            fetch('/product-review-submit', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Thank you for your review!');
+                    document.getElementById('productReviewForm').reset();
+                } else {
+                    alert('There was an issue submitting your review. Please try again.');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred while submitting your review. Please try again.');
+            });
+        });
+    });
+</script>
+{% endblock %}

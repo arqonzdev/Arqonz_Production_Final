@@ -1,0 +1,846 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span>
+            <span class="breadcrumb-divider">></span>
+            <span class="Breadcrumb-nonactive"><a href="/account/Requirements">Requirements</a></span>
+            <span class="breadcrumb-divider">></span>
+            <span class="Breadcrumb-active">
+                {% if requirement is defined %}Edit Requirement{% else %}Add Requirement Manually{% endif %}
+            </span>
+        </span>
+    </div>
+
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <div class="requirements">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading" style="width: 100%;">
+                        <h2>{% if requirement is defined %}Edit Requirement{% else %}Add Requirement Manually{% endif %}</h2>
+                        <p class="sectionsubheading">Create and manage your BOQ interactively</p> 
+                    </div>
+                </div>
+
+                <div class="requirementcontent">
+                    <div id="manualBoqEditor">
+                        <!-- Requirement Details Section -->
+                        <div class="modern-card requirement-details-section">
+                            <div class="card-header">
+                                <div class="header-content">
+                                    <div class="header-icon">
+                                        <i class="fas fa-clipboard-list"></i>
+                                    </div>
+                                    <div class="header-text">
+                                        <h3>Requirement Details</h3>
+                                        <p>Basic information about your requirement</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="form-group modern-form-group">
+                                    <label for="requirementTitle" class="modern-label">
+                                        <i class="fas fa-tag"></i>
+                                        Title <span class="required">*</span>
+                                    </label>
+                                    <input type="text" id="requirementTitle" class="modern-input" 
+                                           value="{{ requirement.title|default('') }}" 
+                                           placeholder="Enter requirement title" required>
+                                </div>
+                                
+                                <div class="form-group modern-form-group">
+                                    <label for="requirementDescription" class="modern-label">
+                                        <i class="fas fa-align-left"></i>
+                                        Description
+                                    </label>
+                                    <textarea id="requirementDescription" class="modern-textarea" 
+                                              placeholder="Enter requirement description">{{ requirement.description|default('') }}</textarea>
+                                </div>
+                                
+                                <div class="form-row modern-form-row">
+                                    <div class="form-group col-md-6 modern-form-group">
+                                        <label for="requirementCity" class="modern-label">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            City <span class="required">*</span>
+                                        </label>
+                                        <input type="text" id="requirementCity" class="modern-input" 
+                                               value="{{ requirement.city|default('') }}" 
+                                               placeholder="Enter city" required>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-6 modern-form-group">
+                                        <label for="requirementTargetPrice" class="modern-label">
+                                            <i class="fas fa-rupee-sign"></i>
+                                            Target Price (₹)
+                                        </label>
+                                        <input type="number" id="requirementTargetPrice" class="modern-input" 
+                                               value="{{ requirement.targetPrice|default('') }}" 
+                                               placeholder="Enter target price" step="0.01">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group modern-form-group">
+                                    <label for="requirementExpireDate" class="modern-label">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Expiry Date
+                                    </label>
+                                    <input type="datetime-local" id="requirementExpireDate" class="modern-input" 
+                                           value="{% if requirement.expireDate is defined %}{{ requirement.expireDate|date('Y-m-d\\TH:i') }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Products Section -->
+                        <div class="modern-card products-section">
+                            <div class="card-header">
+                                <div class="header-content">
+                                    <div class="header-icon">
+                                        <i class="fas fa-boxes"></i>
+                                    </div>
+                                    <div class="header-text">
+                                        <h3>Products</h3>
+                                        <p>Add and manage your product requirements</p>
+                                    </div>
+                                </div>
+                                <button type="button" id="addProductBtn" class="modern-btn modern-btn-primary">
+                                    <i class="fas fa-plus"></i> 
+                                    <span>Add Product</span>
+                                </button>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div id="productsContainer">
+                                    {% if products is defined and products is not empty %}
+                                        {% for product in products %}
+                                            <div class="product-card modern-product-card" data-product-id="{{ product.id }}">
+                                                <div class="product-header">
+                                                    <div class="product-title">
+                                                        <div class="product-icon">
+                                                            <i class="fas fa-cube"></i>
+                                                        </div>
+                                                        <div class="product-info">
+                                                            <h4>Product #<span class="product-number">{{ loop.index }}</span></h4>
+                                                            <p>Product details and specifications</p>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="modern-btn modern-btn-danger modern-btn-sm remove-product-btn">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff" class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
+                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="product-form">
+                                                    <div class="form-row modern-form-row">
+                                                        <div class="form-group col-md-6 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-tag"></i>
+                                                                Product Name <span class="required">*</span>
+                                                            </label>
+                                                            <input type="text" class="modern-input product-name" 
+                                                                   value="{{ product.productName }}" 
+                                                                   placeholder="Enter product name" required>
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-6 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-award"></i>
+                                                                Brand
+                                                            </label>
+                                                            <input type="text" class="modern-input product-brand" 
+                                                                   value="{{ product.brand }}" 
+                                                                   placeholder="Enter brand">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-row modern-form-row">
+                                                        <div class="form-group col-md-6 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-layer-group"></i>
+                                                                Material
+                                                            </label>
+                                                            <input type="text" class="modern-input product-material" 
+                                                                   value="{{ product.material }}" 
+                                                                   placeholder="Enter material">
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-6 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-th-large"></i>
+                                                                Product Type
+                                                            </label>
+                                                            <input type="text" class="modern-input product-type" 
+                                                                   value="{{ product.prodType }}" 
+                                                                   placeholder="Enter product type">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-row modern-form-row">
+                                                        <div class="form-group col-md-4 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-hashtag"></i>
+                                                                Quantity <span class="required">*</span>
+                                                            </label>
+                                                            <input type="number" class="modern-input product-quantity" 
+                                                                   value="{{ product.quantity }}" 
+                                                                   placeholder="Quantity" step="0.01" required>
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-4 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-ruler"></i>
+                                                                Unit <span class="required">*</span>
+                                                            </label>
+                                                            <input type="text" class="modern-input product-unit" 
+                                                                   value="{{ product.unit }}" 
+                                                                   placeholder="Unit (e.g., pcs, kg)" required>
+                                                        </div>
+                                                        
+                                                        <div class="form-group col-md-4 modern-form-group">
+                                                            <label class="modern-label">
+                                                                <i class="fas fa-shield-alt"></i>
+                                                                Minimum Reserve
+                                                            </label>
+                                                            <input type="text" class="modern-input product-min-reserve" 
+                                                                   value="{{ product.minimumReserve }}" 
+                                                                   placeholder="Minimum reserve">
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group modern-form-group">
+                                                        <label class="modern-label">
+                                                            <i class="fas fa-align-left"></i>
+                                                            Description
+                                                        </label>
+                                                        <textarea class="modern-textarea product-description" 
+                                                                  placeholder="Product description">{{ product.description }}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons modern-action-buttons">
+                            <button type="button" id="saveRequirementBtn" class="modern-btn modern-btn-success modern-btn-lg">
+                                <i class="fas fa-save"></i> 
+                                <span>{% if requirement is defined %}Update Requirement{% else %}Save Requirement{% endif %}</span>
+                            </button>
+                            <a href="/account/Requirements" class="modern-btn modern-btn-secondary modern-btn-lg">
+                                <i class="fas fa-times"></i>
+                                <span>Cancel</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add product template
+            const productTemplate = `
+                <div class="product-card modern-product-card">
+                    <div class="product-header">
+                        <div class="product-title">
+                            <div class="product-icon">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <div class="product-info">
+                                <h4>Product #<span class="product-number"></span></h4>
+                                <p>Product details and specifications</p>
+                            </div>
+                        </div>
+                        <button type="button" class="modern-btn modern-btn-danger modern-btn-sm remove-product-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="product-form">
+                        <div class="form-row modern-form-row">
+                            <div class="form-group col-md-6 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-tag"></i>
+                                    Product Name <span class="required">*</span>
+                                </label>
+                                <input type="text" class="modern-input product-name" placeholder="Enter product name" required>
+                            </div>
+                            
+                            <div class="form-group col-md-6 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-award"></i>
+                                    Brand
+                                </label>
+                                <input type="text" class="modern-input product-brand" placeholder="Enter brand">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row modern-form-row">
+                            <div class="form-group col-md-6 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-layer-group"></i>
+                                    Material
+                                </label>
+                                <input type="text" class="modern-input product-material" placeholder="Enter material">
+                            </div>
+                            
+                            <div class="form-group col-md-6 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-th-large"></i>
+                                    Product Type
+                                </label>
+                                <input type="text" class="modern-input product-type" placeholder="Enter product type">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row modern-form-row">
+                            <div class="form-group col-md-4 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-hashtag"></i>
+                                    Quantity <span class="required">*</span>
+                                </label>
+                                <input type="number" class="modern-input product-quantity" placeholder="Quantity" step="0.01" required>
+                            </div>
+                            
+                            <div class="form-group col-md-4 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-ruler"></i>
+                                    Unit <span class="required">*</span>
+                                </label>
+                                <input type="text" class="modern-input product-unit" placeholder="Unit (e.g., pcs, kg)" required>
+                            </div>
+                            
+                            <div class="form-group col-md-4 modern-form-group">
+                                <label class="modern-label">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Minimum Reserve
+                                </label>
+                                <input type="text" class="modern-input product-min-reserve" placeholder="Minimum reserve">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group modern-form-group">
+                            <label class="modern-label">
+                                <i class="fas fa-align-left"></i>
+                                Description
+                            </label>
+                            <textarea class="modern-textarea product-description" placeholder="Product description"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add product button
+            document.getElementById('addProductBtn').addEventListener('click', function() {
+                const productsContainer = document.getElementById('productsContainer');
+                const newProduct = document.createElement('div');
+                newProduct.innerHTML = productTemplate;
+                productsContainer.appendChild(newProduct);
+                updateProductNumbers();
+            });
+
+            // Remove product button (delegated event)
+            document.getElementById('productsContainer').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-product-btn') || 
+                    e.target.closest('.remove-product-btn')) {
+                    const productCard = e.target.closest('.product-card');
+                    if (document.querySelectorAll('.product-card').length > 1) {
+                        productCard.remove();
+                        updateProductNumbers();
+                    } else {
+                        alert('At least one product is required.');
+                    }
+                }
+            });
+
+            // Update product numbers
+            function updateProductNumbers() {
+                const productCards = document.querySelectorAll('.product-card');
+                productCards.forEach((card, index) => {
+                    const numberSpan = card.querySelector('.product-number');
+                    if (numberSpan) {
+                        numberSpan.textContent = index + 1;
+                    }
+                });
+            }
+
+            // Save requirement
+            document.getElementById('saveRequirementBtn').addEventListener('click', function() {
+                const requirementTitle = document.getElementById('requirementTitle').value.trim();
+                const requirementCity = document.getElementById('requirementCity').value.trim();
+                
+                // Basic validation
+                if (!requirementTitle || !requirementCity) {
+                    alert('Please fill in all required fields (Title and City).');
+                    return;
+                }
+
+                // Validate products
+                const productCards = document.querySelectorAll('.product-card');
+                let isValid = true;
+                const products = [];
+
+                productCards.forEach(card => {
+                    const productName = card.querySelector('.product-name').value.trim();
+                    const quantity = card.querySelector('.product-quantity').value.trim();
+                    const unit = card.querySelector('.product-unit').value.trim();
+                    
+                    if (!productName || !quantity || !unit) {
+                        isValid = false;
+                        return;
+                    }
+
+                    products.push({
+                        id: card.getAttribute('data-product-id') || '',
+                        productName: productName,
+                        brand: card.querySelector('.product-brand').value.trim(),
+                        material: card.querySelector('.product-material').value.trim(),
+                        prodType: card.querySelector('.product-type').value.trim(),
+                        quantity: quantity,
+                        unit: unit,
+                        minDec: card.querySelector('.product-min-reserve').value.trim(),
+                        minimumReserve: card.querySelector('.product-min-reserve').value.trim(),
+                        description: card.querySelector('.product-description').value.trim()
+                    });
+                });
+
+                if (!isValid) {
+                    alert('Please fill in all required fields for each product (Name, Quantity, and Unit).');
+                    return;
+                }
+
+                if (products.length === 0) {
+                    alert('Please add at least one product.');
+                    return;
+                }
+
+                // Prepare data
+                const requirementData = {
+                    {% if requirement is defined %}requirementId: '{{ requirement.key }}',{% endif %}
+                    title: requirementTitle,
+                    description: document.getElementById('requirementDescription').value.trim(),
+                    city: requirementCity,
+                    targetPrice: document.getElementById('requirementTargetPrice').value.trim(),
+                    expireDate: document.getElementById('requirementExpireDate').value,
+                    products: products
+                };
+
+                // Show loading
+                const saveBtn = document.getElementById('saveRequirementBtn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Saving...</span>';
+                saveBtn.disabled = true;
+
+                // Send request
+                fetch('/account/save-requirement-manual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requirementData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Requirement saved successfully!');
+                        window.location.href = '/account/Requirements';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred while saving the requirement.');
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                });
+            });
+
+            // Initialize product numbers
+            updateProductNumbers();
+        });
+    </script>
+
+    <style>
+        /* Modern Design System */
+        :root {
+            --primary-color: #00A79D;
+            --primary-hover: #00A79D;
+            --success-color: #10b981;
+            --success-hover: #059669;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --secondary-color: #6b7280;
+            --secondary-hover: #4b5563;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --border-color: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+
+        #manualBoqEditor {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Modern Card Styles */
+        .modern-card {
+            background: var(--card-background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .modern-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon {
+            width: 3rem;
+            height: 3rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .header-text h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-text p {
+            margin: 0.25rem 0 0 0;
+            opacity: 0.9;
+            font-size: 0.875rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Modern Form Styles */
+        .modern-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modern-form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modern-form-row .col-md-6 {
+            flex: 1;
+        }
+
+        .modern-form-row .col-md-4 {
+            flex: 1;
+        }
+
+        .modern-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .modern-label i {
+            color: var(--primary-color);
+            width: 1rem;
+        }
+
+        .modern-input, .modern-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--card-background);
+            color: var(--text-primary);
+        }
+
+        .modern-input:focus, .modern-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .modern-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Modern Button Styles */
+        .modern-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .modern-btn:hover::before {
+            left: 100%;
+        }
+
+        .modern-btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            color: white;
+        }
+
+        .modern-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modern-btn-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, var(--success-hover) 100%);
+            color: white;
+        }
+
+        .modern-btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modern-btn-danger {
+            background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-hover) 100%);
+            color: white;
+        }
+
+        .modern-btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modern-btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-hover) 100%);
+            color: white;
+        }
+
+        .modern-btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modern-btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        .modern-btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        /* Product Card Styles */
+        .modern-product-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modern-product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .product-info h4 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .product-info p {
+            margin: 0.25rem 0 0 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Action Buttons */
+        .modern-action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+
+        /* Required Field Indicator */
+        .required {
+            color: var(--danger-color);
+            font-weight: 700;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .modern-form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .product-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .modern-action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .modern-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #manualBoqEditor {
+                padding: 0 0.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Focus States */
+        .modern-input:focus,
+        .modern-textarea:focus {
+            transform: translateY(-1px);
+        }
+
+        /* Hover Effects */
+        .modern-product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Smooth Transitions */
+        * {
+            transition: all 0.3s ease;
+        }
+    </style>
+{% endblock %}

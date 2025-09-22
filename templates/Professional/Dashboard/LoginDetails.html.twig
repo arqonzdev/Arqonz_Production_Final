@@ -1,0 +1,150 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+<div class="dashboard-projects">
+    <span>
+        <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span>
+        <span class="breadcrumb-divider">></span>
+        <span class="Breadcrumb-nonactive"><a href="{{ path('admin_login_logs') }}">Login Logs</a></span>
+        <span class="breadcrumb-divider">></span>
+        <span class="Breadcrumb-active">Session Details</span>
+    </span>
+</div>
+<div class="line-8"></div>
+
+<div class="dashboard-container" style="flex-direction: column;">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Session Overview</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">User:</dt>
+                        <dd class="col-sm-8">
+                            {% if log.getUser() %}
+                                {{ log.getUser().getFirstname() }} {{ log.getUser().getLastname() }}
+                                <br><small>{{ log.getUser().getEmail() }}</small>
+                            {% else %}
+                                User deleted
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4">Login Time:</dt>
+                        <dd class="col-sm-8">
+                            {% if log.getLoginTime() %}
+                                {% set istTimezone = 'Asia/Kolkata' %}
+                                {{ log.getLoginTime().setTimezone(istTimezone).format('d M Y H:i:s') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4">Logout Time:</dt>
+                        <dd class="col-sm-8">{{ log.getLogoutTime() ? log.getLogoutTime().format('d M Y H:i:s') : 'Session still active' }}</dd>
+                        
+                        <dt class="col-sm-4">Duration:</dt>
+                        <dd class="col-sm-8">
+                            {% if log.getLogoutTime() %}
+                                {{ log.getLoginTime().diff(log.getLogoutTime())|date('%H:%I:%S') }}
+                            {% else %}
+                                Still active
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">IP Address:</dt>
+                        <dd class="col-sm-8">{{ log.getIpAddress() }}</dd>
+                        
+                        <dt class="col-sm-4">Device:</dt>
+                        <dd class="col-sm-8">
+                            {% set userAgent = log.getUserAgent() %}
+                            {% if 'Mobile' in userAgent %}
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                            {% elseif 'Tablet' in userAgent %}
+                                <i class="fas fa-tablet-alt"></i> Tablet
+                            {% else %}
+                                <i class="fas fa-desktop"></i> Desktop
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4">User Agent:</dt>
+                        <dd class="col-sm-8"><small>{{ log.getUserAgent() }}</small></dd>
+                        
+                        <dt class="col-sm-4">Session ID:</dt>
+                        <dd class="col-sm-8"><small>{{ log.getSessionId() }}</small></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Page Views ({{ pageViews|length }})</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Time</th>
+                            <th>Page Title</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for view in pageViews %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ view.timestamp }}</td>
+                                <td>{{ view.title }}</td>
+                                <td><small>{{ view.url }}</small></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No page views recorded</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ path('admin_login_logs') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Login Logs
+        </a>
+    </div>
+</div>
+
+<style>
+    .card {
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px 20px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    dt {
+        font-weight: 600;
+    }
+    dd {
+        margin-bottom: 10px;
+    }
+    .card-body {
+        background: #fff;
+    }
+</style>
+{% endblock %}
