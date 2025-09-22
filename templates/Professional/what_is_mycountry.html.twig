@@ -1,0 +1,389 @@
+
+
+{% block title %}What is My Country - Location Detection{% endblock %}
+
+{% block content %}
+<div class="location-detector-container">
+    <div class="location-header">
+        <h1>🌍 What is My Country?</h1>
+        <p class="location-subtitle">We've detected your location based on your IP address</p>
+    </div>
+
+    {% if locationData.error %}
+        <div class="alert alert-warning">
+            <h4>⚠️ Detection Issue</h4>
+            <p>{{ locationData.error }}</p>
+            <p><strong>Your IP:</strong> {{ locationData.ip }}</p>
+        </div>
+    {% else %}
+        <div class="location-results">
+            <div class="location-card main-location">
+                <div class="location-icon">
+                    {% if locationData.countryCode %}
+                        <div class="country-flag">
+                            {{ locationData.countryCode|upper }}
+                        </div>
+                    {% else %}
+                        🌍
+                    {% endif %}
+                </div>
+                <div class="location-info">
+                    <h2>{{ locationData.country }}</h2>
+                    {% if locationData.city != 'Unknown' %}
+                        <h3>📍 {{ locationData.city }}</h3>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="location-details">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">🌐 Your IP Address</div>
+                        <div class="detail-value">{{ locationData.ip }}</div>
+                    </div>
+                    
+                    {% if locationData.countryCode %}
+                    <div class="detail-item">
+                        <div class="detail-label">🏳️ Country Code</div>
+                        <div class="detail-value">{{ locationData.countryCode }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if locationData.region and locationData.region != 'Unknown' %}
+                    <div class="detail-item">
+                        <div class="detail-label">🗺️ Region/State</div>
+                        <div class="detail-value">{{ locationData.region }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if locationData.timezone and locationData.timezone != 'Unknown' %}
+                    <div class="detail-item">
+                        <div class="detail-label">⏰ Timezone</div>
+                        <div class="detail-value">{{ locationData.timezone }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if locationData.isp and locationData.isp != 'Unknown' %}
+                    <div class="detail-item">
+                        <div class="detail-label">🌐 Internet Service Provider</div>
+                        <div class="detail-value">{{ locationData.isp }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="location-actions">
+                <button onclick="refreshLocation()" class="btn btn-primary refresh-btn">
+                    🔄 Refresh Location
+                </button>
+               
+            </div>
+        </div>
+    {% endif %}
+
+    
+</div>
+
+<style>
+.location-detector-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.location-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.location-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.location-subtitle {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.location-results {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    color: white;
+}
+
+.location-card.main-location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.location-icon {
+    margin-right: 25px;
+    font-size: 4rem;
+}
+
+.country-flag {
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.location-info h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.location-info h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.location-details {
+    margin-bottom: 30px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.detail-item {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.detail-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.location-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.btn-primary:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+.location-info-box {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    border-left: 5px solid #3498db;
+}
+
+.location-info-box h4 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.location-info-box ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.location-info-box li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.privacy-note {
+    background: #e8f4f8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 0.95rem;
+    border: 1px solid #bee5eb;
+}
+
+.alert {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.alert h4 {
+    margin-top: 0;
+    color: #856404;
+}
+
+.alert p {
+    margin-bottom: 10px;
+    color: #856404;
+}
+
+.alert p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .location-detector-container {
+        padding: 15px;
+    }
+    
+    .location-header h1 {
+        font-size: 2rem;
+    }
+    
+    .location-card.main-location {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .location-icon {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .location-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+function refreshLocation() {
+    const refreshBtn = document.querySelector('.refresh-btn');
+    const originalText = refreshBtn.innerHTML;
+    
+    refreshBtn.innerHTML = '<span class="loading"></span>Refreshing...';
+    refreshBtn.disabled = true;
+    
+    // Reload the page to refresh location data
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
+function shareLocation() {
+    const locationText = `🌍 My location: {{ locationData.country }}{% if locationData.city != 'Unknown' %}, {{ locationData.city }}{% endif %} (IP: {{ locationData.ip }})`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'My Location Detection',
+            text: locationText,
+            url: window.location.href
+        }).catch(console.error);
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(locationText).then(() => {
+            const shareBtn = document.querySelector('.share-btn');
+            const originalText = shareBtn.innerHTML;
+            shareBtn.innerHTML = '✅ Copied!';
+            setTimeout(() => {
+                shareBtn.innerHTML = originalText;
+            }, 2000);
+        }).catch(() => {
+            // Fallback: show alert with the text
+            alert('Your location info:\n' + locationText);
+        });
+    }
+}
+
+// Add some entrance animations
+document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.location-card, .detail-item, .location-actions, .location-info-box');
+    elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

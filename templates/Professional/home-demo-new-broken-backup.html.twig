@@ -1,0 +1,2420 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{# {% do pimcore_head_link().appendStylesheet('/static/css/arqonz_custom.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz-home.css') %} #}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% do pimcore_head_link().appendStylesheet('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css') %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+{% form_theme form1 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+    {# <script src="https://unpkg.com/lenis@1.0.45-dev.0/dist/lenis.min.js"></script>  #}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/home.js" preload></script>
+    
+    {# <script src="static/js/lenis-script.js" preload></script> #}
+
+<br>
+<br>
+    <!-- Modern Hero Section -->
+    <section class="modern-hero-section">
+        <div class="container-fluid px-0">
+            <div class="row g-0 min-vh-100">
+                <!-- Content Column -->
+                <div class="col-lg-6 d-flex align-items-center">
+                    <div class="hero-content px-4 px-lg-5 py-5">
+                        <div class="hero-badge mb-4">
+                            <span class="badge bg-primary bg-gradient px-3 py-2 rounded-pill">
+                                <i class="fas fa-star me-2"></i>India's First Construction SaaS
+                            </span>
+        </div>
+
+                        <h1 class="hero-title display-3 fw-bold mb-4">
+                            AI-Powered Construction Deals.
+                            <span class="text-primary d-block">No Delays. Just Decisions</span>
+                        </h1>
+                        
+                        <p class="hero-description lead mb-5 text-muted">
+                            Arqonz is a smart construction platform and digital procurement solution that connects 
+                            contractors, suppliers through one unified interface. It simplifies vendor onboarding 
+                            with a robust vendor verification platform, enables real-time project tracking, 
+    and streamlines material sourcing through tools like BOQ software, rate analysis, and AI estimation tools. 
+                        </p>
+                        
+                        <!-- Features Grid -->
+                        <div class="row g-3 mb-5">
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center p-3 rounded-3 bg-light">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-bolt text-primary fs-4"></i>
+                </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-semibold">Instant BOM Quotes</h6>
+                                        <small class="text-muted">Bill of Materials</small>
+                </div>
+                </div>
+                </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center p-3 rounded-3 bg-light">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-robot text-primary fs-4"></i>
+            </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-semibold">AQIQ AI Chatbot</h6>
+                                        <small class="text-muted">Smart Questions</small>
+                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center p-3 rounded-3 bg-light">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-handshake text-primary fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-semibold">E-Negotiations</h6>
+                                        <small class="text-muted">Digital Deals</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center p-3 rounded-3 bg-light">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-sync-alt text-primary fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-semibold">Complete Workflow</h6>
+                                        <small class="text-muted">Discover-Match-Evaluate-Transact</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- CTA Buttons -->
+                        <div class="hero-cta d-flex flex-column flex-sm-row gap-3">
+                            <a href="https://arqonz.in/about-us" class="btn btn-primary btn-lg px-4 py-3 rounded-pill">
+                                <i class="fas fa-arrow-right me-2"></i>Explore Platform
+                            </a>
+                            <a href="#enterpriseSolutionsSection" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
+                                <i class="fas fa-play me-2"></i>Watch Demo
+                            </a>
+                        </div>
+        </div>
+    </div>
+                
+                <!-- Image Column -->
+                <div class="col-lg-6 d-flex align-items-center justify-content-center position-relative">
+                    <div class="hero-image-container p-4">
+                        <div class="hero-image-wrapper position-relative">
+                            <img src="/static/images/India-First.jpeg" alt="India's First Construction SaaS Company" 
+                                 class="img-fluid rounded-4 shadow-lg">
+                            <div class="hero-image-overlay position-absolute top-0 start-0 w-100 h-100 rounded-4"
+                                 style="background: linear-gradient(135deg, rgba(0, 167, 157, 0.1) 0%, rgba(0, 151, 167, 0.1) 100%);"></div>
+                        </div>
+                        
+                        <!-- Floating Stats -->
+                        <div class="floating-stats position-absolute">
+                            <div class="stat-card bg-white rounded-4 shadow-lg p-3 mb-3" style="top: 10%; right: -10%;">
+                                <div class="d-flex align-items-center">
+                                    <div class="stat-icon bg-primary bg-gradient rounded-circle p-2 me-3">
+                                        <i class="fas fa-users text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 fw-bold text-primary">80k+</h5>
+                                        <small class="text-muted">Products</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card bg-white rounded-4 shadow-lg p-3" style="bottom: 20%; left: -10%;">
+                                <div class="d-flex align-items-center">
+                                    <div class="stat-icon bg-success bg-gradient rounded-circle p-2 me-3">
+                                        <i class="fas fa-building text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 fw-bold text-success">15k+</h5>
+                                        <small class="text-muted">Projects</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Modern Hero Section Styles */
+        .modern-hero-section {
+            background: linear-gradient(135deg, #f8fffe 0%, #f0fdfa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modern-hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%2300A79D" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%230097A7" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%2300A79D" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="%230097A7" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            color: #1a1a1a;
+            line-height: 1.2;
+        }
+        
+        .hero-badge .badge {
+            background: linear-gradient(135deg, #00A79D 0%, #0097A7 100%) !important;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .feature-item {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 167, 157, 0.1);
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 167, 157, 0.15);
+            border-color: rgba(0, 167, 157, 0.2);
+        }
+        
+        .hero-image-container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .floating-stats {
+            z-index: 3;
+        }
+        
+        .stat-card {
+            animation: float 6s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:nth-child(2) {
+            animation-delay: -3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00A79D 0%, #0097A7 100%);
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0097A7 0%, #00838F 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 167, 157, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid #00A79D;
+            color: #00A79D;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #00A79D;
+            border-color: #00A79D;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 167, 157, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .hero-title {
+                font-size: 2.5rem !important;
+            }
+            
+            .floating-stats {
+                display: none;
+            }
+            
+            .hero-cta {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .hero-title {
+                font-size: 2rem !important;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+            }
+            
+            .feature-item {
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* Header Styles */
+        .DashboardRow {
+            position: fixed;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 167, 157, 0.1);
+            z-index: 1000;
+        }
+        
+        .HeroSearch {
+            border: 0px !important;
+        }
+        
+        .menuopen img {
+            filter: invert(1);
+        }
+        
+        .menuclose img {
+            filter: invert(1);
+        }
+        
+        @media (max-width: 724px) {
+            .Parent-Menu > li > a {
+                color: #000 !important;
+            }
+            .SlideTextContent h2 {
+                font-size: 42px;
+                line-height: 3.6rem;
+            }
+            .HeroSearch {
+                display: none;
+            }
+        }
+    </style>
+    
+    <div id="X"></div>
+    <div id="Y"></div>
+
+
+    <!-- New Products Hero Section -->
+
+    <!-- Modern Enterprise Solutions Section -->
+    <section class="modern-enterprise-section py-5" id="enterpriseSolutionsSection">
+        <div class="container">
+            <!-- Modern Stats Banner -->
+            <div class="modern-stats-banner rounded-4 p-4 p-lg-5 mb-5 position-relative overflow-hidden">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="stats-content">
+                            <h2 class="stats-title display-5 fw-bold text-white mb-3">
+                                Discover a vast array of solutions customized for your enterprise requirements
+                            </h2>
+                            <p class="stats-subtitle text-white-50 lead mb-0">
+                                Join thousands of professionals who trust Arqonz for their construction needs
+                            </p>
+            </div>
+                </div>
+                    <div class="col-lg-4">
+                        <div class="stats-grid">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="stat-card-modern text-center p-3 rounded-3 bg-white bg-opacity-10 backdrop-blur">
+                                        <div class="stat-number-modern display-6 fw-bold text-white mb-1">80k+</div>
+                                        <div class="stat-label-modern text-white-50 small">Products</div>
+                </div>
+                </div>
+                                <div class="col-6">
+                                    <div class="stat-card-modern text-center p-3 rounded-3 bg-white bg-opacity-10 backdrop-blur">
+                                        <div class="stat-number-modern display-6 fw-bold text-white mb-1">15k+</div>
+                                        <div class="stat-label-modern text-white-50 small">Projects</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-card-modern text-center p-3 rounded-3 bg-white bg-opacity-10 backdrop-blur">
+                                        <div class="stat-number-modern display-6 fw-bold text-white mb-1">200+</div>
+                                        <div class="stat-label-modern text-white-50 small">Professionals</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="stat-card-modern text-center p-3 rounded-3 bg-white bg-opacity-10 backdrop-blur">
+                                        <div class="stat-number-modern display-6 fw-bold text-white mb-1">10k+</div>
+                                        <div class="stat-label-modern text-white-50 small">Suppliers</div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+
+                <!-- Background Elements -->
+                <div class="stats-bg-elements position-absolute top-0 start-0 w-100 h-100">
+                    <div class="bg-circle position-absolute rounded-circle" style="width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); top: -50px; right: -50px;"></div>
+                    <div class="bg-circle position-absolute rounded-circle" style="width: 150px; height: 150px; background: rgba(255, 255, 255, 0.05); bottom: -30px; left: -30px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Product Categories Grid -->
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="section-header text-center mb-5">
+                        <h2 class="section-title display-5 fw-bold mb-3">Explore Our Product Categories</h2>
+                        <p class="section-subtitle lead text-muted">Find everything you need for your construction projects</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/TMT-Steel-Bars" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/structural-steel.png" alt="Structural Steel" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Structural Steel</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Bricks-&-Blocks" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/bricks-blocks.png" alt="Bricks & Blocks" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Bricks & Blocks</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Cement" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/Cement-prod.png" alt="Cement" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Cement</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Wooden-Products" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/plywood-prod.png" alt="Plywood" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Plywood</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Tiles" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/tiles-cat.png" alt="Tiles" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Tiles</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/bathroom-accessories" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/sanitaryware.png" alt="Sanitaryware" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Sanitaryware</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Electricals" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/electricals-cat.png" alt="Electricals" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                    </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Electricals</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="/categories/Plumbing" class="modern-category-card text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="category-image-container position-relative">
+                                <img src="/static/images/homeimgs/plumbing-prods.png" alt="Plumbing" class="card-img-top">
+                                <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right text-white fs-3 opacity-0"></i>
+                                </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-bold mb-2">Plumbing</h5>
+                                <p class="card-text text-muted small mb-0">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill">20k+ Products</span>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern View All Button -->
+        <div class="container text-center mt-5">
+            <a href="/products" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
+                <i class="fas fa-arrow-right me-2"></i>View All Products
+            </a>
+        </div>
+    </section>
+
+    <style>
+        /* Modern Enterprise Section Styles */
+        .modern-enterprise-section {
+            background: linear-gradient(135deg, #f8fffe 0%, #f0fdfa 100%);
+            position: relative;
+        }
+        
+        .modern-stats-banner {
+            background: linear-gradient(135deg, #00A79D 0%, #0097A7 100%);
+            box-shadow: 0 20px 40px rgba(0, 167, 157, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stats-title {
+            line-height: 1.2;
+        }
+        
+        .stat-card-modern {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-card-modern:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .backdrop-blur {
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Modern Category Cards */
+        .modern-category-card {
+            transition: all 0.3s ease;
+        }
+        
+        .modern-category-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .modern-category-card .card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 167, 157, 0.1);
+        }
+        
+        .modern-category-card:hover .card {
+            box-shadow: 0 20px 40px rgba(0, 167, 157, 0.15) !important;
+            border-color: rgba(0, 167, 157, 0.2);
+        }
+        
+        .category-image-container {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .category-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        
+        .modern-category-card:hover .category-image-container img {
+            transform: scale(1.1);
+        }
+        
+        .category-overlay {
+            background: linear-gradient(135deg, rgba(0, 167, 157, 0.8) 0%, rgba(0, 151, 167, 0.8) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .modern-category-card:hover .category-overlay i {
+            opacity: 1 !important;
+        }
+        
+        .section-title {
+            color: #1a1a1a;
+        }
+        
+        .section-subtitle {
+            color: #6c757d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .stats-title {
+                font-size: 2rem !important;
+            }
+            
+            .stat-number-modern {
+                font-size: 2.5rem !important;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .stats-title {
+                font-size: 1.75rem !important;
+            }
+            
+            .stat-number-modern {
+                font-size: 2rem !important;
+            }
+            
+            .category-image-container {
+                height: 150px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .modern-stats-banner {
+                padding: 2rem 1.5rem !important;
+            }
+            
+            .stats-title {
+                font-size: 1.5rem !important;
+            }
+            
+            .stat-card-modern {
+                padding: 1rem !important;
+            }
+            
+            .stat-number-modern {
+                font-size: 1.75rem !important;
+            }
+        }
+    </style>
+
+    <!-- Products Hero Section Ends -->
+
+
+  
+
+    <style>
+        /* Modern Hero Slides Section Styles */
+        .modern-hero-slides-section {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-slide-container {
+            position: relative;
+        }
+        
+        .slide-background img {
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .slide-overlay {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+        }
+        
+        .slide-title {
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slide-description {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slide-badge .badge {
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-light {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            color: #00A79D;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-light:hover {
+            background: white;
+            color: #0097A7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Carousel Controls */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-control-prev {
+            left: 30px;
+        }
+        
+        .carousel-control-next {
+            right: 30px;
+        }
+        
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Carousel Indicators */
+        .carousel-indicators {
+            bottom: 30px;
+        }
+        
+        .carousel-indicators [data-bs-target] {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            margin: 0 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-indicators .active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 991.98px) {
+            .slide-title {
+                font-size: 2.5rem !important;
+            }
+            
+            .carousel-control-prev,
+            .carousel-control-next {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .carousel-control-prev {
+                left: 20px;
+            }
+            
+            .carousel-control-next {
+                right: 20px;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .slide-title {
+                font-size: 2rem !important;
+            }
+            
+            .slide-description {
+                font-size: 1rem;
+            }
+            
+            .slide-cta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .slide-cta .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .carousel-control-prev,
+            .carousel-control-next {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .slide-title {
+                font-size: 1.75rem !important;
+            }
+            
+            .slide-badge .badge {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+    
+    <!-- Modern Hero Slides Section -->
+    <section class="modern-hero-slides-section">
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            
+            <div class="carousel-inner">
+                <!-- Slide 1: Professionals -->
+                <div class="carousel-item active">
+                    <div class="hero-slide-container position-relative min-vh-100 d-flex align-items-center">
+                        <div class="slide-background position-absolute top-0 start-0 w-100 h-100">
+                            <img src="/static/images/HeroSlide-Images/build-beyond-boundaries.png" alt="Build Beyond Boundaries" class="w-100 h-100 object-fit-cover">
+                            <div class="slide-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+                        </div>
+                        
+                        <div class="container position-relative z-3">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 text-center text-white">
+                                    <div class="slide-badge mb-4">
+                                        <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 rounded-pill">
+                                            <i class="fas fa-users me-2"></i>For Professionals
+                                        </span>
+                                    </div>
+                                    
+                                    <h2 class="slide-title display-3 fw-bold mb-4">
+                                        Build Faster, Smarter, and Stress-Free
+                                    </h2>
+                                    
+                                    <p class="slide-description lead mb-5 opacity-90">
+                                        Get instant quotations, smart calculators, and AI tools to manage projects, materials, and clients — all in one platform.
+                                        <br><strong>All this, at less than the cost of your Netflix monthly subscription.</strong>
+                                    </p>
+                                    
+                                    <div class="slide-cta">
+                                        <a href="/account/register" class="btn btn-light btn-lg px-5 py-3 rounded-pill me-3">
+                                            <i class="fas fa-rocket me-2"></i>Get Started
+                                        </a>
+                                        <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                                            <i class="fas fa-play me-2"></i>Learn More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 2: Suppliers -->
+                <div class="carousel-item">
+                    <div class="hero-slide-container position-relative min-vh-100 d-flex align-items-center">
+                        <div class="slide-background position-absolute top-0 start-0 w-100 h-100">
+                            <img src="/static/images/HeroSlide-Images/AQ-IQ-Chatbot-Slide.png" alt="AI Chatbot" class="w-100 h-100 object-fit-cover">
+                            <div class="slide-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+                        </div>
+                        
+                        <div class="container position-relative z-3">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 text-center text-white">
+                                    <div class="slide-badge mb-4">
+                                        <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 rounded-pill">
+                                            <i class="fas fa-store me-2"></i>For Suppliers & Manufacturers
+                                        </span>
+                                    </div>
+                                    
+                                    <h2 class="slide-title display-3 fw-bold mb-4">
+                                        Connect Directly with Active Buyers in Construction
+                                    </h2>
+                                    
+                                    <p class="slide-description lead mb-5 opacity-90">
+                                        Showcase your products to verified professionals like Architects and designers, get eNegotiation requests, and close more deals — on the first dedicated digital marketplace built just for construction.
+                                        <br><strong>All this, for less than your monthly fuel cost to meet customers.</strong>
+                                    </p>
+                                    
+                                    <div class="slide-cta">
+                                        <a href="/account/register" class="btn btn-light btn-lg px-5 py-3 rounded-pill me-3">
+                                            <i class="fas fa-handshake me-2"></i>Join Marketplace
+                                        </a>
+                                        <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                                            <i class="fas fa-info-circle me-2"></i>Learn More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 3: Consumers -->
+                <div class="carousel-item">
+                    <div class="hero-slide-container position-relative min-vh-100 d-flex align-items-center">
+                        <div class="slide-background position-absolute top-0 start-0 w-100 h-100">
+                            <img src="/static/images/HeroSlide-Images/VR-AR.png" alt="VR AR Technology" class="w-100 h-100 object-fit-cover">
+                            <div class="slide-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+                        </div>
+                        
+                        <div class="container position-relative z-3">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 text-center text-white">
+                                    <div class="slide-badge mb-4">
+                                        <span class="badge bg-white bg-opacity-20 text-white px-3 py-2 rounded-pill">
+                                            <i class="fas fa-home me-2"></i>For Consumers
+                                        </span>
+                                    </div>
+                                    
+                                    <h2 class="slide-title display-3 fw-bold mb-4">
+                                        Plan your house the smart way. From Dream to Done
+                                    </h2>
+                                    
+                                    <p class="slide-description lead mb-5 opacity-90">
+                                        Estimate costs, find skilled professionals, and plan your project with clarity and confidence.
+                                        <br><strong>All this convenience — for less than a popcorn at the movies.</strong>
+                                    </p>
+                                    
+                                    <div class="slide-cta">
+                                        <a href="/account/register" class="btn btn-light btn-lg px-5 py-3 rounded-pill me-3">
+                                            <i class="fas fa-home me-2"></i>Start Planning
+                                        </a>
+                                        <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                                            <i class="fas fa-calculator me-2"></i>Try Calculator
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client Carousel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <style>
+   body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: whitesmoke;
+    }
+
+    .products-section {
+      padding: 15px 10px;
+      text-align: center;
+    }
+
+    .products-section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .swiper {
+      padding: 5px 0;
+    }
+
+    .swiper-slide {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      width: 160px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+
+    .product-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #222;
+    }
+
+    .product-desc {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      background-color: white;
+      color: black;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+ 
+
+
+
+
+<section class="products-section">
+  <h2>Explore Our Trusted Clients in the Construction Ecosystem</h2>
+
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+
+      <!-- Slide 1 -->
+      <div class="swiper-slide">
+        <img src="/static/images/Merino.jpg" alt="Cement" class="product-img">
+        <div class="product-title">MERINO</div>
+        <div class="product-desc">Merino laminates for homes</div>
+      </div>
+
+
+           <div class="swiper-slide">
+        <img src="/static/images/Hettich.jpg" alt="Cement" class="product-img">
+        <div class="product-title">HETTICH MAGIC LIGHTS</div>
+        <div class="product-desc">Illuminating Your Space with Elegance</div>
+      </div>
+
+
+        <div class="swiper-slide">
+        <img src="/static/images/Bombay.jpg" alt="Cement" class="product-img">
+        <div class="product-title">BOMBAY DECORATIVES</div>
+        <div class="product-desc">Timeless Elegance for Your Home</div>
+      </div>
+
+
+       <div class="swiper-slide">
+        <img src="/static/images/Roca.jpg" alt="Cement" class="product-img">
+        <div class="product-title">ROCA</div>
+        <div class="product-desc">Innovating Bathroom Spaces</div>
+      </div>
+
+
+      <div class="swiper-slide">
+        <img src="/static/images/Fab.jpg" alt="Cement" class="product-img">
+        <div class="product-title">MERINO FAB WOOD</div>
+        <div class="product-desc">Redefining Surfaces with Innovation</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/dor.jpg" alt="Cement" class="product-img">
+        <div class="product-title">DORSET</div>
+        <div class="product-desc">Building Excellence</div>
+      </div>
+
+
+        <div class="swiper-slide">
+        <img src="/static/images/century.jpg" alt="Cement" class="product-img">
+        <div class="product-title">CENTURY PLY</div>
+        <div class="product-desc">India's Most Trusted Plywood Brand</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/green.jpg" alt="Cement" class="product-img">
+        <div class="product-title">GREEN PLY</div>
+        <div class="product-desc">Pioneering Sustainable Wood Solutions</div>
+      </div>
+
+       <div class="swiper-slide">
+        <img src="/static/images/Tes.jpg" alt="Cement" class="product-img">
+        <div class="product-title">CENTURY LAMINATES</div>
+        <div class="product-desc">Premium Decorative Surfaces</div>
+      </div>
+
+
+       <div class="swiper-slide">
+        <img src="/static/images/Lam.jpg" alt="Cement" class="product-img">
+        <div class="product-title">GREENLAM LAMINATES</div>
+        <div class="product-desc">Premium Surfaces for Modern Living & Design</div>
+      </div>
+
+
+       <div class="swiper-slide">
+        <img src="/static/images/catalano.jpg" alt="Cement" class="product-img">
+        <div class="product-title">CATALANO</div>
+        <div class="product-desc">Premium ceramic bathroom solutions</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/fan.jpg" alt="Cement" class="product-img">
+        <div class="product-title">FANTINI</div>
+        <div class="product-desc">Elegant Italian faucets blending design</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/kohler.jpg" alt="Cement" class="product-img">
+        <div class="product-title">KOHLER</div>
+        <div class="product-desc">Stylish and innovative bathroom and kitchen solutions</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/axor.jpg" alt="Cement" class="product-img">
+        <div class="product-title">AXOR</div>
+        <div class="product-desc">Luxury bathroom fittings crafted</div>
+      </div>
+
+       <div class="swiper-slide">
+        <img src="/static/images/Grohe.jpg" alt="Cement" class="product-img">
+        <div class="product-title">GROHE</div>
+        <div class="product-desc">German-engineered sanitary fittings</div>
+      </div>
+
+
+       <div class="swiper-slide">
+        <img src="/static/images/mar.jpg" alt="Cement" class="product-img">
+        <div class="product-title">MARC</div>
+        <div class="product-desc">Reliable and durable plumbing solutions</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/kritzle.jpg" alt="Bricks" class="product-img">
+        <div class="product-title">KRITZLE</div>
+        <div class="product-desc">Innovative sanitary solutions</div>
+      </div>
+
+
+         <div class="swiper-slide">
+        <img src="/static/images/cam.jpg" alt="Cement" class="product-img">
+        <div class="product-title">CAMRY</div>
+        <div class="product-desc">Trusted sanitaryware brand</div>
+      </div>
+
+        <div class="swiper-slide">
+        <img src="/static/images/hav.jpg" alt="Cement" class="product-img">
+        <div class="product-title">HAVELLS</div>
+        <div class="product-desc">Leading brand for electrical solutions</div>
+      </div>
+        <div class="swiper-slide">
+        <img src="/static/images/fin.jpg" alt="Cement" class="product-img">
+        <div class="product-title">FINESTA</div>
+        <div class="product-desc">High-performance uPVC windows and doors</div>
+      </div>
+
+       <div class="swiper-slide">
+        <img src="/static/images/eroline.jpg" alt="Cement" class="product-img">
+        <div class="product-title">EROLINE</div>
+        <div class="product-desc">Modern architectural hardware designed</div>
+      </div>
+
+
+       <div class="swiper-slide">
+        <img src="/static/images/asian.jpg" alt="Cement" class="product-img">
+        <div class="product-title">ASIAN PAINTS</div>
+        <div class="product-desc">India’s leading paint company</div>
+      </div>
+
+
+        <div class="swiper-slide">
+        <img src="/static/images/finolex.jpg" alt="Cement" class="product-img">
+        <div class="product-title">FINOLEX PIPES</div>
+        <div class="product-desc">Trusted provider of high-quality plumbing solutions</div>
+      </div>
+
+
+        <div class="swiper-slide">
+        <img src="/static/images/mk.jpg" alt="Cement" class="product-img">
+        <div class="product-title">MK SWITCHES</div>
+        <div class="product-desc">Reliable and stylish electrical switches</div>
+      </div>
+
+        <div class="swiper-slide">
+        <img src="/static/images/roma.jpg" alt="Cement" class="product-img">
+        <div class="product-title">ROMA SWITCHES</div>
+        <div class="product-desc">Elegant and user-friendly switches</div>
+      </div>
+
+       <div class="swiper-slide">
+        <img src="/static/images/orbit.jpg" alt="Cement" class="product-img">
+        <div class="product-title">ORBIT CABLES</div>
+        <div class="product-desc">High-quality wires and cables</div>
+      </div>
+
+      <div class="swiper-slide">
+        <img src="/static/images/parry.jpg" alt="Cement" class="product-img">
+        <div class="product-title">PARRYWARE</div>
+        <div class="product-desc">Smart and stylish bathroom</div>
+      </div>
+
+
+      
+
+
+     
+      <div class="swiper-slide">
+        <img src="/static/images/dale.jpg" alt="Bricks" class="product-img">
+        <div class="product-title">DALE</div>
+        <div class="product-desc">Elevate modern interior design.</div>
+      </div>
+
+
+      <div class="swiper-slide">
+        <img src="/static/images/prime.jpg" alt="Tiles" class="product-img">
+        <div class="product-title">PP PRIME PRO GOLD</div>
+        <div class="product-desc">Premium-grade PVC boards</div>
+      </div>
+
+      
+
+    </div>
+
+    <!-- Navigation arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+</section>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper(".mySwiper", {
+      slidesPerView: 3,
+      spaceBetween: 20,
+      loop: true, // 🔁 Enables infinite loop
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      breakpoints: {
+        0: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const slides = document.querySelectorAll('.HeroSectionSlide');
+            let currentSlide = 0;
+    
+            // Function to play animation
+            function animateSlide(slide) {
+                const slideTextContent = slide.querySelector('.SlideTextContent');
+                const label = slideTextContent.querySelector('.SlideTextlable');
+                const heading = slideTextContent.querySelector('h2');
+                const otherContent = slideTextContent.querySelectorAll('p, .SlideCTAButton');
+    
+                // Reset initial positions for animations
+                gsap.set(label, { y: -30, opacity: 0 });
+                gsap.set(heading, { y: -30, opacity: 0 });
+                gsap.set(otherContent, { y: 30, opacity: 0 });
+    
+                // Animate all elements at the same time
+                gsap.to([label, heading], {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                });
+                gsap.to(otherContent, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                });
+            }
+    
+            // Function to change slides
+            function changeSlide() {
+                // Hide current slide
+                slides[currentSlide].classList.remove('active');
+    
+                // Move to next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+    
+                // Show next slide
+                slides[currentSlide].classList.add('active');
+    
+                // Trigger animation on the new slide
+                animateSlide(slides[currentSlide]);
+            }
+    
+            // Initialize first slide
+            slides[currentSlide].classList.add('active');
+            animateSlide(slides[currentSlide]);
+    
+            // Auto-slide every 5 seconds
+            setInterval(changeSlide, 5000);
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize GSAP ScrollTrigger
+            
+
+            // Change menu link color and logo visibility
+            const menuLinks = document.querySelectorAll('.Parent-Menu > li > a');
+            const LoginLink = document.querySelectorAll('.loginsignUp .login a');
+            const blackLogo = document.getElementById('BlackLogo');
+            const whiteLogo = document.getElementById('WhiteLOGO');
+
+            // Animation to trigger when HeroNewSection is in view
+            ScrollTrigger.create({
+                trigger: ".HeroNewSection",
+                start: "-100px top",
+                end: "bottom top",
+                onEnter: () => {
+                    // Set link color to white
+                    menuLinks.forEach(link => link.style.color = "white");
+                    LoginLink.forEach(link => link.style.color = "white");
+
+                    // Swap logos
+                    blackLogo.style.display = "none";
+                    whiteLogo.style.display = "block";
+                },
+                onLeave: () => {
+                    // Revert to default styles
+                    menuLinks.forEach(link => link.style.color = "");
+                    LoginLink.forEach(link => link.style.color = "");
+                    blackLogo.style.display = "block";
+                    whiteLogo.style.display = "none";
+                },
+                onLeaveBack: () => {
+                    // Revert to default styles when scrolling back
+                    menuLinks.forEach(link => link.style.color = "");
+                    LoginLink.forEach(link => link.style.color = "");
+                    blackLogo.style.display = "block";
+                    whiteLogo.style.display = "none";
+                },
+                onEnterBack: () => {
+                    // Apply white color and logo swap when scrolling back into section
+                    menuLinks.forEach(link => link.style.color = "white");
+                    LoginLink.forEach(link => link.style.color = "white");
+                    blackLogo.style.display = "none";
+                    whiteLogo.style.display = "block";
+                },
+                markers: false // Set to true for debugging, false for production
+            });
+        });
+    </script>
+
+    <!-- <div class="BuilderAwardsSection">
+        <div class="BuilderAwardstext">
+            <p>Architect</br>Builder Awards</p>
+        </div>
+        <div class="BuilderAwardCuntry">
+            <p>DUBAI</p>
+        </div>
+        <div class="BuilderAwardCTA">
+            <a href="https://www.globalarchitectbuilderawards.com/public/awards">REGISTER NOW</a>
+        </div>
+
+        <div class="ImageScrollerSection">
+            <div class="wrapper">
+                <div id="whiteshadeleft"></div>
+                <div id="whiteshaderight"></div>
+                <div class="boxes">
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-1.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-2.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-3.jpeg" alt="">
+                    </div>
+
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-4.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-5.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-6.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-7.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-8.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-9.jpeg" alt="">
+                    </div>
+
+                    <div class="box">
+                        <img src="/static/images/AwardsImages/Scoller-10.jpeg" alt="">
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+            
+        
+        .BuilderAwardsSection {
+            background: #f9f9f9; /* This sets the overlay color */
+            background-image: url(https://arqonz.in/static/images/BestAwardBackgroundImag.png);
+            background-size: 50% auto; /* Ensures the image retains its original width */
+            background-repeat: repeat; /* Repeats the image */
+            background-position: 0% 0%; /* Positions the image at the top-left */
+            background-blend-mode: overlay; /* Applies the overlay effect */
+            padding: 76px 10px 0px 10px;
+        }
+        .BuilderAwardstext {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            font-size: 117px;
+            line-height: 117px;
+        }
+        .BuilderAwardCuntry {
+            display: flex;
+            justify-content: center;
+        }
+        .BuilderAwardCuntry p {
+            text-align: center;
+            font-family: "Bebas Neue";
+            font-size: 64px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 90%;
+            letter-spacing: 22.08px;
+            background: var(--Gradien1, linear-gradient(90deg, #FF6F9A 0%, #FF6E99 0.01%, #E33A19 100%));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .BuilderAwardCTA {
+            display: flex;
+            justify-content: center;
+            padding: 14px 0px;
+        }
+        .BuilderAwardCTA a {
+            color: var(--Primary-color, #1D1D1D);
+            font-family: "Bebas Neue";
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-decoration-line: underline;
+            text-decoration-style: solid;
+            text-decoration-skip-ink: auto;
+            text-decoration-thickness: auto;
+            text-underline-offset: auto;
+            text-underline-position: from-font;
+            padding: 13px 113px;
+            background: #DB3A1C;
+        }
+
+        /* Box Scroller */
+        .ImageScrollerSection {
+            display: flex;
+            justify-content: center;
+        }
+        .wrapper {
+            width: 1137px; /* Adjusted for 4 boxes of 200px each */
+            height: 25rem;
+            position: relative;
+            margin: 50px 0px;
+            overflow: hidden;
+            border-radius: 30px;
+            
+        }
+
+        .box {
+            width: 340px;
+            height: auto;
+            position: absolute;
+            /* background: red; */
+            font-size: 25px;
+            /* line-height: 100px; */
+            /* text-align: center; */
+            display:flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding:20px;
+            border-radius: 30px;
+
+        }
+        .box img {
+            width: 100%;
+        } 
+
+        .boxes {
+            position: relative;
+            left: -340px;
+            display:flex;
+            gap:10px;
+        }
+        /* Box Scroller Ends */
+
+        #whiteshadeleft {
+            width: 2rem;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #whiteshaderight {
+            width: 2rem;
+            height: 100%;
+            background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+        }
+
+    </style>
+
+    <script>
+
+        // Initially position each box and apply colors
+        gsap.set(".box", {
+            // backgroundColor: (i) => colors[i % colors.length],
+            x: (i) => i * 340 // Adjusted for 200px width of each box
+        });
+
+        const TestiAnimation = gsap.to(".box", {
+            duration: 4, // Adjusted for smoother movement with larger boxes
+            ease: "none",
+            x: "+=240", // Move each box 800px to the right (width of all 4 boxes)
+            modifiers: {
+                x: gsap.utils.unitize(x => parseFloat(x) % 3400) // Loop within 800px range
+            },
+            repeat: -1,
+            repeatRefresh: true,
+            // repeatDelay: 1
+        });
+
+        // Pause animation on hover
+        document.querySelectorAll('.IFHTestimonialBox').forEach((box) => {
+            box.addEventListener('mouseenter', () => {
+                TestiAnimation.pause(); // Pause the animation
+            });
+
+            box.addEventListener('mouseleave', () => {
+                TestiAnimation.play(); // Resume the animation
+            });
+
+            // Pause on touch for mobile
+            box.addEventListener('touchstart', () => {
+                TestiAnimation.pause(); // Pause the animation
+            });
+
+            box.addEventListener('touchend', () => {
+                TestiAnimation.play(); // Resume the animation
+            });
+        });
+    </script>
+
+    <!-- <div class="BannerHomepag">
+        <img src="/static/images/construction-conclave.jpeg" alt="">
+    </div>
+
+    <style>
+        .BannerHomepag {
+            display: flex;
+            justify-content: center;
+            height: 44rem;
+        }
+        .BannerHomepag img {
+            
+            max-height: 100%;
+        }
+    </style> -->
+
+    <div class="homeheroSection">
+        <div class="heroCircle">
+        {# No Content Needed #}
+        </div>
+        <div class="HeroSectionImage">
+            <img src="/static/images/Arqonz-Dashboard-Preview.png" alt="Arqonz Dashboard Preview">
+        </div>
+        <div class="HeroSectionTextCOntent">
+            <div class="heroTitle">
+                <ul id="titleEffects">
+                    <li>Plan.Procure.Progress</li>
+                    <li>Best Bid Wins</li>
+                    <li>Powering Every Project</li>
+                    <li>Quotes.Leads.Results</li>
+                    <li>Connect.Construct.Grow</li>
+                    <li>Quotes in Seconds.</li>
+                    <li>Smart Tools.Faster Results</li>
+                    <li>Procurement Made Easy</li>
+                    <li>AI Meets Construction</li>
+                    <li>Faster Material Deals</li>
+                    <li>Negotiate Without Noise</li>
+                    <li>Click.Compete.Close</li>
+                    <li>Build With Trust</li>
+                    
+                   
+                    
+                </ul>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const titleList = gsap.utils.toArray('#titleEffects li');
+                        const titlesTl = gsap.timeline({ repeat: -1 });
+
+                        titleList.forEach((element, index) => {
+                            titlesTl.to(element, {
+                                duration: 0.9,
+                                opacity: 1,
+                                
+                                rotationX: 0,
+                                scale: 1, /* Zoom in */
+                                // color: "#FFFFFF", /* Change color on entry */
+                                transformOrigin: 'center',
+                                ease: 'power3.out', /* Smooth easing for entrance */
+                            })
+                            .to(element, {
+                                duration: 0.7,
+                                opacity: 0,
+                                y: 20,
+                                rotationX: -90,
+                                scale: 1, /* Zoom out */
+                                color: "#cecece", /* Transition back to original color */
+                                transformOrigin: 'center',
+                                ease: 'power2.in', /* Subtle exit easing */
+                                delay: 1.5, /* Extended delay to view text longer */
+                            });
+                        });
+                    });
+
+                </script>
+                <!-- <h2>Build Beyond Boundaries.</h2> -->
+               <p>We bring together verified professionals— architects, interior designers,contractors, material suppliers onto a single platform.</br></br>Our mission is simple: to enable seamless collaboration,</br> faster decision-making & smarter building outcomes using technology,</br>data & deep industry insights.</p>
+            </div>
+            <!-- <div class="HeroSearch">
+                <div class="searchoptions">
+                    <div class="SearchCOl1">
+                        <img src="/static/images/icons/Category.svg" alt="Categories">
+                        <select name="profession" id="profession-dropdown">
+                            <option value="Architect">Architect</option>
+                            <option value="Builder">Builder</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Designer">Designer</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Manufacturer">Manufacturer</option>
+                        </select>
+                    </div>
+                    <div class="SearchCOl2">
+                        <input class="pro-search-input" type="text" placeholder="Search">
+                    </div>
+                </div>
+
+                <div class="SearchCOl3">
+                    <button class="pro-search-icon" id="HerosearchButton">Search</button>
+                </div>
+                
+            </div> -->
+
+            </br>
+            </br>
+
+            <div class="frequentlysearched">
+            <p><span class="lable">Frequently Searched: </span> Architects, Builders</p>
+            </div>
+        </div>
+    </div>
+    <div class="HomeProductsSection" id="HomeProductsSection">
+        <div class="HomeProductsWrapper">
+            <div class="ProductsTopSection">
+                <div class="ProductsHeadingSection">
+                    <h2 class="HomeSectiontitle">Products</h2>
+                    <p class="HomeSectionSubtitle">Explore the Products to build your dream project.</p>
+                </div>
+                <a href="https://arqonz.in/products">
+                    <div class="ProductsExplore">
+                        <p>Explore All</p>
+                        <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                    </div>
+                </a>
+            </div>
+
+            <div class="HomeProductsList">
+                <a href="/categories/Cement">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Cement.jpg" class="HomeProductfeaturedImage" alt="Cement">
+                    </div>
+                    <h3 class="HomeProductTitle">Cement</h3>
+                    <p class="HomeProductDesc">Strong building material for construction projects.</p>
+                </div>
+                </a>
+
+                <a href="/categories/Bricks-&-Blocks">
+
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Bricks.jpg" class="HomeProductfeaturedImage" alt="Bricks">
+                    </div>
+                    <h3 class="HomeProductTitle">Bricks</h3>
+                    <p class="HomeProductDesc">Solid blocks for building walls and structures.</p>
+                </div>
+                </a>
+
+                <a href="/categories/TMT-Steel-Bars">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/TMT.jpeg" class="HomeProductfeaturedImage" alt="TMT Bars">
+                    </div>
+                    <h3 class="HomeProductTitle">TMT Bars</h3>
+                    <p class="HomeProductDesc">Reinforcement bars for strong concrete structures.</p>
+                </div>
+                </a>
+
+                <a href="/categories/Tiles">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Tiles.jpg" class="HomeProductfeaturedImage" alt="Tiles">
+                    </div>
+                    <h3 class="HomeProductTitle">Tiles</h3>
+                    <p class="HomeProductDesc">Durable, stylish, versatile flooring for all spaces.</p>
+                </div>
+                </a>
+                
+                <a href="/categories/Wooden-Products">
+                    <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                        <div class="ProdImgCOntainer">
+                            <img src="/static/images/Productimages/Wood.png" class="HomeProductfeaturedImage" alt="Wooden Products">
+                        </div>
+                        <h3 class="HomeProductTitle">Wooden Products</h3>
+                        <p class="HomeProductDesc">Discover high-quality wooden products crafted with precision.</p>
+                    </div>
+                </a>
+
+                
+            </div>
+        </div>
+    </div>
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    <div class="ProfessionalsForYou Architects">
+        <div class="HomeProductsSection">
+            <div class="HomeProductsWrapper">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Architects for you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Architects for your Projects.</p>
+                    </div>
+                    <a href="https://arqonz.in/architects">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for architect in architects|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ architect.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ architect.description|length > 120 ? architect.description|slice(0, 120) ~ '...' : architect.description }} 
+                                        <a href="/architect/portfolio/{{ architect.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = architect.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ architect.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Designers">
+        <div class="HomeProductsSection" style="background: rgba(0, 167, 157, 0.05);">
+            <div class="HomeProductsWrapper" style="background:none;">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Builders For you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Builders for your Projects.</p>
+                    </div>
+                    <a href="/builders">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for builder in builders|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ builder.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ builder.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ builder.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ builder.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ builder.description|length > 120 ? builder.description|slice(0, 120) ~ '...' : builder.description }} 
+                                        <a href="/builder/portfolio/{{ builder.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = builder.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ builder.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="265px" height="171px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Architects">
+        <div class="HomeProductsSection">
+            <div class="HomeProductsWrapper">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Contractors for you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Contractors for your Projects.</p>
+                    </div>
+                    <a href="https://arqonz.in/contractors">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for contractor in contractors|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ contractor.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ contractor.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ contractor.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ contractor.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ contractor.description|length > 120 ? contractor.description|slice(0, 120) ~ '...' : contractor.description }} 
+                                        <a href="/contractor/portfolio/{{ contractor.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = contractor.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ contractor.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Designers">
+        <div class="HomeProductsSection" style="background: rgba(0, 167, 157, 0.05);">
+            <div class="HomeProductsWrapper" style="background:none;">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Interior Designers For you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Designers for your Projects.</p>
+                    </div>
+                    <a href="/designers">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for architect in designers|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ architect.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ architect.description|length > 120 ? architect.description|slice(0, 120) ~ '...' : architect.description }} 
+                                        <a href="/designer/portfolio/{{ architect.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = architect.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ architect.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="265px" height="171px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all the .Professionalfeatured elements
+            const professionalFeaturedItems = document.querySelectorAll('.Professionalfeatured');
+        
+            // Add click event listener to each item
+            professionalFeaturedItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove "FeaturedSelected" class from any element that has it and add "FeaturedUnSelected"
+                    professionalFeaturedItems.forEach(feature => {
+                        feature.classList.remove('FeaturedSelected');
+                        feature.classList.add('FeaturedUnSelected');
+                    });
+        
+                    // Add "FeaturedSelected" class to the clicked element and remove "FeaturedUnSelected"
+                    this.classList.add('FeaturedSelected');
+                    this.classList.remove('FeaturedUnSelected');
+                });
+            });
+        });
+    </script>
+
+
+
+    
+
+
+    
+
+    {# <div class="Arqfooter">
+        <div class="ArqFootercol">
+            <img src="/static/images/Arqonz-NewLOGO.png" class="FooterLogo" alt="">
+            <p>Chennai, India</p>
+            <p>Call us: 0984453895</p>
+        </div>
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">Explore</h3>
+            <div class="FooterLinks">
+                <a class="FooterLink" href="#">Building Materials</a>
+                <a class="FooterLink" href="#">Architects</a>
+                <a class="FooterLink" href="#">Builders</a>
+                <a class="FooterLink" href="#">Engineers</a>
+                <a class="FooterLink" href="#">Interior</a>
+            </div>
+        </div>
+
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">About</h3>
+            <div class="FooterLinks">
+                <a class="FooterLink" href="#">Building Materials</a>
+                <a class="FooterLink" href="#">Architects</a>
+                <a class="FooterLink" href="#">Builders</a>
+                <a class="FooterLink" href="#">Engineers</a>
+                <a class="FooterLink" href="#">Interior</a>
+            </div>
+        </div>
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">Coming Soon</h3>
+            <div class="FooterLinks">
+                <img src="/static/images/download-apple.png" alt="">
+                <img src="/static/images/Download-android.png" alt="">
+            </div>
+        </div>
+    </div> #}
+
+
+
+    
+    
+    {# <div class="loading-container">
+        <!-- Create a progress bar -->
+        <p>Loading the experience</p>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+        <!-- Create a text element to display the percentage -->
+        <p class="loading-text">0%</p>
+    </div>
+    <div id="canvas-container">
+        <div id="animatedtext">
+            <p id="uppertext">Welcome To Arqonz</p>
+            <p id="lowertext">A Better Way To Build</p>
+        </div>
+
+        <div class="overlay-div">
+            <div class="scroll-down">
+                <h3>SCROLL DOWN</h3>
+                <i class="fa-solid fa-down"></i>
+            </div>
+        </div>
+
+        <canvas id="canvasA"></canvas>
+
+    </div> #}
+    
+
+    
+
+{% endblock %}

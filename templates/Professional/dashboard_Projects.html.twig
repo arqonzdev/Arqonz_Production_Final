@@ -1,77 +1,761 @@
 {% extends 'layouts/UserDashboard_layout.html.twig' %}
 
 {% block content %}
-    <div class="dashboard-projects">
-        <span>
-            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Projects</span>
-        </span>
-    </div>
-    <div class="line-8"></div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+<div class="dashboard-projects">
+    <span>
+        <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Projects</span>
+    </span>
+</div>
+<div class="line-8"></div>
 
-    <div class="dashboard-container">
-        <div class="left-column" style="width: 100%; justify-content:center;">
-            <!-- ArchitectProjects -->
-            <div class="projectssection">
-                <div class="dashboardheading-section">
-                    <div class="sectionheading">
-                        <h2>Projects</h2> 
+<div class="dashboard-container">
+    <div class="left-column" style="width: 100%; justify-content:center;">
+        <div class="projectssection">
+            <div class="dashboardheading-section">
+                <div class="sectionheading">
+                    <h2>Projects</h2>
+                    <p class="sectionsubheading">Manage Your Projects.</p> 
+                </div>
+                <div class="DashboardStatsSection">
+                    <div class="totalnumber">
+                        {% if ProProjects |length < 10 %}
+                            <p>0{{ ProProjects |length }}</p>
+                        {% else %}
+                            <p>{{ ProProjects |length }}</p>
+                        {% endif %}    
                     </div>
-                    <div class="DashboardStatsSection">
-                        <div class="totalnumber">
-                            {% if ProProjects |length < 10 %}
-                                <p>0{{ ProProjects |length }}</p>
-                            {% else %}
-                                <p>{{ ProProjects |length }}</p>
-                            {% endif %}    
-                        </div>
-                        <div class="totalnumberLable">
+                    <div class="totalnumberLable">
+                        {% if ProProjects |length < 2 %}
+                            <p>Project</br>Found</p>
+                        {% else %}
                             <p>Projects</br>Found</p>
-                        </div>
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>
+
+            <div class="RequirementsMain">
+                <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                    <a href="/{{ MaincustType|lower }}/portfolio/add-project" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Project
+                    </a>
+                </div>
+
+                <div class="dashboard-controls">
+                    <div class="search-container-new">
+                        <input type="text" id="projectSearch" placeholder="Search projects..." class="search-input">
+                        <i class="fas fa-search search-icon-new"></i>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid" title="Grid View">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="view-btn" data-view="list" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="sort-dropdown">
+                        <select id="sortProjects" class="sort-select">
+                            <option value="date-desc" {% if currentSort == 'date-desc' %}selected{% endif %}>Newest First</option>
+                            <option value="date-asc" {% if currentSort == 'date-asc' %}selected{% endif %}>Oldest First</option>
+                            <option value="name-asc" {% if currentSort == 'name-asc' %}selected{% endif %}>Name (A-Z)</option>
+                            <option value="name-desc" {% if currentSort == 'name-desc' %}selected{% endif %}>Name (Z-A)</option>
+                            <option value="location-asc" {% if currentSort == 'location-asc' %}selected{% endif %}>Location (A-Z)</option>
+                            <option value="location-desc" {% if currentSort == 'location-desc' %}selected{% endif %}>Location (Z-A)</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="DashProjectsListSection" style="flex-wrap: wrap;;">
+                <!-- Modern Card Grid View -->
+                <div class="projects-grid" id="projectsGrid">
                     {% for ProProject in ProProjects %}
-                    <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}">
-                        <div class="Projectssinglecontainer">
-                            <div class="DashprojectfeaturedImg">
+                        <div class="project-card" data-project-name="{{ ProProject.ProjectName() ?: '' }}" data-project-location="{{ ProProject.getLocation() ?: '' }}">
+                            <div class="project-image-container">
                                 {% if ProProject.ProjectGallery is not empty %}
                                     {% set images = ProProject.ProjectGallery.getItems() %}
                                     {% if images|length > 0 %}
-                                        <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="Project Thumbnail">
+                                        <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" 
+                                             alt="{{ ProProject.ProjectName() }}" 
+                                             class="project-image"
+                                             loading="lazy">
+                                    {% else %}
+                                        <div class="project-image-placeholder">
+                                            <i class="fas fa-image"></i>
+                                            <span>No Image</span>
+                                        </div>
                                     {% endif %}
                                 {% else %}
-                                    <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                    <div class="project-image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <span>No Image</span>
+                                    </div>
                                 {% endif %}
-                            </div>
-                            <div class="Dashprojecttitle">
-                                <h3>{{ ProProject.ProjectName() }}</h3>
-                            </div>
-                            <div class="DashprojectLocation">
-                                <div class="pleftcol">
-                                    <img src="/static/icons/locationIcon.svg" alt="Project Location">
-                                    <p>{{ ProProject.getLocation() }}</p>
+                                <div class="project-overlay">
+                                    <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}" class="btn-view">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    <a href="/account/Project/edit/{{ ProProject.getKey() }}" class="btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
                                 </div>
-                                <div class="prightcol">
-                                    <span><a href="/account/Project/edit/{{ ProProject.getKey() }}">Edit</a></span>
+                            </div>
+                            
+                            <div class="project-info">
+                                <div class="project-header">
+                                    <h3 class="project-title">
+                                        <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}">
+                                            {{ ProProject.ProjectName() ?: 'Unnamed Project' }}
+                                        </a>
+                                    </h3>
+                                    <div class="project-id">#{{ ProProject.getKey() }}</div>
                                 </div>
-
+                                
+                                <div class="project-details">
+                                    <div class="project-meta">
+                                        <span class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ ProProject.getLocation() ?: 'Location N/A' }}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="project-date">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ ProProject.getCreationDate()|date('M d, Y') }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </a>
                     {% endfor %}
-                    <div class="addprojectbutton">
-                        <a href="/{{ MaincustType|lower }}/portfolio/add-project">
-                            <img src="/static/icons/addprojectsbtn.svg" alt="">
-                        </a>
-                    </div>
-
                 </div>
 
-            
-            </div> 
-        </div>
+                <!-- List View Table (Hidden by default) -->
+                <div class="projects-table-container" id="projectsTable" style="display: none;">
+                    <table class="requirements-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>ID</th>
+                                <th>Project</th>
+                                <th>Location</th>
+                                <th>Published Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ProProject in ProProjects %}
+                                <tr class="requirement-item" data-project-name="{{ ProProject.ProjectName() ?: '' }}" data-project-location="{{ ProProject.getLocation() ?: '' }}">
+                                    <td class="project-image-cell">
+                                        {% if ProProject.ProjectGallery is not empty %}
+                                            {% set images = ProProject.ProjectGallery.getItems() %}
+                                            {% if images|length > 0 %}
+                                                <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" 
+                                                     alt="{{ ProProject.ProjectName() }}" 
+                                                     class="table-project-image"
+                                                     loading="lazy">
+                                            {% else %}
+                                                <div class="table-image-placeholder">
+                                                    <i class="fas fa-image"></i>
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="table-image-placeholder">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ProProject.getKey() }}</td>
+                                    <td>
+                                        {% if ProProject %}
+                                            <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}" class="requirementTitle">{{ ProProject.ProjectName() }} </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ProProject.getLocation() ?: 'N/A' }}</td>
+                                    <td>{{ ProProject.getCreationDate()|date('d-m-Y') }}</td>
+                                    <td class="actions-cell">
+                                        <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}" class="btn-action btn-view-small" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="/account/Project/edit/{{ ProProject.getKey() }}" class="btn-action btn-edit-small" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if ProProjects|length == 0 %}
+                    <div class="no-projects">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No Projects Found</h3>
+                        <p>You haven't added any projects yet. Click the "Add Project" button to get started.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div> 
     </div>
-    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // View toggle functionality
+        const viewButtons = document.querySelectorAll('.view-btn');
+        const gridView = document.getElementById('projectsGrid');
+        const tableView = document.getElementById('projectsTable');
+        
+        viewButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+                
+                // Update active button
+                viewButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Toggle views
+                if (view === 'grid') {
+                    gridView.style.display = 'grid';
+                    tableView.style.display = 'none';
+                } else {
+                    gridView.style.display = 'none';
+                    tableView.style.display = 'block';
+                }
+            });
+        });
+
+        // Search functionality for both views
+        const searchInput = document.getElementById('projectSearch');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            // Search in grid view
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                const projectName = card.dataset.projectName.toLowerCase();
+                const projectLocation = card.dataset.projectLocation.toLowerCase();
+                
+                if (projectName.includes(searchTerm) || 
+                    projectLocation.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Search in table view
+            const projectRows = document.querySelectorAll('#projectsTable tbody tr');
+            projectRows.forEach(row => {
+                const projectName = row.dataset.projectName.toLowerCase();
+                const projectLocation = row.dataset.projectLocation.toLowerCase();
+                
+                if (projectName.includes(searchTerm) || 
+                    projectLocation.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Sorting functionality
+        const sortSelect = document.getElementById('sortProjects');
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            window.location.href = window.location.pathname + '?sort=' + sortValue;
+        });
+
+        // Enhanced hover effects for table
+        const table = document.querySelector('#projectsTable table');
+        if (table) {
+            table.addEventListener('mouseover', function(e) {
+                if (e.target.tagName === 'TD') {
+                    e.target.parentNode.style.backgroundColor = '#f8f9fa';
+                }
+            });
+            
+            table.addEventListener('mouseout', function(e) {
+                if (e.target.tagName === 'TD') {
+                    e.target.parentNode.style.backgroundColor = '';
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Dashboard Controls */
+    .dashboard-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .search-container-new {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #4a90e2;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .search-icon-new {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 16px;
+    }
+
+    /* View Toggle */
+    .view-toggle {
+        display: flex;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 4px;
+        border: 1px solid #e1e8ed;
+    }
+
+    .view-btn {
+        background: none;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #6c757d;
+    }
+
+    .view-btn:hover {
+        background: #e9ecef;
+        color: #495057;
+    }
+
+    .view-btn.active {
+        background: #4a90e2;
+        color: white;
+        box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+    }
+
+    .sort-dropdown {
+        min-width: 200px;
+    }
+
+    .sort-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 14px;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .sort-select:focus {
+        outline: none;
+        border-color: #4a90e2;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .project-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        border: 1px solid #e1e8ed;
+    }
+
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        border-color: #4a90e2;
+    }
+
+    /* Project Image */
+    .project-image-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .project-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .project-card:hover .project-image {
+        transform: scale(1.05);
+    }
+
+    .project-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #adb5bd;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .project-image-placeholder i {
+        font-size: 48px;
+        margin-bottom: 8px;
+    }
+
+    .project-image-placeholder span {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Project Overlay */
+    .project-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-overlay {
+        opacity: 1;
+    }
+
+    .btn-view, .btn-edit {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-view {
+        background: #4a90e2;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #357abd;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #1e7e34;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Project Info */
+    .project-info {
+        padding: 20px;
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .project-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .project-title a {
+        color: #2c3e50;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .project-title a:hover {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .project-id {
+        background: #e9ecef;
+        color: #6c757d;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .project-details {
+        /* space-y: 12px; - This is a Tailwind CSS utility, not standard CSS */
+    }
+
+    .project-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .project-location {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .project-location i {
+        color: #adb5bd;
+        width: 14px;
+    }
+
+    .project-date {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #6c757d;
+        padding-top: 12px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .project-date i {
+        color: #adb5bd;
+    }
+
+    /* Table View Styles */
+    .projects-table-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e1e8ed;
+    }
+
+    .requirements-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .requirements-table th {
+        background: #f8f9fa;
+        padding: 16px 12px;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #e1e8ed;
+        text-align: left;
+    }
+
+    .requirements-table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+
+    .project-image-cell {
+        width: 80px;
+    }
+
+    .table-project-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e1e8ed;
+    }
+
+    .table-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        border: 1px solid #e1e8ed;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+
+    .table-image-placeholder i {
+        font-size: 24px;
+    }
+
+    .requirementTitle {
+        color: #2c3e50;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .requirementTitle:hover {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .actions-cell {
+        white-space: nowrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-right: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-view-small {
+        background: #e3f2fd;
+        color: #4a90e2;
+    }
+
+    .btn-view-small:hover {
+        background: #4a90e2;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit-small {
+        background: #e8f5e8;
+        color: #28a745;
+    }
+
+    .btn-edit-small:hover {
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* No Projects State */
+    .no-projects {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+
+    .no-projects i {
+        font-size: 64px;
+        margin-bottom: 20px;
+        color: #adb5bd;
+    }
+
+    .no-projects h3 {
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .search-container-new {
+            max-width: 100%;
+        }
+        
+        .view-toggle {
+            align-self: center;
+        }
+        
+        .sort-dropdown {
+            width: 100%;
+        }
+
+        .projects-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .project-header {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .requirements-table {
+            font-size: 14px;
+        }
+
+        .requirements-table th,
+        .requirements-table td {
+            padding: 8px 6px;
+        }
+
+        .table-project-image,
+        .table-image-placeholder {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .project-overlay {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-view, .btn-edit {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+</style>
+
 {% endblock %}
