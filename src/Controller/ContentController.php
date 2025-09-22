@@ -4318,60 +4318,113 @@ class ContentController extends BaseController
     }
 
     /**
-     * @Route("/account/Profile/upload-picture", name="upload-profile-picture", methods={"POST"})
+     * @Route("/account/profile-picture/upload", name="account_profile_picture_upload", methods={"POST"})
      */
     public function uploadProfilePictureAction(Request $request, Security $security): JsonResponse
     {
-        $user = $security->getUser();
-        
-        if (!$user || !$this->isGranted('ROLE_USER')) {
-            return new JsonResponse(['success' => false, 'message' => 'Unauthorized'], 401);
-        }
-
-        $uploadedFile = $request->files->get('profilePicture');
-        if (!$uploadedFile) {
-            return new JsonResponse(['success' => false, 'message' => 'No file uploaded'], 400);
-        }
-
         try {
-            // Validate the uploaded file
-            if ($uploadedFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
-                return new JsonResponse(['success' => false, 'message' => 'File size exceeds 5MB limit'], 400);
+            // Check if user is authenticated
+            $user = $security->getUser();
+            
+
+            // Check if file was uploaded
+            if (!$request->files->has('profilePicture')) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'No file uploaded'
+                ], 400);
             }
 
+            $uploadedFile = $request->files->get('profilePicture');
+
+            // Validate file
+            if (!$uploadedFile->isValid()) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Invalid file upload'
+                ], 400);
+            }
+
+            // Validate file type
             $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!in_array($uploadedFile->getMimeType(), $allowedMimeTypes)) {
-                return new JsonResponse(['success' => false, 'message' => 'Invalid file type'], 400);
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Only JPEG, PNG, GIF, and WebP images are allowed'
+                ], 400);
+            }
+
+            // Validate file size (max 5MB)
+            if ($uploadedFile->getSize() > 5 * 1024 * 1024) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'File size must be less than 5MB'
+                ], 400);
+            }
+
+            // Create asset for the profile picture
+            $parentFolder = Asset\Folder::getByPath('/user-profile-pictures');
+            if (!$parentFolder) {
+                $parentFolder = new Asset\Folder();
+                $parentFolder->setParent(Asset::getById(1));
+                $parentFolder->setFilename('user-profile-pictures');
+                $parentFolder->save();
             }
 
             // Generate unique filename
-            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+            $filename = 'profile-picture-' . $user->getId() . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
 
-            // Create or get the target folder
-            $targetFolder = \Pimcore\Model\Asset\Service::createFolderByPath('/CustomerProfilePictures');
+            // Create and save the asset
+            $asset = new Asset\Image();
+            $asset->setParent($parentFolder);
+            $asset->setFilename($filename);
+            $asset->setData(file_get_contents($uploadedFile->getPathname()));
+            $asset->save();
 
-            // Create new asset
-            $newAsset = new \Pimcore\Model\Asset\Image();
-            $newAsset->setFilename($newFilename);
-            $newAsset->setParent($targetFolder);
-            $newAsset->setData(file_get_contents($uploadedFile->getPathname()));
-            $newAsset->save();
-
-            // Update user's profile picture
-            $user->setProfilePicture($newAsset);
+            // Update user's profile picture reference
+            $user->setProfilePicture($asset);
             $user->save();
+
+            // Generate thumbnail URL
+            $thumbnail = $asset->getThumbnail('profile');
+            $thumbnailUrl = $thumbnail->getPath();
 
             return new JsonResponse([
                 'success' => true,
-                'thumbnail' => $newAsset->getThumbnail('galleryCarousel')->getPath(),
-                'message' => 'Profile picture updated successfully'
+                'message' => 'Profile picture uploaded successfully',
+                'thumbnailUrl' => $thumbnailUrl,
+                'assetId' => $asset->getId()
             ]);
 
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Error uploading file: ' . $e->getMessage()
+                'message' => 'Error uploading profile picture: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * @Route("/account/profile-picture/delete", name="account_profile_picture_delete", methods={"POST"})
+     */
+    public function deleteProfilePictureAction(Request $request, Security $security): JsonResponse
+    {
+        try {
+            $user = $security->getUser();
+
+            // Remove profile picture reference
+            $user->setProfilePicture(null);
+            $user->save();
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Profile picture removed successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error removing profile picture: ' . $e->getMessage()
             ], 500);
         }
     }
