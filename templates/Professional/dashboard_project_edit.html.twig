@@ -46,7 +46,12 @@
                                         {% for video in existingVideos %}
                                             <div class="preview-item existing-item" data-path="{{ video }}">
                                                 <div class="video-preview">
-                                                    <i class="fas fa-video"></i>
+                                                    <video controls style="width: 100%; height: 100%; object-fit: cover;">
+                                                        <source src="{{ video }}" type="video/mp4">
+                                                        <source src="{{ video }}" type="video/webm">
+                                                        <source src="{{ video }}" type="video/ogg">
+                                                        Your browser does not support the video tag.
+                                                    </video>
                                                     <div class="media-type-badge">Video</div>
                                                 </div>
                                                 <button type="button" class="remove-btn" onclick="removeExistingVideo('{{ video }}')">&times;</button>
