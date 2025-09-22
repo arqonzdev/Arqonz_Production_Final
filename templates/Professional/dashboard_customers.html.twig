@@ -1,0 +1,177 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    <div class="dashboard-customers">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span>
+            <span class="breadcrumb-divider">></span>
+            <span class="Breadcrumb-active">Customers & Surveys</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <!-- Surveys Section -->
+            <div class="surveys-section">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Customer Surveys</h2> 
+                    </div>
+                    <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if surveys |length < 10 %}
+                                <p>0{{ surveys |length }}</p>
+                            {% else %}
+                                <p>{{ surveys |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            <p>Surveys</br>Created</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="DashSurveysListSection" style="flex-wrap: wrap;">
+                    <div class="addsurveybutton">
+                        <a href="{{ path('survey-create') }}">
+                            <img src="/static/icons/addprojectsbtn.svg" alt="Add Survey">
+                            <span>Create New Survey</span>
+                        </a>
+
+                        <!-- <a href="">
+                            <img src="/static/icons/addprojectsbtn.svg" alt="Add Survey">
+                            <span>Create New Survey</span>
+                        </a> -->
+                    </div>
+                    
+                    {% for survey in surveys %}
+                        <div class="Surveysinglecontainer">
+                            <div class="DashsurveyInfo">
+                                <div class="Dashsurveytitle">
+                                    <h3>{{ survey.getTitle() ? survey.getTitle() : 'Untitled Survey' }}</h3>
+                                </div>
+                                
+                                <div class="DashsurveyMeta">
+                                    <div class="surveyCustomerInfo">
+                                        <p>Customer: {{ survey.getFirstname() }} {{ survey.getLastname() }}</p>
+                                        <p>Email: {{ survey.getEmail() }}</p>
+                                        <p>Phone: {{ survey.getPhone() }}</p>
+                                    </div>
+                                    <!-- <div class="surveyQuestions">
+                                        <h4>Questions:</h4>
+                                        <p>{{ survey.getQuestions()|nl2br }}</p>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="surveyActions">
+                                
+
+                                <a href="{{ path('survey_responses', {'surveyId': survey.getKey()}) }}" class="btn btn-view">
+                                    View Responses
+                                </a>
+                                <!-- <a href="" class="btn btn-send">
+                                    Send to Customer
+                                </a> -->
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .Surveysinglecontainer {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .DashsurveyInfo {
+            flex: 1;
+        }
+        
+        .Dashsurveytitle h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .DashsurveyDescription p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .DashsurveyMeta {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .surveyCustomerInfo p,
+        .surveyQuestions p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .surveyQuestions h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .surveyActions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .btn-view {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-send {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #45a049;
+        }
+        
+        .addsurveybutton {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .addsurveybutton a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .addsurveybutton a:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+{% endblock %}

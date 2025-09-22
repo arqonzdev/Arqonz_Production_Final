@@ -1,0 +1,198 @@
+
+<div class="AQIQMain">
+
+    <div class="AQIQsidebar">
+        <div class="LogoArea">
+            <div class="AQIcon">
+                <img src="/static/icons/AQ-AI.svg" alt="">
+                <p>AQ-IQ</p>
+            </div>
+        </div>
+        <div class="AQHistory">
+            <div class="historyheader">
+                <img src="/static/icons/chat-histroy.svg" alt="">
+                <p>History</p>
+            </div>
+
+            <div class="historycontent">
+                <p>Tell me about Arqonz</p>
+                <p>Tell me about Arqonz</p>
+            </div>
+            
+
+        </div>
+    </div>
+    <div class="AQIQMainWindow">
+        <div class="ChatHeader">
+            <div class="chatTitle">
+                <h2>Chat</h2>
+            </div>
+            <div class="ChatTools">
+                <img src="/static/icons/chat-bell.svg" alt="">
+                <img  class="chatprofilepic" src="/static/icons/ChatProfile.svg" alt="">
+            </div>
+        </div>
+
+        <div id="chat-container">
+            <div id="conversation">
+                {% for message in conversationHistory %}
+                    <div class="message">
+                        <strong>User:</strong> {{ message.user }}<br>
+                        <strong>AQ-IQ:</strong> {{ message.bot }}<br>
+                    </div>
+                {% endfor %}
+            </div>
+        
+            <form id="chat-form" method="post" action="{{ path('chatgpt') }}">
+                <input type="text" name="message" placeholder="Type your message here..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+
+        <div class="ChatFooter">
+            <p>© 2023 AQ-IQ. All Rights Reserved.</p>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    :root {
+        --mobile-para: 14px; /* Define the variable */
+        --mobile-small-para: 10px;
+        --mobile-heading-2: 28px;
+    }
+    html, body {
+        height: 100%;
+        width: 100%;
+        font-family: "Poppins", sans-serif;
+        scroll-behavior: smooth;
+    }
+    p, h2, h3, h1, h4, a{
+        font-family: "Poppins", sans-serif;
+        color: #202224;
+        letter-spacing: 0.3px; 
+    }
+    #chat-container {
+        
+        padding: 10px;
+        height: 86%;
+        overflow-y: scroll;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-direction: column;
+    }
+    .message {
+        margin-bottom: 10px;
+    }
+    .AQIQsidebar .AQIcon img {
+        max-width:37px;
+    }
+    .AQIQsidebar .AQIcon p {
+        font-size: 26;
+        font-weight: 700;
+        color: #01A79E;
+    }
+    .AQIQsidebar .AQIcon{
+        flex: 0 0 100%;
+        display:flex;
+        justify-content: center;
+        gap: 3px;
+    }
+    .AQIQMain {
+        display:flex;
+        height: 100vh;
+        padding: 13px;
+    }
+    .AQIQsidebar {
+        flex: 0 0 293px;
+        border-radius: 20px;
+        box-shadow: 6px 6px 54px 0px rgba(0, 0, 0, 0.07);
+    }
+    .AQIQMainWindow {
+        width: 100%;
+    }
+    .historyheader {
+        display: flex;
+        gap: 5px;
+
+    }
+    .LogoArea {
+        height:80px;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: #E9EDF7 solid 1px;
+    }
+    .AQHistory {
+        padding: 20px;
+    }
+    .ChatHeader {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .chatTitle {
+        padding: 20px;
+    }
+    .chatTitle h2 {
+        font-size: 34px;
+        font-weight: 600;
+        color: #01A79E;
+    }
+    .ChatTools {
+        display: flex;
+        gap: 13px;
+        padding: 5px 10px;
+    }
+    .chatprofilepic {
+        border-radius: 100%;
+    }
+    #chat-container input {
+        width: 300px;
+        padding: 9px;
+        border: 1px solid #718096;
+        border-radius: 45px;
+
+    }
+    #chat-container button {
+        border: 0px;
+        padding: 9px;
+        border-radius: 45px;
+        width: 100px;
+        background: linear-gradient(4deg, #02A89F, #fff);
+    }
+    #chat-container form {
+        padding: 20px;
+
+    }
+    .ChatFooter p {
+        font-size: 14px;
+        color: 718096;
+    }
+    #conversation {
+        width: 79%;
+    }
+    .historycontent {
+        margin: 25px 0px;
+        display: flex;
+        flex-direction: column;
+    }
+    .historycontent p {
+        padding: 10px;
+    } 
+    .ChatFooter {
+        padding: 0px 22px;
+    }
+</style>
+

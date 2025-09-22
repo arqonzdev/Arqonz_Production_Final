@@ -1,0 +1,77 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Projects</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="projectssection">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Projects</h2> 
+                    </div>
+                    <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if ProProjects |length < 10 %}
+                                <p>0{{ ProProjects |length }}</p>
+                            {% else %}
+                                <p>{{ ProProjects |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            <p>Projects</br>Found</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="DashProjectsListSection" style="flex-wrap: wrap;;">
+                    {% for ProProject in ProProjects %}
+                    <a href="/{{ MaincustType|lower }}/project/{{ ProProject.getKey() }}">
+                        <div class="Projectssinglecontainer">
+                            <div class="DashprojectfeaturedImg">
+                                {% if ProProject.ProjectGallery is not empty %}
+                                    {% set images = ProProject.ProjectGallery.getItems() %}
+                                    {% if images|length > 0 %}
+                                        <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="Project Thumbnail">
+                                    {% endif %}
+                                {% else %}
+                                    <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                {% endif %}
+                            </div>
+                            <div class="Dashprojecttitle">
+                                <h3>{{ ProProject.ProjectName() }}</h3>
+                            </div>
+                            <div class="DashprojectLocation">
+                                <div class="pleftcol">
+                                    <img src="/static/icons/locationIcon.svg" alt="Project Location">
+                                    <p>{{ ProProject.getLocation() }}</p>
+                                </div>
+                                <div class="prightcol">
+                                    <span><a href="/account/Project/edit/{{ ProProject.getKey() }}">Edit</a></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    <div class="addprojectbutton">
+                        <a href="/{{ MaincustType|lower }}/portfolio/add-project">
+                            <img src="/static/icons/addprojectsbtn.svg" alt="">
+                        </a>
+                    </div>
+
+                </div>
+
+            
+            </div> 
+        </div>
+    </div>
+    
+{% endblock %}

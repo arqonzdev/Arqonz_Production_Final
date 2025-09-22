@@ -1,0 +1,399 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block content %}
+
+  <div class="dashboard-projects">
+      <span>
+          <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-nonactive"><a href="/account/Projects">Projects</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Add Project</span>
+      </span>
+  </div>
+  <div class="line-8"></div>
+
+  <div id="main-content" class="main-content mb-5">
+
+    <div class="page-header">
+      <h1>Add Builder Project</h1>
+    </div>
+
+    <p>
+      {{ pimcore_wysiwyg('intro') }}
+    </p>
+
+    <div class="AddProjectForm">
+      {{ form_start(form) }}
+      <div class="Projectdetails">
+
+        
+
+        <div class="FormRow1">
+          <div class="form-field ProjectTitle">
+            {{ form_row(form.ProjectName) }}
+          </div>
+          <div class="form-field ProjectLocation">
+            {{ form_row(form.Location) }}
+          </div>
+        </div>
+        <div class="form-field ProjectDescription">
+          {{ form_row(form.ProjectDescription) }}
+        </div>
+        <div class="form-group form-field ProjectGallery">
+            {{ form_row(form.ProjectGallery, {'attr': {'class': 'custom-file-input'}}) }}
+            <div class="choosefilebtn">
+              <button type="button" id="custom-file-button" class="btn btn-primary">Choose Files</button>
+              <span id="file-selected">No File Chosen</span>
+            </div>
+        </div>
+          {# <button id="add-gallery-button">Add Images</button>
+          <button id="clear-gallery-button">Clear</button>
+          <div id="gallery-preview-container"></div> #}
+        <div class="form-group form-field ProjectGallery">
+            {{ form_row(form.FloorMaps, {'attr': {'class': 'custom-file-input-floormap'}}) }}
+            <div class="choosefilebtn">
+              <button type="button" id="custom-file-button-floormap" class="btn btn-primary">Choose Files</button>
+              <span id="file-selected">No File Chosen</span>
+            </div>
+        </div>
+
+        <div class="FormRow2">
+          <div class="form-field ProjectValue">
+            {{ form_row(form.PriceRange) }}
+          </div>
+          <div class="form-field ProjectSpecs">
+            {{ form_row(form.Configuration) }}
+          </div>
+        </div>
+        <div class="FormRow2">
+          <div class="form-field ProjectValue">
+            {{ form_row(form.Collaborations) }}
+          </div>
+          <div class="form-field ProjectSpecs">
+            {{ form_row(form.PossessionStarts) }}
+          </div>
+        </div>
+        <div class="form-field ProjectCollab">
+            {{ form_row(form.ReraApproval) }}
+          </div>
+        
+        <div class="form-field ProjectSubmitBtn">
+          {{ form_row(form._submit) }}
+        </div>
+      </div>
+      {{ form_end(form) }}
+
+    </div>
+
+    {# <div class="form-group">
+      {{ form_row(form.ProjectGallery)}}
+    </div> #}
+    {# <button id="add-gallery-button">Add Images</button>
+    <button id="clear-gallery-button">Clear</button>
+    <div id="gallery-preview-container"></div> #}
+
+    {# <div class="form-group">
+      {{ form_row(form.FloorMaps)}}
+    </div> #}
+    {# <button id="add-floor-maps-button">Add Floor Maps</button>
+    <button id="clear-floor-maps-button">Clear</button>
+    <div id="floor-maps-preview-container"></div> #}
+
+    {# {{ form(form) }} #}
+
+  </div>
+
+<script>
+  document.getElementById('custom-file-button').addEventListener('click', function() {
+      document.querySelector('.custom-file-input').click();
+  });
+
+  document.querySelector('.custom-file-input').addEventListener('change', function() {
+      var input = this;
+      var infoArea = document.getElementById('file-selected');
+      
+      if (input.files.length === 1) {
+          var fileName = input.files[0].name;
+          infoArea.textContent = 'Selected file: ' + fileName;
+      } else if (input.files.length > 1) {
+          infoArea.textContent = input.files.length + ' files selected';
+      } else {
+          infoArea.textContent = 'No file selected';
+      }
+  });
+</script>
+
+<script>
+  document.getElementById('custom-file-button-floormap').addEventListener('click', function() {
+      document.querySelector('.custom-file-input-floormap').click();
+  });
+
+  document.querySelector('.custom-file-input-floormap').addEventListener('change', function() {
+      var input = this;
+      var infoArea = document.getElementById('file-selected');
+      
+      if (input.files.length === 1) {
+          var fileName = input.files[0].name;
+          infoArea.textContent = 'Selected file: ' + fileName;
+      } else if (input.files.length > 1) {
+          infoArea.textContent = input.files.length + ' files selected';
+      } else {
+          infoArea.textContent = 'No file selected';
+      }
+  });
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Project Gallery
+  const galleryInput = document.querySelector('.image-input');
+  const galleryContainer = document.getElementById('gallery-preview-container');
+  const addGalleryButton = document.getElementById('add-gallery-button');
+  const clearGalleryButton = document.getElementById('clear-gallery-button');
+  const form = document.querySelector('form[name="builder_add_project_form"]');
+
+  let selectedGalleryFiles = [];
+
+  function addGalleryImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.classList.add('preview-image');
+
+      const previewId = `gallery-preview-${selectedGalleryFiles.length}`;
+
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `builder_add_project_form[ProjectGallery][]`;
+      hiddenInput.value = file.name;
+      hiddenInput.id = previewId;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'x';
+      removeBtn.addEventListener('click', function () {
+        galleryContainer.removeChild(img);
+        galleryContainer.removeChild(removeBtn);
+        galleryContainer.removeChild(document.getElementById(previewId));
+
+        selectedGalleryFiles = selectedGalleryFiles.filter(fileInfo => fileInfo.name !== file.name);
+
+        if (selectedGalleryFiles.length === 0) {
+          hideGalleryAddButton();
+          hideGalleryClearButton();
+        }
+      });
+
+      galleryContainer.appendChild(img);
+      galleryContainer.appendChild(hiddenInput);
+      galleryContainer.appendChild(removeBtn);
+
+      selectedGalleryFiles.push({
+        name: file.name,
+        file: file
+      });
+
+      showGalleryAddButton();
+      showGalleryClearButton();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  galleryInput.addEventListener('change', function (e) {
+    for (const file of e.target.files) {
+      addGalleryImagePreview(file);
+    }
+  });
+
+  addGalleryButton.addEventListener('click', function () {
+    galleryInput.click();
+  });
+
+  clearGalleryButton.addEventListener('click', function () {
+    galleryContainer.innerHTML = '';
+    selectedGalleryFiles = [];
+    galleryInput.value = '';
+    hideGalleryAddButton();
+    hideGalleryClearButton();
+  });
+
+  // Floor Maps
+  const floorMapsInput = document.querySelector('#builder_add_project_form_FloorMaps');
+  const floorMapsContainer = document.getElementById('floor-maps-preview-container');
+  const addFloorMapsButton = document.getElementById('add-floor-maps-button');
+  const clearFloorMapsButton = document.getElementById('clear-floor-maps-button');
+
+  let selectedFloorMapsFiles = [];
+
+  function addFloorMapsImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.classList.add('preview-image');
+
+      const previewId = `floor-maps-preview-${selectedFloorMapsFiles.length}`;
+
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `builder_add_project_form[FloorMaps][]`;
+      hiddenInput.value = file.name;
+      hiddenInput.id = previewId;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'x';
+      removeBtn.addEventListener('click', function () {
+        floorMapsContainer.removeChild(img);
+        floorMapsContainer.removeChild(removeBtn);
+        floorMapsContainer.removeChild(document.getElementById(previewId));
+
+        selectedFloorMapsFiles = selectedFloorMapsFiles.filter(fileInfo => fileInfo.name !== file.name);
+
+        if (selectedFloorMapsFiles.length === 0) {
+          hideFloorMapsAddButton();
+          hideFloorMapsClearButton();
+        }
+      });
+
+      floorMapsContainer.appendChild(img);
+      floorMapsContainer.appendChild(hiddenInput);
+      floorMapsContainer.appendChild(removeBtn);
+
+      selectedFloorMapsFiles.push({
+        name: file.name,
+        file: file
+      });
+
+      showFloorMapsAddButton();
+      showFloorMapsClearButton();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  floorMapsInput.addEventListener('change', function (e) {
+    for (const file of e.target.files) {
+      addFloorMapsImagePreview(file);
+    }
+  });
+
+  addFloorMapsButton.addEventListener('click', function () {
+    floorMapsInput.click();
+  });
+
+  clearFloorMapsButton.addEventListener('click', function () {
+    floorMapsContainer.innerHTML = '';
+    selectedFloorMapsFiles = [];
+    floorMapsInput.value = '';
+    hideFloorMapsAddButton();
+    hideFloorMapsClearButton();
+  });
+
+  // Common functions
+  function showGalleryAddButton() {
+    addGalleryButton.style.display = 'inline-block';
+  }
+
+  function hideGalleryAddButton() {
+    addGalleryButton.style.display = 'none';
+  }
+
+  function showGalleryClearButton() {
+    clearGalleryButton.style.display = 'inline-block';
+  }
+
+  function hideGalleryClearButton() {
+    clearGalleryButton.style.display = 'none';
+  }
+
+  function showFloorMapsAddButton() {
+    addFloorMapsButton.style.display = 'inline-block';
+  }
+
+  function hideFloorMapsAddButton() {
+    addFloorMapsButton.style.display = 'none';
+  }
+
+  function showFloorMapsClearButton() {
+    clearFloorMapsButton.style.display = 'inline-block';
+  }
+
+  function hideFloorMapsClearButton() {
+    clearFloorMapsButton.style.display = 'none';
+  }
+  
+
+  // Initial setup: hide the "Add" and "Clear" buttons for both Gallery and Floor Maps
+  hideGalleryAddButton();
+  hideGalleryClearButton();
+  hideFloorMapsAddButton();
+  hideFloorMapsClearButton();
+
+  // Form submission
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Update the field names for ProjectGallery and FloorMaps
+    for (const fileInfo of selectedGalleryFiles) {
+      formData.append('builder_add_project_form[ProjectGallery][]', fileInfo.file, fileInfo.name);
+    }
+
+    for (const newfileInfo of selectedFloorMapsFiles) {
+      formData.append('builder_add_project_form[FloorMaps][]', newfileInfo.file, newfileInfo.name);
+    }
+
+    // Perform AJAX submission or use the form's default action
+    // Example using fetch API:
+    fetch(form.action, {
+      method: form.method,
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        // Clear the form and show a success message
+        {# container.innerHTML = '';
+        selectedFiles = [];
+        input.value = ''; #}
+        hideGalleryAddButton();
+        hideGalleryClearButton();
+        hideFloorMapsAddButton();
+        hideFloorMapsClearButton();
+        alert('Project Submitted'); // Display a confirmation message
+
+        // Redirect to the specified link after the alert is shown
+        window.location.href = '/account/index';
+      } else {
+        console.error('Error submitting the form');
+      }
+    })
+    .catch(error => {
+      console.error('Error submitting the form:', error);
+    });
+  });
+});
+</script>
+
+<script>
+//ADD required Field
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form[name]');
+    var requiredFields = form.querySelectorAll('[required]');
+
+    for (var i = 0; i < requiredFields.length; i++) {
+      var field = requiredFields[i];
+      var label = form.querySelector('label[for="' + field.id + '"]');
+
+      if (label) {
+        label.innerHTML += ' <span class="required">*</span>';
+      }
+    }
+  });
+</script>
+
+{% endblock %}

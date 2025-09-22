@@ -1,0 +1,125 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_builderprofile.css') %}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+
+    <div id="main-content" class="main-content mb-5">
+    
+        {# <div class="page-header">
+            <h1>{{ BuilderProfile.getCompanyName() }}</h1>
+        </div> #}
+
+        <div class="builder-profile">
+            <div class="hero-section">
+                <div class="profile-image">
+                    {% if BuilderProfile.getProfileImage() %}
+                        <img src="{{ BuilderProfile.getProfileImage().getThumbnail("product_detail") }}" alt="Profile Image" class="profile-image">
+                    {% else %}
+                        <img src="{{ asset('path/to/default/profile/image.jpg') }}" alt="Default Profile Image" class="default-profile-image">
+                    {% endif %}
+                </div>
+
+                <div class="profile-details">
+                    <h1>{{ BuilderProfile.getCompanyName() }}</h1>
+                    <p><i class="a-sharp fa-solid fa-location-dot" style="font-size:22px;color:#4aaaa0;"></i> {{ BuilderProfile.getCity() }}</p>
+                    <p><i class="fa-regular fa-shield-check" style="font-size:22px;color:#4aaaa0;"></i> Verified Builder</p>
+                    <div class="portfolio-attributes">
+                        <div class="attributebox">
+                            <i class="fa-solid fa-calendar" aria-hidden="true" style="font-size:22px;color:#4aaaa0;"></i> <b> {{ BuilderProfile.YearEstablished() }}</b>
+                            <p>Established Year</p>
+                            
+                        </div>
+                        <div class="attributebox">
+                            <i class="fas fa-briefcase" aria-hidden="true" style="font-size:22px;color:#4aaaa0;"></i><b> {{ numberOfProjects }}</b>
+                            <p>Projects Done</p>
+                            
+                        </div>
+                        
+                        <div class="attributebox">
+                            {% set rating = BuilderProfile.getProRating() %}
+                            <i class="fas fa-star" aria-hidden="true" style="font-size:22px;color:#4aaaa0;"></i><b> {{rating}}</b>
+                            <p>Star Rating</p>
+                            
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+
+            <div class="enquiry-section">
+                <div class="inside-content">
+                    <h2 style="display:none">Enquire Now</h2>
+                    <div class="enquiryform">
+                            
+                            {{ form(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="Builder-description">
+                {# {{ form(form) }} #}
+                <h2>Description</h2>
+                {# {% set bio = architectProfile.getBio() %}
+                {% if bio|length > 150 %}
+                    <p>{{ bio|slice(0, 150) ~ ' (...)' }}</p>
+                {% else %}
+                    <p>{{ bio }}</p>
+                {% endif %} #}
+                <p>{{ BuilderProfile.getDescription() }}</p>
+            </div>
+
+            <div class="portfolio-projects">
+                <div class="inside-content">
+                    <h2>Portfolio Projects</h2>
+                    <div class="project-list">
+                        {% for project in pagination %}
+                            {% include '/Professional/project_listing_card.html.twig' with {'project': project, 'architectProfile':BuilderProfile, 'portfolioType':'Builder'} %}
+                        {% endfor %}
+                    </div>
+                
+                    <div class="pagination">
+                        {% include 'includes/projectpagination.html.twig' with {'paginationVariables': paginationVariables} %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="cities-served">
+                <h2>Cities where we have done Projects</h2>
+                <div class="citylist">
+                    {% set cities = BuilderProfile.CitiesServed() | split(',') %}
+                    {% for city in cities %}
+                        <div class="citytagbox">
+                            <p>{{ city|trim }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="skills">
+                <h2>Construction Types</h2>
+                <div class="citylist">
+                    {% set skills = BuilderProfile.Skills() | split(',') %}
+                    {% for skill in skills %}
+                            <div class="skilltagbox">
+                                <p>{{ skill|trim }}</p>
+                            </div>
+                        {% endfor %}
+                    
+                </div>
+                
+            </div>
+
+            <div class="skills">
+                <h2>Requirements</h2>
+                <div id="requirementsbox">
+                    {% for requirement in requirements %}
+                            {% include '/Professional/requirement_listing_card.html.twig' with {'requirement': requirement, 'architectProfile':BuilderProfile, 'portfolioType':'Builder'} %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

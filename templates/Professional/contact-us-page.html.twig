@@ -1,0 +1,88 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+
+<div class="Contact-Main">
+    <div class="Contact-Left">
+        <h3>Let’s Build Smarter, Together!</h3>
+        <p>Are you a contractor, architect, designer, or supplier?  
+    Have questions or want to book a free demo? Let’s connect and grow with ArQonZ.</p>
+    <p>Have questions? Want a demo? Ready to grow with ArQonZ?</p>
+
+        <div class="ContactEmailUs">
+            <div class="ContactEmailUsLeft">
+                <img src="/static/icons/ContactEmailIcon.svg" alt="Contact Email Icon">
+            </div>
+            <div class="ContactEmailUsRight">
+                <p class="EmailLable">mailto:</p>
+                <p class="SupportEmail">Support@arqonz.com</p>
+            </div>
+        </div>
+    </div>
+    <div class="Contact-Right">
+        <form>
+            <div class="FormRow1">
+              <div class="form-field">
+                <label for="name">Name:</label>
+                <input type="text" placeholder="Brian Clarke" name="name" required>
+              </div>
+              
+              <div class="form-field">
+                <label for="email">Email:</label>
+                <input type="email" placeholder="example@youremail.com" id="email" name="email" required>
+              </div>
+            </div>
+
+            <div class="FormRow2">
+              <div class="form-field">
+                <label for="phone" >Phone:</label>
+                <input type="tel" placeholder="Phone Number" id="phone" name="phone" pattern="[0-9]{10}" required>
+              </div>
+              
+              <div class="form-field">
+                <label for="company">Company:</label>
+                <input type="text" placeholder="XYZ Agency" id="company" name="company">
+              </div>
+            </div>
+            
+            <div class="form-field">
+              <label for="message">Message:</label>
+              <textarea id="message" placeholder="Type your message here..." name="message" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-submit">
+              <button type="submit">Send message →</button>
+            </div>
+        </form>
+
+        <script>
+          document.querySelector('form').addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              let formData = new FormData(this);
+          
+              fetch('/submit-contact-form', {
+                  method: 'POST',
+                  body: formData
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      // Display success message
+                      alert(data.message);
+                  } else {
+                      // Display error message
+                      alert(data.message);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  alert('There was a problem submitting your message.');
+              });
+          });
+        </script>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_Prodashboard.css') %}
+{# {% form_theme form 'bootstrap_5_layout.html.twig' %} #}
+
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width:100%;justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="profile-details">
+                <div class="sectionheading">
+                    <h2>Checkout</h2>
+                </div>
+                <div class="details">
+                    Please Complete the payment to finish buing Credits 
+
+                    {# {{ form(form) }} #}
+                </div>
+            </div>
+        </div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderId = '{{ orderid }}';
+        var razorpayKey = '{{ razorpayKey }}';
+        var plan = '{{ plan }}';
+        var amount = '{{ amount }}';
+        var options = {
+            "key": razorpayKey,
+            "amount": amount, // Amount in paisa
+            "currency": "INR",
+            "name": "Your Business Name",
+            "description": "Unlock Enquiry Details",
+            "order_id": orderId,
+            "handler": function(response) {
+                // Handle successful payment response
+                window.location.href = "{{ path('Verifysubscription') }}?payment_id=" + response.razorpay_payment_id + "&order_id=" + response.razorpay_order_id + "&razorpay_signature=" + response.razorpay_signature + "&plan=" + plan;
+            },
+            "prefill": {
+                "name": "John Doe", // Pre-filled customer's name
+                "email": "john.doe@example.com", // Pre-filled customer's email
+                "contact": "9000090000" // Pre-filled customer's phone number
+            },
+            "theme": {
+                "color": "#3399cc" // Customize color as per your requirement
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+    
+    });
+</script>    
+    
+{% endblock %}

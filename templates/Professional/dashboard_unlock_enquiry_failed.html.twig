@@ -1,0 +1,28 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_Prodashboard.css') %}
+{# {% form_theme form 'bootstrap_5_layout.html.twig' %} #}
+
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width:100%;justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="profile-details">
+                <div class="sectionheading">
+                    <h2>Unlock Enquiry</h2>
+                </div>
+                
+                <div class="details">
+                    <p>Failed! Insufficient balance to unlock Enquiry.</p>
+                    <a href="/account/pricing">Buy Credits</a>
+
+
+                    {# {{ form(form) }} #}
+                </div>
+            </div>
+        </div>
+    
+    
+{% endblock %}

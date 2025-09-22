@@ -1,0 +1,20 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+
+{% block content %}
+   
+    <div id="main-content" class="main-content mb-5">
+
+        <div class="page-header">
+            <h1>{{ pimcore_input('headline') }}</h1>
+        </div>
+        <div class="Pageheading">
+        <h2>Sorry! You are not Logged In</h2>
+        </div>
+        <center>
+        <div class="signupbutton">
+        <a href="/account/login" class="btn btn-lg btn-block btn-success btn" target="_blank">Login Now</a>
+        </div>
+        </center>
+    </div>
+    
+{% endblock %}

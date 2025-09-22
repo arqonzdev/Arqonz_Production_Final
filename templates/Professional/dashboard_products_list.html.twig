@@ -1,0 +1,895 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="dashboard-projects">
+    <span>
+        <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Products</span>
+    </span>
+</div>
+<div class="line-8"></div>
+
+<div class="dashboard-container">
+    <div class="left-column" style="width: 100%; justify-content:center;">
+        <div class="projectssection">
+            <div class="dashboardheading-section">
+                <div class="sectionheading">
+                    <h2>Products</h2>
+                    <p class="sectionsubheading">Manage Your Products.</p> 
+                </div>
+                <div class="DashboardStatsSection">
+                    <div class="totalnumber">
+                        {% if ProProducts |length < 10 %}
+                            <p>0{{ ProProducts |length }}</p>
+                        {% else %}
+                            <p>{{ ProProducts |length }}</p>
+                        {% endif %}    
+                    </div>
+                    <div class="totalnumberLable">
+                        {% if ProProducts |length < 2 %}
+                            <p>Product</br>Found</p>
+                        {% else %}
+                            <p>Products</br>Found</p>
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>
+
+            <div class="RequirementsMain">
+                <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                    {% if app.user.customertype == 'Manufacturer' %}
+                    <a href="/manufacturer/add-product" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Product
+                    </a>
+                    {% endif %}
+                    {% if app.user.customertype == 'Dealer' %}
+                    <a href="/dealers/add-product" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Product
+                    </a>
+                    {% endif %}
+                    {% if app.user.customertype == 'Distributor' %}
+                    <a href="/distributor/add-product" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Product
+                    </a>
+                    {% endif %}
+                    {% if app.user.customertype == 'Supplier' %}
+                    <a href="/supplier/add-product" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Product
+                    </a>
+                    {% endif %}
+                    {% if app.user.customertype == 'Retailer' %}
+                    <a href="/retailer/add-product" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                        <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Product
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="dashboard-controls">
+                    <div class="search-container-new">
+                        <input type="text" id="productSearch" placeholder="Search products..." class="search-input">
+                        <i class="fas fa-search search-icon-new"></i>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid" title="Grid View">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="view-btn" data-view="list" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="sort-dropdown">
+                        <select id="sortProducts" class="sort-select">
+                        
+                                <option value="date-desc" {% if currentSort == 'date-desc' %}selected{% endif %}>Newest First</option>
+                                <option value="date-asc" {% if currentSort == 'date-asc' %}selected{% endif %}>Oldest First</option>
+                                <option value="name-asc" {% if currentSort == 'name-asc' %}selected{% endif %}>Name (A-Z)</option>
+                                <option value="name-desc" {% if currentSort == 'name-desc' %}selected{% endif %}>Name (Z-A)</option>
+                                <option value="price-asc" {% if currentSort == 'price-asc' %}selected{% endif %}>Price (Low to High)</option>
+                                <option value="price-desc" {% if currentSort == 'price-desc' %}selected{% endif %}>Price (High to Low)</option>
+                                <option value="views-desc" {% if currentSort == 'views-desc' %}selected{% endif %}>Most Viewed</option>
+                                <option value="views-asc" {% if currentSort == 'views-asc' %}selected{% endif %}>Least Viewed</option>
+                            
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modern Card Grid View -->
+                <div class="products-grid" id="productsGrid">
+                    {% for ProProduct in ProProducts %}
+                        <div class="product-card" data-product-name="{{ ProProduct.ProductName() ?: '' }}" data-product-brand="{{ ProProduct.ProductBrand() ?: '' }}" data-product-category="{{ ProProduct.ParentCategory() ?: '' }}">
+                            <div class="product-image-container">
+                                {% if ProProduct.getProductImage() %}
+                                    <img src="{{ ProProduct.getProductImage().getThumbnail('product_listing').getPath() }}" 
+                                         alt="{{ ProProduct.ProductName() }}" 
+                                         class="product-image"
+                                         loading="lazy">
+                                {% else %}
+                                    <div class="product-image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                        <span>No Image</span>
+                                    </div>
+                                {% endif %}
+                                <div class="product-overlay">
+                                    <a href="/manufacturer/product/{{ ProProduct.getKey() }}" class="btn-view">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    <a href="/account/Product/edit/{{ ProProduct.getKey() }}" class="btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="product-info">
+                                <div class="product-header">
+                                    <h3 class="product-title">
+                                        <a href="/manufacturer/product/{{ ProProduct.getKey() }}">
+                                            {{ ProProduct.ProductName() ?: 'Unnamed Product' }}
+                                        </a>
+                                    </h3>
+                                    <div class="product-id">#{{ ProProduct.getKey() }}</div>
+                                </div>
+                                
+                                <div class="product-details">
+                                    <div class="product-meta">
+                                        <span class="product-brand">
+                                            <i class="fas fa-tag"></i>
+                                            {{ ProProduct.ProductBrand() ?: 'No Brand' }}
+                                        </span>
+                                        <span class="product-category">
+                                            <i class="fas fa-folder"></i>
+                                            {{ ProProduct.ParentCategory() ?: 'Uncategorized' }}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="product-price">
+                                        {% if ProProduct.Price() %}
+                                            <span class="price-amount">₹{{ ProProduct.Price() }}</span>
+                                        {% else %}
+                                            <span class="price-na">Price N/A</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="product-date">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ ProProduct.getCreationDate()|date('M d, Y') }}
+                                    </div>
+                                    <div class="product-stats">
+                                        <span class="product-views">
+                                            <i class="fas fa-eye"></i>
+                                            {{ ProProduct.getPageViewsCount() ?? 0 }} views
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- List View Table (Hidden by default) -->
+                <div class="products-table-container" id="productsTable" style="display: none;">
+                    <table class="requirements-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>ID</th>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Views</th>
+                                <th>Published Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ProProduct in ProProducts %}
+                                <tr class="requirement-item" data-product-name="{{ ProProduct.ProductName() ?: '' }}" data-product-brand="{{ ProProduct.ProductBrand() ?: '' }}" data-product-category="{{ ProProduct.ParentCategory() ?: '' }}">
+                                    <td class="product-image-cell">
+                                        {% if ProProduct.getProductImage() %}
+                                            <img src="{{ ProProduct.getProductImage().getThumbnail('product_listing').getPath() }}" 
+                                                 alt="{{ ProProduct.ProductName() }}" 
+                                                 class="table-product-image"
+                                                 loading="lazy">
+                                        {% else %}
+                                            <div class="table-image-placeholder">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ProProduct.getKey() }}</td>
+                                    <td>
+                                        {% if ProProduct %}
+                                            <a href="/manufacturer/product/{{ ProProduct.getKey() }}" class="requirementTitle">{{ ProProduct.ProductName() }} </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ProProduct.ProductBrand() ?: 'N/A' }}</td>
+                                    <td>{{ ProProduct.ParentCategory() ?: 'N/A' }}</td>
+                                    <td>
+                                        {% if ProProduct.Price() %}
+                                            <span class="price-cell">₹{{ ProProduct.Price() }}</span>
+                                        {% else %}
+                                            <span class="price-na">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="views-count">
+                                            <i class="fas fa-eye"></i>
+                                            {{ ProProduct.getPageViewsCount() ?? 0 }}
+                                        </span>
+                                    </td>
+                                    <td>{{ ProProduct.getCreationDate()|date('d-m-Y') }}</td>
+                                    <td class="actions-cell">
+                                        <a href="/manufacturer/product/{{ ProProduct.getKey() }}" class="btn-action btn-view-small" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="/account/Product/edit/{{ ProProduct.getKey() }}" class="btn-action btn-edit-small" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <style>
+                    /* Product Stats */
+                    .product-stats {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 12px;
+                        padding-top: 12px;
+                        border-top: 1px solid #e9ecef;
+                    }
+
+                    .product-views {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        font-size: 13px;
+                        color: #6c757d;
+                    }
+
+                    .product-views i {
+                        color: #adb5bd;
+                    }
+
+                    /* Table view styles for views count */
+                    .views-count {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        color: #6c757d;
+                    }
+
+                    .views-count i {
+                        color: #adb5bd;
+                        font-size: 14px;
+                    }
+
+                    /* Highlight popular products */
+                    .product-card.high-views {
+                        border-left: 4px solid #4a90e2;
+                    }
+
+                    .product-card.high-views .product-views {
+                        color: #4a90e2;
+                        font-weight: 500;
+                    }
+
+                    .product-card.high-views .product-views i {
+                        color: #4a90e2;
+                    }
+                </style>
+
+                {% if ProProducts|length == 0 %}
+                    <div class="no-products">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No Products Found</h3>
+                        <p>You haven't added any products yet. Click the "Add Product" button to get started.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div> 
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // View toggle functionality
+        const viewButtons = document.querySelectorAll('.view-btn');
+        const gridView = document.getElementById('productsGrid');
+        const tableView = document.getElementById('productsTable');
+        
+        viewButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+                
+                // Update active button
+                viewButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Toggle views
+                if (view === 'grid') {
+                    gridView.style.display = 'grid';
+                    tableView.style.display = 'none';
+                } else {
+                    gridView.style.display = 'none';
+                    tableView.style.display = 'block';
+                }
+            });
+        });
+
+        // Search functionality for both views
+        const searchInput = document.getElementById('productSearch');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            // Search in grid view
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                const productName = card.dataset.productName.toLowerCase();
+                const productBrand = card.dataset.productBrand.toLowerCase();
+                const productCategory = card.dataset.productCategory.toLowerCase();
+                
+                if (productName.includes(searchTerm) || 
+                    productBrand.includes(searchTerm) || 
+                    productCategory.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Search in table view
+            const productRows = document.querySelectorAll('#productsTable tbody tr');
+            productRows.forEach(row => {
+                const productName = row.dataset.productName.toLowerCase();
+                const productBrand = row.dataset.productBrand.toLowerCase();
+                const productCategory = row.dataset.productCategory.toLowerCase();
+                
+                if (productName.includes(searchTerm) || 
+                    productBrand.includes(searchTerm) || 
+                    productCategory.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Sorting functionality
+        const sortSelect = document.getElementById('sortProducts');
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            window.location.href = window.location.pathname + '?sort=' + sortValue;
+        });
+
+        // Enhanced hover effects for table
+        const table = document.querySelector('#productsTable table');
+        if (table) {
+            table.addEventListener('mouseover', function(e) {
+                if (e.target.tagName === 'TD') {
+                    e.target.parentNode.style.backgroundColor = '#f8f9fa';
+                }
+            });
+            
+            table.addEventListener('mouseout', function(e) {
+                if (e.target.tagName === 'TD') {
+                    e.target.parentNode.style.backgroundColor = '';
+                }
+            });
+        }
+
+        // Highlight popular products
+        document.querySelectorAll('.product-card').forEach(card => {
+            const viewsElement = card.querySelector('.product-views');
+            if (viewsElement) {
+                const viewsText = viewsElement.textContent.trim();
+                const viewsCount = parseInt(viewsText.replace(/\D/g, ''));
+                if (viewsCount > 100) { // Adjust this threshold as needed
+                    card.classList.add('high-views');
+                }
+            }
+        });
+
+    });
+</script>
+
+<style>
+    /* Dashboard Controls */
+    .dashboard-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .search-container-new {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #4a90e2;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .search-icon-new {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 16px;
+    }
+
+    /* View Toggle */
+    .view-toggle {
+        display: flex;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 4px;
+        border: 1px solid #e1e8ed;
+    }
+
+    .view-btn {
+        background: none;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #6c757d;
+    }
+
+    .view-btn:hover {
+        background: #e9ecef;
+        color: #495057;
+    }
+
+    .view-btn.active {
+        background: #4a90e2;
+        color: white;
+        box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+    }
+
+    .sort-dropdown {
+        min-width: 200px;
+    }
+
+    .sort-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 14px;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .sort-select:focus {
+        outline: none;
+        border-color: #4a90e2;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    /* Products Grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        border: 1px solid #e1e8ed;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        border-color: #4a90e2;
+    }
+
+    /* Product Image */
+    .product-image-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .product-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #adb5bd;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .product-image-placeholder i {
+        font-size: 48px;
+        margin-bottom: 8px;
+    }
+
+    .product-image-placeholder span {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Product Overlay */
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+
+    .btn-view, .btn-edit {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-view {
+        background: #4a90e2;
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: #357abd;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #1e7e34;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Product Info */
+    .product-info {
+        padding: 20px;
+    }
+
+    .product-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .product-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .product-title a {
+        color: #2c3e50;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .product-title a:hover {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .product-id {
+        background: #e9ecef;
+        color: #6c757d;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .product-details {
+        space-y: 12px;
+    }
+
+    .product-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .product-brand, .product-category {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .product-brand i, .product-category i {
+        color: #adb5bd;
+        width: 14px;
+    }
+
+    .product-price {
+        margin: 12px 0;
+    }
+
+    .price-amount {
+        font-size: 20px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .price-na {
+        font-size: 16px;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .product-date {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #6c757d;
+        padding-top: 12px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .product-date i {
+        color: #adb5bd;
+    }
+
+    /* Table View Styles */
+    .products-table-container {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e1e8ed;
+    }
+
+    .requirements-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .requirements-table th {
+        background: #f8f9fa;
+        padding: 16px 12px;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #e1e8ed;
+        text-align: left;
+    }
+
+    .requirements-table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+
+    .product-image-cell {
+        width: 80px;
+    }
+
+    .table-product-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e1e8ed;
+    }
+
+    .table-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        border: 1px solid #e1e8ed;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+
+    .table-image-placeholder i {
+        font-size: 24px;
+    }
+
+    .requirementTitle {
+        color: #2c3e50;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .requirementTitle:hover {
+        color: #4a90e2;
+        text-decoration: none;
+    }
+
+    .price-cell {
+        font-weight: 600;
+        color: #28a745;
+    }
+
+    .actions-cell {
+        white-space: nowrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-right: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-view-small {
+        background: #e3f2fd;
+        color: #4a90e2;
+    }
+
+    .btn-view-small:hover {
+        background: #4a90e2;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit-small {
+        background: #e8f5e8;
+        color: #28a745;
+    }
+
+    .btn-edit-small:hover {
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* No Products State */
+    .no-products {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+
+    .no-products i {
+        font-size: 64px;
+        margin-bottom: 20px;
+        color: #adb5bd;
+    }
+
+    .no-products h3 {
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .search-container-new {
+            max-width: 100%;
+        }
+        
+        .view-toggle {
+            align-self: center;
+        }
+        
+        .sort-dropdown {
+            width: 100%;
+        }
+
+        .products-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .product-header {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .requirements-table {
+            font-size: 14px;
+        }
+
+        .requirements-table th,
+        .requirements-table td {
+            padding: 8px 6px;
+        }
+
+        .table-product-image,
+        .table-image-placeholder {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-overlay {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-view, .btn-edit {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Length Converter</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Length Converter</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>STEP 1: Start by typing the numerical value you want to convert in the "Enter Value" field.</li>
+                    <li>STEP 2: Choose the unit of measurement for this value (e.g., millimeters, feet, miles) from the dropdown menu next to the input field.</li>
+                    <li>STEP 3: In the "Convert To" section, select the unit you want to convert the value into. For instance, if you want to convert from feet to meters, select "Meters" from the dropdown.</li>
+                    <li>STEP 4: Click the "CALCULATE NOW" button to see the converted result displayed in the results section below.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Length Converter</h2>
+    
+            <!-- Convert From -->
+            <div class="FormField">
+                <label for="Length">Enter Value:</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="Length" placeholder="0" />
+
+                    <select id="Unit">
+                        <option value="mm">Millimeters</option>
+                        <option value="cm">Centimeters</option>
+                        <option value="in">Inches</option>
+                        <option value="ft" selected="selected">Feet</option>
+                        <option value="yd">Yards</option>
+                        <option value="m">Meters</option>
+                        <option value="fur">Furlongs</option>
+                        <option value="km">Kilometers</option>
+                        <option value="mi">Miles</option>
+                        <option value="nmi">Nautical miles</option>
+                    </select>
+                </div>
+            </div>
+
+             <!-- Concrete Mix -->
+             <div class="FormField">
+                <label>Convert To:</label>
+                <select id="brick-country">
+                    <option value="mm">Millimeters</option>
+                        <option value="cm">Centimeters</option>
+                        <option value="in">Inches</option>
+                        <option value="ft">Feet</option>
+                        <option value="yd">Yards</option>
+                        <option value="m" selected="selected">Meters</option>
+                        <option value="fur">Furlongs</option>
+                        <option value="km">Kilometers</option>
+                        <option value="mi">Miles</option>
+                        <option value="nmi">Nautical miles</option>
+                </select>
+            </div>
+
+    
+            <!-- Calculate and Reset Buttons -->
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const calculateBtn = document.getElementById("calculate-btn");
+                const resetBtn = document.getElementById("reset-btn");
+                const resultDiv = document.getElementById("result");
+                const resultSection = document.getElementById("resultssection");
+        
+                // Conversion factors to meters (base unit)
+                const conversionToMeters = {
+                    mm: 0.001,
+                    cm: 0.01,
+                    in: 0.0254,
+                    ft: 0.3048,
+                    yd: 0.9144,
+                    m: 1,
+                    fur: 201.168,
+                    km: 1000,
+                    mi: 1609.34,
+                    nmi: 1852,
+                };
+        
+                calculateBtn.addEventListener("click", () => {
+                    // Get input values
+                    const lengthValue = parseFloat(document.getElementById("Length").value);
+                    const fromUnit = document.getElementById("Unit").value;
+                    const toUnit = document.getElementById("brick-country").value;
+        
+                    // Validate input
+                    if (isNaN(lengthValue) || lengthValue <= 0) {
+                        resultDiv.innerHTML = `<p style="color: red;">Please enter a valid length value.</p>`;
+                        resultSection.style.display = "block";
+                        return;
+                    }
+        
+                    // Convert to meters (base unit) first, then to target unit
+                    const lengthInMeters = lengthValue * conversionToMeters[fromUnit];
+                    const convertedLength = lengthInMeters / conversionToMeters[toUnit];
+        
+                    // Display result
+                    resultDiv.innerHTML = `
+                        <p><strong>Converted Length:</strong></p>
+                        <p>${lengthValue} ${fromUnit} = <span>${convertedLength.toFixed(4)} ${toUnit}</span></p>
+                    `;
+                    resultSection.style.display = "block"; // Ensure result section is visible
+                });
+        
+                resetBtn.addEventListener("click", () => {
+                    // Reset form fields
+                    document.getElementById("Length").value = "";
+                    document.getElementById("Unit").value = "ft";
+                    document.getElementById("brick-country").value = "m";
+        
+                    // Clear result
+                    resultDiv.innerHTML = "";
+                    resultSection.style.display = "none"; // Hide result section
+                });
+            });
+        </script>
+    
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const lengthInput = document.getElementById("Length");
+            const fromUnit = document.getElementById("Unit");
+            const toUnit = document.getElementById("brick-country");
+
+            function checkFields() {
+                if (
+                    lengthInput.value !== "" &&
+                    fromUnit.value !== "" &&
+                    toUnit.value !== ""
+                ) {
+                    calculateBtn.style.color = "#000"; // Set color to black
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            lengthInput.addEventListener("input", checkFields);
+            fromUnit.addEventListener("change", checkFields);
+            toUnit.addEventListener("change", checkFields);
+        });
+    </script>
+
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<!-- <div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div> -->
+
+{% endblock %}

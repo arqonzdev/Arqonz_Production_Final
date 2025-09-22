@@ -1,0 +1,678 @@
+<div class="DashboardRow">
+    <div class="DashRowCol1">
+        <div class="arqonzlogo">
+            <a href="/"><img  id="BlackLogo" src="/static/images/Logo-Arq.png" alt=""></a>
+            <a href="/"><img  id="WhiteLOGO" style="display:none" src="/static/images/ArqonzWhite-Logo.png" alt=""></a>
+        </div>
+    </div>
+    <div class="DashRowCol2">
+        
+        <!-- <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search">
+            <div class="search-icon">
+                <img src="https://arqonz.in/static/icons/SearchIcon.svg" alt="Arqonz Search Icon">
+            </div>
+            <div class="suggestions-list"></div> 
+        </div> -->
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <div class="HeroSearch">
+                <div class="searchoptions">
+                    <div class="SearchCOl1">
+                        <img src="/static/images/icons/Category.svg" alt="Categories">
+                        <select name="profession" id="profession-dropdown">
+                            <option value="All" selected>Professionals</option>
+                            <option value="Products">Products</option>                            
+                        </select>
+                    </div>
+                    <div class="SearchCOl2">
+                        <div class="search-container">
+                            <input class="pro-search-input" type="text" placeholder="Search" autocomplete="off">
+                            <div class="suggestions-dropdown"></div>
+                        </div>
+                        <!-- <input class="pro-search-input" type="text" placeholder="Search"> -->
+                    </div>
+                </div>
+
+                <div class="SearchCOl3">
+                    <button class="pro-search-icon" id="HerosearchButton"><img src="/static/icons/SearchIcon.svg" alt=""></button>
+                </div>
+
+                <style>
+                    .search-container {
+                        position: relative;
+                        width: 100%;
+                    }
+                    
+                    .suggestions-dropdown {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        width: 100%;
+                        max-height: 300px;
+                        overflow-y: auto;
+                        background: #fff;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        z-index: 1000;
+                        display: none;
+                    }
+                    
+                    .suggestion-item {
+                        padding: 10px 15px;
+                        cursor: pointer;
+                        transition: background-color 0.2s;
+                    }
+                    
+                    .suggestion-item:hover {
+                        background-color: #f5f5f5;
+                    }
+                    
+                    .suggestion-item.highlighted {
+                        background-color: #e9e9e9;
+                    }
+                    .search-container{
+                        margin-left: 0px !important;
+                        padding-left: 14px !important;
+
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const searchInput = document.querySelector('.pro-search-input');
+                        const suggestionsDropdown = document.querySelector('.suggestions-dropdown');
+                        const professionDropdown = document.getElementById('profession-dropdown');
+                        const searchButton = document.getElementById('HerosearchButton');
+                        
+                        let currentRequest = null;
+                        let activeSuggestionIndex = -1;
+                        let showDefaultSuggestions = false;
+                        
+                        // Debounce function to limit API calls
+                        function debounce(func, delay) {
+                            let timeout;
+                            return function() {
+                                const context = this;
+                                const args = arguments;
+                                clearTimeout(timeout);
+                                timeout = setTimeout(() => func.apply(context, args), delay);
+                            };
+                        }
+                        
+                        // Fetch suggestions from server
+                        const fetchSuggestions = debounce(function(searchTerm) {
+                            if (currentRequest) {
+                                currentRequest.abort();
+                            }
+                            
+                            const category = professionDropdown.value;
+                            
+                            currentRequest = new XMLHttpRequest();
+                            currentRequest.open('POST', '{{ path("search_suggestions") }}', true);
+                            currentRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            currentRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                            
+                            currentRequest.onload = function() {
+                                if (this.status >= 200 && this.status < 400) {
+                                    const suggestions = JSON.parse(this.responseText);
+                                    displaySuggestions(suggestions);
+                                }
+                                currentRequest = null;
+                            };
+                            
+                            currentRequest.onerror = function() {
+                                currentRequest = null;
+                            };
+                            
+                            currentRequest.send(`searchTerm=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(category)}`);
+                        }, 300);
+                        
+                        // Display suggestions in dropdown
+                        function displaySuggestions(suggestions) {
+                            if (suggestions.length === 0 && !showDefaultSuggestions) {
+                                suggestionsDropdown.style.display = 'none';
+                                return;
+                            }
+                            
+                            suggestionsDropdown.innerHTML = '';
+                            
+                            suggestions.forEach((suggestion, index) => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.className = 'suggestion-item';
+                                suggestionItem.textContent = suggestion;
+                                
+                                suggestionItem.addEventListener('click', function() {
+                                    searchInput.value = suggestion;
+                                    suggestionsDropdown.style.display = 'none';
+                                    performSearch();
+                                });
+                                
+                                suggestionsDropdown.appendChild(suggestionItem);
+                            });
+                            
+                            suggestionsDropdown.style.display = 'block';
+                            activeSuggestionIndex = -1;
+                        }
+                        
+                        // Show default suggestions
+                        function showDefaultSearchSuggestions() {
+                            showDefaultSuggestions = true;
+                            fetchSuggestions('');
+                        }
+                        
+                        // Perform the search
+                        function performSearch() {
+                            const selectedOption = professionDropdown.value;
+                            const searchValue = searchInput.value.trim();
+                            
+                            if (!searchValue) {
+                                return;
+                            }
+                            
+                            if (selectedOption === 'Products') {
+                                const form = document.createElement('form');
+                                form.method = 'POST';
+                                form.action = '/products-search';
+                                
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'search';
+                                input.value = searchValue;
+                                
+                                form.appendChild(input);
+                                document.body.appendChild(form);
+                                form.submit();
+                            } else if (selectedOption === 'All') {
+                                window.location.href = `/Search/All/${encodeURIComponent(searchValue)}`;
+                            } else {
+                                window.location.href = `/Search/${selectedOption}/${encodeURIComponent(searchValue)}`;
+                            }
+                        }
+                        
+                        // Event listeners
+                        searchInput.addEventListener('input', function() {
+                            showDefaultSuggestions = false;
+                            fetchSuggestions(this.value);
+                        });
+                        
+                        searchInput.addEventListener('focus', function() {
+                            if (this.value === '') {
+                                showDefaultSearchSuggestions();
+                            }
+                        });
+                        
+                        searchButton.addEventListener('click', performSearch);
+                        
+                        searchInput.addEventListener('keydown', function(e) {
+                            const suggestions = suggestionsDropdown.querySelectorAll('.suggestion-item');
+                            
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (activeSuggestionIndex < suggestions.length - 1) {
+                                        activeSuggestionIndex++;
+                                        updateActiveSuggestion(suggestions);
+                                    }
+                                }
+                            } else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                if (activeSuggestionIndex > 0) {
+                                    activeSuggestionIndex--;
+                                    updateActiveSuggestion(suggestions);
+                                }
+                            } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                                if (activeSuggestionIndex >= 0 && suggestions.length > 0) {
+                                    const selectedSuggestion = suggestions[activeSuggestionIndex];
+                                    searchInput.value = selectedSuggestion.textContent;
+                                    suggestionsDropdown.style.display = 'none';
+                                    performSearch();
+                                } else {
+                                    performSearch();
+                                }
+                            } else if (e.key === 'Escape') {
+                                suggestionsDropdown.style.display = 'none';
+                            }
+                        });
+                        
+                        // Update active suggestion highlight
+                        function updateActiveSuggestion(suggestions) {
+                            suggestions.forEach((suggestion, index) => {
+                                if (index === activeSuggestionIndex) {
+                                    suggestion.classList.add('highlighted');
+                                    suggestion.scrollIntoView({ block: 'nearest' });
+                                } else {
+                                    suggestion.classList.remove('highlighted');
+                                }
+                            });
+                        }
+                        
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(e) {
+                            if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                                suggestionsDropdown.style.display = 'none';
+                                showDefaultSuggestions = false;
+                            }
+                        });
+                        
+                        // Clear suggestions when category changes
+                        professionDropdown.addEventListener('change', function() {
+                            suggestionsDropdown.style.display = 'none';
+                            searchInput.value = '';
+                            showDefaultSuggestions = false;
+                        });
+                        
+                        // Show default suggestions when search input is empty and clicked
+                        searchInput.addEventListener('click', function() {
+                            if (this.value === '') {
+                                showDefaultSearchSuggestions();
+                            }
+                        });
+                    });
+                </script>
+                
+            </div>
+        {% endif %}
+        <style>
+            .suggestions-list {
+                position: absolute;
+                background-color: white;
+                border: 1px solid #ddd;
+                width: 100%;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1000;
+                left: 0%;
+                top: 100%;
+                display:none;
+            }
+
+            .suggestion-item {
+                padding: 10px;
+                cursor: pointer;
+            }
+
+            .suggestion-item:hover {
+                background-color: #f0f0f0;
+            }
+        </style>
+        <div class="DashNavNew">
+            <div class="DashnavMain">
+
+                <div class="mobileMenu">
+                    <div class="menuopen">
+                        <img style="width:27px;" id="menuopen" src="/static/icons/menu-icon-top.svg" alt="Menu Icon">
+                    </div>
+                    <div class="menuclose">
+                        <img style="width:27px;" id="menuclose" src="/static/icons/menu-close-icon.svg" alt="Menu close Icon">
+                    </div>
+                </div>
+                <!-- Menu icon -->
+
+                <ul class="Parent-Menu">
+                    <li><a href="/">Home</a></li>
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        <li>
+                            <a href="/architects">Professionals <span class="dropIcon">▼</span></a>
+                            <ul class="Children-Menu">
+                                <li>
+                                    <a class="nav-link" href="/architects">Architects</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/builders">Builders</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/contractors">Contractors</a>
+
+                                    <!-- Sub-submenu for "Contractors" -->
+                                    <ul class="Sub-Children-Menu">
+                                        <li><a class="nav-link" href="/earth-movers/listing">Earth Movers</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/designers">Designers</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/engineers">Engineers</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/manufacturers">Manufacturers</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/distributors">Distributors</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/dealers">Dealers</a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="/retailers">Retailer</a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <!-- <li>
+                        <a href="https://quboyd.accubate.app/ext/form/2306/1/apply">Placements</a>
+                    </li> -->
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li>
+                        <a href="/products" class="parent-link">Products <span class="dropIcon">▼</span></a>
+                        <ul class="Children-Menu">
+                            <li>
+                                <a class="nav-link" href="/categories/Plumbing">Plumbing</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/categories/Bricks-&-Blocks">Bricks & Blocks</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/categories/Tiles">Tiles</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/categories/tmt-steel-bars">TMT Steel Bars</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/categories/Cement">Cement</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/categories/electricals">Electrical</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Allow parent menu items with dropdowns to work as links
+                            document.querySelectorAll('.Parent-Menu > li > a.parent-link').forEach(link => {
+                                link.addEventListener('click', function(e) {
+                                    // Only navigate if clicking directly on the text (not the dropdown arrow)
+                                    if (e.target === this || e.target === this.querySelector('span')) {
+                                        // Check if we're clicking the dropdown arrow
+                                        if (e.target === this.querySelector('span.dropIcon') || e.target === this.querySelector('span')) {
+                                            e.preventDefault();
+                                            // Toggle dropdown manually if needed
+                                        } else {
+                                            // Allow normal navigation
+                                            window.location.href = this.href;
+                                        }
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                    {% endif %}
+                    <li>
+                        <a href="#">Tools <span class="dropIcon">▼</span></a>
+                        <ul class="Children-Menu">
+                            <li>
+                                <a class="nav-link" href="/calculator/tile-calculator">Tile Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/wallpaper-calculator">Wallpaper Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/paint-calculator">Paint Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/brick-calculator">Brick Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/wall-plaster-calculator">Wall Plaster Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/concrete-calculator">Concrete Calculator</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/length-converter">Length Converter</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/calculator/area-converter">Area Converter</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/deal-desk">Deal Desk</a>
+                    
+                    </li>
+                </ul>
+
+                
+                
+            </div>
+
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const professionDropdown = document.getElementById('profession-dropdown');
+            const searchInput = document.querySelector('.pro-search-input');
+            const searchButton = document.getElementById('HerosearchButton');
+    
+            // Function to handle the search action
+            function performSearch() {
+                const selectedOption = professionDropdown.value;
+                const searchValue = searchInput.value.trim();
+    
+                if (searchValue) {
+                    if (selectedOption === 'Products') {
+                        // Create a form dynamically and submit with POST for Products search
+                        let form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '/products-search';
+    
+                        let input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'search';
+                        input.value = searchValue;
+    
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else if (selectedOption === 'All') {
+                        window.location.href = `/Search/All/${encodeURIComponent(searchValue)}`;
+                    } else {
+                        window.location.href = `/Search/${selectedOption}/${encodeURIComponent(searchValue)}`;
+                    }
+                } else {
+                    alert('Please enter a search term.');
+                }
+            }
+    
+            // Add event listener to the search button
+            searchButton.addEventListener('click', performSearch);
+    
+            // Add event listener for 'Enter' key on the search input
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    performSearch();
+                }
+            });
+        });
+    </script>
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const professionDropdown = document.getElementById('profession-dropdown');
+            const searchInput = document.querySelector('.pro-search-input');
+            const searchButton = document.getElementById('HerosearchButton');
+        
+            // Function to handle the search action
+            function performSearch() {
+                // Get the selected profession and search input value
+                const selectedProfession = professionDropdown.value;
+                const searchValue = searchInput.value.trim();
+        
+                // Check if search input is not empty
+                if (searchValue) {
+                    // Construct the URL and navigate to it
+                    const searchURL = `/Search/${selectedProfession}/${encodeURIComponent(searchValue)}`;
+                    window.location.href = searchURL;
+                } else {
+                    alert('Please enter a search term.');
+                }
+            }
+        
+            // Add event listener to the search button
+            searchButton.addEventListener('click', performSearch);
+        
+            // Add event listener for 'Enter' key on the search input
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();  // Prevent form submission (if inside a form)
+                    performSearch();
+                }
+            });
+        });
+    </script> -->
+
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const searchIcon = document.querySelector('.search-icon');
+            const suggestionsList = document.querySelector('.suggestions-list');
+
+            let keywords = [];
+
+            // Fetch the keywords from the JSON file
+            fetch('/static/files/keywords.json') // Update this path to the correct location
+                .then(response => response.json())
+                .then(data => {
+                    keywords = data;
+                });
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `/Search/${encodeURIComponent(query)}`;
+                }
+            }
+
+            function showSuggestions(query) {
+                const filteredKeywords = keywords.filter(keyword => 
+                    keyword.toLowerCase().includes(query.toLowerCase())
+                );
+
+                // Clear previous suggestions
+                suggestionsList.innerHTML = '';
+
+                if (filteredKeywords.length > 0) {
+                    // Show the suggestions list if there are suggestions
+                    suggestionsList.style.display = 'block';
+
+                    // Display the filtered suggestions
+                    filteredKeywords.forEach(keyword => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('suggestion-item');
+                        suggestionItem.textContent = keyword;
+                        suggestionsList.appendChild(suggestionItem);
+
+                        // Handle click on suggestion
+                        suggestionItem.addEventListener('click', function() {
+                            searchInput.value = keyword;
+                            performSearch();
+                        });
+                    });
+                } else {
+                    // Hide the suggestions list if no suggestions are found
+                    suggestionsList.style.display = 'none';
+                }
+            }
+
+            searchInput.addEventListener('input', function() {
+                const query = searchInput.value.trim();
+                if (query) {
+                    showSuggestions(query);
+                } else {
+                    // Hide the suggestions list if input is empty
+                    suggestionsList.style.display = 'none';
+                }
+            });
+
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    performSearch();
+                }
+            });
+
+            searchIcon.addEventListener('click', function() {
+                performSearch();
+            });
+        });
+    </script>
+
+    <div class="DashRowCol3">
+
+            
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            
+            <div class="loginsignUp">
+                {% if app.user.customertype in ['Admin', 'ChannelPartner', 'Agent'] or app.user.Portfolio is not empty %}
+                    <div class="Register">
+                        <a href="/account/index">Dashboard</a>
+                    </div>
+                {% else %}
+                    <div class="Register">
+                        <a href="/get-listed">Get Listed</a>
+                    </div>
+                {% endif %}
+                <div class="Register">
+                    <a href="/en/account/logout">Logout</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="loginsignUp">
+                <div class="login">
+                    <a href="/account/sign-in">Login</a>
+                </div>
+
+                <div class="Register">
+                    <a href="/account/register">Sign Up</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissable">
+            <button type="button" class="Toastclose" data-dismiss="alert" aria-hidden="true" style="color: #000; background-color: #fff0; border: 0px;">×</button>
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all close buttons
+        const closeButtons = document.querySelectorAll('.Toastclose');
+
+        // Add click event listener to each close button
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Find the parent div with class 'alert' and hide it
+                const alertDiv = this.closest('.alert');
+                if (alertDiv) {
+                    alertDiv.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "oeryd5hbwu");
+</script>

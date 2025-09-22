@@ -1,0 +1,429 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+{% block content %}
+    <!-- External Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <style>
+        .profile-picture-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+        
+        .profile-picture-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .profile-picture-container:hover .profile-picture-overlay {
+            opacity: 1;
+        }
+        
+        .dashbord-profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-picture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .profile-picture-overlay i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-picture-overlay span {
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        #profilePictureUpload {
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .upload-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 4px;
+            z-index: 10000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .upload-toast.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .upload-toast.error {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+    
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+    
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Profile</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+    
+    <div class="dashboard-container">
+        <div class="left-column">
+            <!-- Profile Details -->
+            <div class="profile-details">
+                <div class="sectionheading">
+                    <h2>Profile Details</h2>
+                </div>
+                <div class="DashProfileMain">
+                    {% include 'Professional/Dashboard/DashboardProfileNavigation.html.twig' %}
+                    <div class="PersonalProfile">
+                        <div class="PersonalProfileFrames">
+                            <div class="ProfilePicture">
+                                <div class="profile-picture-container" id="profilePictureWrapper">
+                                    {% set profileImage = customer.getProfilePicture() %}
+                                    <img src="{{ profileImage ? profileImage.getThumbnail('galleryCarousel') : '/static/images/icons/DefaultDP.jpg' }}" 
+                                        width="100px" height="100px" alt="Profile Image" class="dashbord-profile-image" id="profileImage">
+                                    <div class="profile-picture-overlay">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Change Photo</span>
+                                    </div>
+                                    <div class="loading-spinner" id="loadingSpinner">
+                                        <i class="fas fa-spinner fa-spin fa-2x" style="color: white;"></i>
+                                    </div>
+                                </div>
+                                <!-- Simplified file input without Dropzone -->
+                                <input type="file" name="profilePicture" id="profilePictureUpload" accept="image/*" style="display: none;">
+                            </div>
+                            <div class="PersonalProfileForm">
+                                <form id="profileForm">
+                                    <div class="FormRow">
+                                        <div class="form-group personalFirstName">
+                                            <label for="first-name">First Name:</label>
+                                            <input type="text" id="first-name" name="first-name" placeholder="{{ Firstname }}" >
+                                        </div>
+                                        <div class="form-group personalLastName">
+                                            <label for="last-name">Last Name:</label>
+                                            <input type="text" id="last-name" name="last-name" placeholder="{{ Lastname }}" >
+                                        </div>
+                                    </div>
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="email">Email:</label>
+                                            <input type="email" id="email" name="email" placeholder="{{ Email }}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="dob">Date of Birth:</label>
+                                            <input type="date" id="dob" name="dob" value="{{ DOBv |date('Y-m-d', 'Asia/Kolkata') }}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="street-address">Street Address (Residential):</label>
+                                        <input type="text" id="street-address" name="street-address" placeholder="{{ Street }}" >
+                                    </div>
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="city">City:</label>
+                                            <input type="text" id="city" name="city" placeholder="{{ City }}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="state">State:</label>
+                                            <input type="text" id="state" name="state" placeholder="{{ state }}" >
+                                        </div>
+                                    </div>
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="country">Country:</label>
+                                            <input type="text" id="country" name="country" placeholder="{{ country }}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pincode">Pincode:</label>
+                                            <input type="text" id="pincode" name="pincode" placeholder="{{ zipcode }}" >
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="align-items:flex-end;">
+                                        <button type="submit" id="saveButton">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Single consolidated script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Profile page DOM loaded');
+        
+        // Initialize all functionality after DOM is ready
+        initializeFormHandling();
+        initializeProfilePictureUpload();
+        initializeSelect2();
+        addRequiredFieldIndicators();
+    });
+
+    // Form submission handling
+    function initializeFormHandling() {
+        const form = document.getElementById('profileForm');
+        if (!form) {
+            console.warn('Profile form not found');
+            return;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submission started');
+            
+            const formData = new FormData(this);
+            const saveButton = document.getElementById('saveButton');
+            
+            // Disable button during save
+            if (saveButton) {
+                saveButton.disabled = true;
+                saveButton.textContent = 'Saving...';
+            }
+            
+            fetch('/account/Profile/save', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    showToast('Profile details saved successfully!', 'success');
+                    // Optionally refresh page to show updated data
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast('An error occurred while saving your profile details.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while saving your profile details.', 'error');
+            })
+            .finally(() => {
+                // Re-enable button
+                if (saveButton) {
+                    saveButton.disabled = false;
+                    saveButton.textContent = 'Save';
+                }
+            });
+        });
+    }
+
+    // Profile picture upload handling
+    function initializeProfilePictureUpload() {
+        const profilePictureWrapper = document.getElementById('profilePictureWrapper');
+        const profileImage = document.getElementById('profileImage');
+        const profilePictureUpload = document.getElementById('profilePictureUpload');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        // Check if all elements exist
+        if (!profilePictureWrapper || !profileImage || !profilePictureUpload) {
+            console.warn('Profile picture elements not found');
+            return;
+        }
+        
+        console.log('Profile picture upload initialized');
+        
+        // Click handler for profile picture
+        profilePictureWrapper.addEventListener('click', function() {
+            profilePictureUpload.click();
+        });
+        
+        // File input change handler
+        profilePictureUpload.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                uploadProfilePicture(e.target.files[0]);
+            }
+        });
+        
+        // Drag and drop support
+        profilePictureWrapper.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.border = '2px dashed #4a90e2';
+            this.style.backgroundColor = 'rgba(74, 144, 226, 0.1)';
+        });
+        
+        profilePictureWrapper.addEventListener('dragleave', function() {
+            this.style.border = 'none';
+            this.style.backgroundColor = 'transparent';
+        });
+        
+        profilePictureWrapper.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.border = 'none';
+            this.style.backgroundColor = 'transparent';
+            
+            if (e.dataTransfer.files.length > 0) {
+                uploadProfilePicture(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // Upload function
+        function uploadProfilePicture(file) {
+            console.log('Uploading file:', file.name);
+            
+            // Validate file
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showToast('Please upload a valid image file (JPEG, PNG, GIF, or WebP)', 'error');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToast('File size exceeds 5MB limit', 'error');
+                return;
+            }
+            
+            // Show loading spinner
+            if (loadingSpinner) {
+                loadingSpinner.classList.add('active');
+            }
+            
+            // Create FormData
+            const formData = new FormData();
+            formData.append('profilePicture', file);
+            
+            // Send AJAX request (you'll need to create this route)
+            fetch('/account/profile-picture/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update profile image with cache-busting
+                    profileImage.src = data.thumbnailUrl + '?t=' + new Date().getTime();
+                    showToast('Profile picture updated successfully!', 'success');
+                } else {
+                    showToast(data.message || 'Error uploading profile picture', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while uploading the file', 'error');
+            })
+            .finally(() => {
+                if (loadingSpinner) {
+                    loadingSpinner.classList.remove('active');
+                }
+                // Reset file input
+                profilePictureUpload.value = '';
+            });
+        }
+    }
+
+    // Initialize Select2 (when jQuery is ready)
+    function initializeSelect2() {
+        if (typeof $ !== 'undefined') {
+            $(document).ready(function() {
+                console.log('Initializing Select2');
+                if ($(".js-select-cities").length) {
+                    $(".js-select-cities").select2();
+                }
+                if ($(".js-select-skills").length) {
+                    $(".js-select-skills").select2();
+                }
+            });
+        }
+    }
+
+    // Add required field indicators
+    function addRequiredFieldIndicators() {
+        const form = document.getElementById('profileForm');
+        if (!form) {
+            console.warn('Form not found for required field indicators');
+            return;
+        }
+        
+        const requiredFields = form.querySelectorAll('[required]');
+        console.log('Found required fields:', requiredFields.length);
+        
+        for (let i = 0; i < requiredFields.length; i++) {
+            const field = requiredFields[i];
+            const label = form.querySelector('label[for="' + field.id + '"]');
+            if (label) {
+                label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+            }
+        }
+    }
+    
+    // Toast notification function
+    function showToast(message, type = 'success') {
+        console.log('Showing toast:', message, type);
+        
+        // Remove existing toasts
+        const existingToasts = document.querySelectorAll('.upload-toast');
+        existingToasts.forEach(toast => toast.remove());
+        
+        const toast = document.createElement('div');
+        toast.className = 'upload-toast ' + type;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 300);
+        }, 3000);
+    }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-nonactive"><a href="/account/Requirements">Requirements</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Add Requirement</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="requirements">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading" style="width: 100%;">
+                        <h2>Add Requirement</h2>
+                        <p class="sectionsubheading">Upload Your BOQ Excel Sheet In Provided Format</p> 
+                    </div>
+                </div>
+                <div class="requirementcontent">
+                    <p>Download Template Excel file given below and add your Requirements in the respective colums</p>
+
+                    <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/static/files/Latest_BOQ_template_Arqonz.xlsx" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Download BOQ Template
+                        </a>
+                    </div>
+
+                    <h3>Add Requirements Sheet</h3>
+                    <div class="AddProjectForm">
+                        {{ form_start(form) }}
+                        <div class="Projectdetails">
+                            <div class="FormRow1">
+                                <div class="form-field ProjectTitle">
+                                    {{ form_row(form.Title) }}
+                                </div>
+                                <div class="form-field ProjectLocation">
+                                    {{ form_row(form.City) }}
+                                </div>
+                            </div>
+                            <div class="form-field ProjectDescription">
+                            {{ form_row(form.Description) }}
+                            </div>
+        
+                            <div class="FormRow2">
+                                <div class="form-field ProjectValue">
+                                    {{ form_row(form.TargetPrice) }}
+                                </div>
+                                <div class="form-field ProjectSpecs">
+                                    {{ form_row(form.ExpireDate) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group form-field ProjectGallery">
+                                {{ form_row(form.excelFile, {'attr': {'class': 'custom-file-input'}}) }}
+                                <div class="choosefilebtn">
+                                    <button type="button" id="custom-file-button" class="btn btn-primary">Choose Files</button>
+                                    <span id="file-selected">No File Chosen</span>
+                                    <div style="padding-top: 13px;" class="File-Upload-warning" padding-top:=""><p style="color: red;">Please select a File before you submit.</p></div>
+                                </div>
+                            </div>
+                            <div class="form-field ProjectSubmitBtn">
+                            {{ form_row(form._submit) }}
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+
+                    </div>
+
+                    <script>
+                        document.getElementById('custom-file-button').addEventListener('click', function() {
+                            document.querySelector('.custom-file-input').click();
+                        });
+                    
+                        document.querySelector('.custom-file-input').addEventListener('change', function() {
+                            var input = this;
+                            var infoArea = document.getElementById('file-selected');
+                            
+                            if (input.files.length === 1) {
+                                var fileName = input.files[0].name;
+                                infoArea.textContent = 'Selected file: ' + fileName;
+                            } else if (input.files.length > 1) {
+                                infoArea.textContent = input.files.length + ' files selected';
+                            } else {
+                                infoArea.textContent = 'No file selected';
+                            }
+                        });
+                    </script>
+
+                    <!-- <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var fileInput = document.getElementById('pro_requirement_form_excelFile');
+                            var infoArea = document.getElementById('file-selected');
+                            var warningMessage = document.querySelector('.File-Upload-warning');
+                            var customButton = document.getElementById('custom-file-button');
+                    
+                            if (!fileInput || !infoArea || !warningMessage || !customButton) {
+                                console.error("One or more elements could not be found. Check your HTML structure.");
+                                return;
+                            }
+                    
+                            // Function to toggle warning based on file-selected text
+                            function toggleWarning() {
+                                if (infoArea.textContent.trim() === "No File Chosen") {
+                                    warningMessage.style.display = 'block';
+                                } else {
+                                    warningMessage.style.display = 'none';
+                                }
+                            }
+                    
+                            // Initialize warning display on page load
+                            toggleWarning();
+                    
+                            // Event to show file selection dialog on button click
+                            customButton.addEventListener('click', function() {
+                                fileInput.click();
+                            });
+                    
+                            // Event to update file name display and toggle warning
+                            fileInput.addEventListener('change', function() {
+                                if (fileInput.files.length > 0) {
+                                    var fileName = fileInput.files[0].name;
+                                    infoArea.textContent = 'Selected file: ' + fileName;
+                                } else {
+                                    infoArea.textContent = 'No File Chosen';
+                                }
+                                toggleWarning();
+                            });
+                        });
+                    </script>
+
+
+                    <script>
+                        document.getElementById('custom-file-button').addEventListener('click', function() {
+                            document.querySelector('.custom-file-input').click();
+                        });
+
+                        document.querySelector('.custom-file-input').addEventListener('change', function() {
+                            var input = this;
+                            var infoArea = document.getElementById('file-selected');
+                            
+                            if (input.files.length === 1) {
+                                var fileName = input.files[0].name;
+                                infoArea.textContent = 'Selected file: ' + fileName;
+                            } else if (input.files.length > 1) {
+                                infoArea.textContent = input.files.length + ' files selected';
+                            } else {
+                                infoArea.textContent = 'No file selected';
+                            }
+                        });
+                    </script> -->
+
+                    
+
+                    <script>
+                        //ADD required Field
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var form = document.querySelector('form[name]');
+                            var requiredFields = form.querySelectorAll('[required]');
+                        
+                            for (var i = 0; i < requiredFields.length; i++) {
+                            var field = requiredFields[i];
+                            var label = form.querySelector('label[for="' + field.id + '"]');
+                        
+                            if (label) {
+                                label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+                            }
+                            }
+                        });
+                    </script>
+        </div>
+    
+    
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+    
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span>
+            <span class="breadcrumb-divider">></span>
+            <span class="Breadcrumb-nonactive"><a href="/account/Projects">Projects</a></span>
+            <span class="breadcrumb-divider">></span>
+            <span class="Breadcrumb-active">Bulk Upload</span>
+        </span>
+    </div>
+    
+    <div class="line-8"></div>
+    
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <div class="requirements">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading" style="width: 100%;">
+                        <h2>Bulk Upload Projects</h2>
+                        <p class="sectionsubheading">Upload Your Projects Excel Sheet In Provided Format</p> 
+                    </div>
+                </div>
+                
+                <div class="requirementcontent">
+                    <p>Download Template Excel file given below and add your Projects in the respective columns</p>
+                    <p><strong>Important:</strong> In the 1st column (Project Gallery), write only the image filename (e.g., "project-image.jpg"). Make sure the actual images are uploaded to the Pimcore assets in the path you specify below.</p>
+                    
+                    <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/static/files/Projects_Upload_Template_{{ customertype|title }}.xlsx" 
+                           class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> 
+                            Download {{ customertype|title }} Projects Template
+                        </a>
+                    </div>
+                    
+                    <h3>Add Projects Sheet</h3>
+                    
+                    <div class="AddProjectForm">
+                        {{ form_start(form) }}
+                        <div class="Projectdetails">
+                            <div class="FormRow1">
+                                <div class="form-field ProjectTitle">
+                                    {{ form_row(form.ProfessionalID) }}
+                                </div>
+                            </div>
+                            
+                            <div class="FormRow2">
+                                <div class="form-field ImageAssetPath">
+                                    {{ form_row(form.ImageAssetPath) }}
+                                    <div class="asset-path-info" style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #007bff; border-radius: 4px;">
+                                        <h6 style="margin: 0 0 8px 0; color: #007bff;">How it works:</h6>
+                                        <p style="margin: 0; font-size: 14px; color: #6c757d;">
+                                            If your Excel has "project-image.jpg" in the Project Gallery column and you enter "/pictures/projects/" as the asset path, 
+                                            the system will look for the image at: <strong>/pictures/projects/project-image.jpg</strong> in your Pimcore assets.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group form-field ProjectGallery">
+                                {{ form_row(form.ProjectsexcelFile, {'attr': {'class': 'custom-file-input'}}) }}
+                                <div class="choosefilebtn">
+                                    <button type="button" id="custom-file-button" class="btn btn-primary">Choose File</button>
+                                    <span id="file-selected">No File Chosen</span>
+                                    <div class="File-Upload-warning" style="padding-top: 13px;">
+                                        <p style="color: red;">Please select an Excel file with project image names in the 1st column (Project Gallery)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-field ProjectSubmitBtn">
+                                {{ form_row(form._submit) }}
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                    
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // File selection handling
+                            const fileInput = document.querySelector('.custom-file-input');
+                            const infoArea = document.getElementById('file-selected');
+                            const customButton = document.getElementById('custom-file-button');
+                            
+                            if (fileInput && infoArea && customButton) {
+                                // Show file dialog on button click
+                                customButton.addEventListener('click', function() {
+                                    fileInput.click();
+                                });
+                                
+                                // Update display when file is selected
+                                fileInput.addEventListener('change', function() {
+                                    if (this.files.length > 0) {
+                                        infoArea.textContent = 'Selected file: ' + this.files[0].name;
+                                        document.querySelector('.File-Upload-warning').style.display = 'none';
+                                    } else {
+                                        infoArea.textContent = 'No File Chosen';
+                                        document.querySelector('.File-Upload-warning').style.display = 'block';
+                                    }
+                                });
+                            }
+                            
+                            // Asset path validation and formatting
+                            const assetPathInput = document.querySelector('input[name="bulk_projects_form[ImageAssetPath]"]');
+                            if (assetPathInput) {
+                                assetPathInput.addEventListener('blur', function() {
+                                    let value = this.value.trim();
+                                    if (value && !value.startsWith('/')) {
+                                        value = '/' + value;
+                                    }
+                                    if (value && !value.endsWith('/')) {
+                                        value = value + '/';
+                                    }
+                                    this.value = value;
+                                });
+                                
+                                // Real-time preview
+                                assetPathInput.addEventListener('input', function() {
+                                    const preview = document.querySelector('.asset-path-info p strong');
+                                    if (preview) {
+                                        let path = this.value.trim();
+                                        if (path && !path.startsWith('/')) path = '/' + path;
+                                        if (path && !path.endsWith('/')) path = path + '/';
+                                        preview.textContent = path + 'project-image.jpg';
+                                    }
+                                });
+                            }
+                            
+                            // Add required field indicators
+                            const form = document.querySelector('form');
+                            if (form) {
+                                const requiredFields = form.querySelectorAll('[required]');
+                                requiredFields.forEach(field => {
+                                    const label = form.querySelector(`label[for="${field.id}"]`);
+                                    if (label) {
+                                        label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                    
+                    <style>
+                        .FormRow2 {
+                            margin: 15px 0;
+                        }
+                        
+                        .form-field.ImageAssetPath {
+                            margin-bottom: 20px;
+                        }
+                        
+                        .asset-path-info {
+                            font-size: 14px;
+                        }
+                        
+                        .asset-path-info h6 {
+                            font-weight: 600;
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

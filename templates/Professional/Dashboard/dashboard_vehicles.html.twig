@@ -1,0 +1,81 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Requirements</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; height: 100%; justify-content:center;">
+            <!-- Active Requirements -->
+            <div class="projectssection">
+
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Vehicles</h2>
+                        <p class="sectionsubheading">Add and manage your vehicles.</p> 
+                    </div>
+                    <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if ProContractorVehicles |length < 10 %}
+                                <p>0{{ ProContractorVehicles |length }}</p>
+                            {% else %}
+                                <p>{{ ProContractorVehicles |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            {% if ProContractorVehicles |length < 2 %}
+                                <p>Vehicle</br>Found</p>
+                            {% else %}
+                                <p>Vehicles</br>Found</p>
+                            {% endif %}    
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="RequirementsMain">
+                    <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/account/Add-Vehicle" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Vehicle
+                        </a>
+                    </div>
+
+                    <div class="DashboardRequirements">
+                        <table class="requirements-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehicle No.</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ProContractorVehicle in ProContractorVehicles %}
+                                    <tr class="requirement-item">
+                                        <td>{{ ProContractorVehicle.getKey() }}</td>
+                                        <td>
+                                            {% if ProContractorVehicle %}
+                                                <a href="/requirements/{{ ProContractorVehicle.getKey() }}" class="requirementTitle">{{ ProContractorVehicle.getVehicleNumber() }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ProContractorVehicle.VehicleType }}</td>
+                                        <td>{{ ProContractorVehicle.getAvailabilityStatus() }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

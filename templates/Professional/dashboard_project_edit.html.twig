@@ -1,0 +1,413 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <div class="projectssection">
+                <div class="sectionheading">
+                    <h2>Edit Project</h2> 
+                </div>
+                
+                {% if app.user.customertype != 'Builder' %}
+                    <div class="editform" style="padding:0px 20px">
+                        {{ form_start(form) }}
+                        <input type="hidden" name="deleted_images" id="deleted-images" value="">
+
+                        <input type="hidden" name="deleted_videos" id="deleted-videos" value="">
+                        
+                        <div class="Projectdetails">
+                            <div class="form-group form-field ProjectGallery">
+                                <label for="professional_add_project_form_ProjectGallery" class="form-label required">Project Pictures</label>
+                                <div class="image-upload-container">
+                                    <div class="upload-area" id="dropzone">
+                                        <div class="upload-icon">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </div>
+                                        <div class="upload-text">
+                                            <span class="drag-text">Drag & drop images/videos here or</span>
+                                            <button type="button" class="btn btn-primary btn-sm" id="browse-btn">Browse Files</button>
+                                            {{ form_widget(form.ProjectGallery, {'attr': {
+                                                'class': 'image-input',
+                                                'style': 'display: none;'
+                                            }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="image-preview-container" id="image-preview-container">
+                                        {% for image in existingImages %}
+                                            <div class="preview-item existing-item" data-id="{{ image.id }}">
+                                                <img src="{{ image.thumbnail }}" class="preview-image" alt="Existing image">
+                                                <div class="media-type-badge">Image</div>
+                                                <button type="button" class="remove-btn" onclick="removeExistingImage({{ image.id }})">&times;</button>
+                                            </div>
+                                        {% endfor %}
+                                        {% for video in existingVideos %}
+                                            <div class="preview-item existing-item" data-path="{{ video }}">
+                                                <div class="video-preview">
+                                                    <i class="fas fa-video"></i>
+                                                    <div class="media-type-badge">Video</div>
+                                                </div>
+                                                <button type="button" class="remove-btn" onclick="removeExistingVideo('{{ video }}')">&times;</button>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="upload-status">
+                                        <span id="file-count">{{ existingImages|length + existingVideos|length }} files selected</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="FormRow1">
+                                <div class="form-field ProjectTitle">
+                                    {{ form_row(form.ProjectName) }}
+                                </div>
+                                <div class="form-field ProjectLocation">
+                                    {{ form_row(form.Location) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-field ProjectDescription">
+                                {{ form_row(form.ProjectDescription) }}
+                            </div>
+                            
+                            <div class="FormRow2">
+                                <div class="form-field ProjectValue">
+                                    {{ form_row(form.MinPrice) }}
+                                </div>
+                                <div class="form-field ProjectSpecs">
+                                    {{ form_row(form.Configuration) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-field ProjectCollab">
+                                {{ form_row(form.Collaborations) }}
+                            </div>
+                            
+                            <div class="form-field ProjectSubmitBtn">
+                                {{ form_row(form._submit) }}
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                {% endif %}
+            </div> 
+        </div>
+    </div>
+
+    <style>
+        .image-upload-container {
+            margin-bottom: 20px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-icon {
+            font-size: 50px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        .drag-text {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .preview-item:hover .remove-btn {
+            opacity: 1;
+        }
+        
+        .upload-status {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .video-preview {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-preview i {
+            font-size: 30px;
+            color: #555;
+        }
+        
+        .video-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .media-type-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.querySelector('.image-input');
+            fileInput.setAttribute('accept', 'image/*,video/*');
+            const browseBtn = document.getElementById('browse-btn');
+            const previewContainer = document.getElementById('image-preview-container');
+            const fileCount = document.getElementById('file-count');
+            const form = document.querySelector('form');
+            const deletedImagesInput = document.getElementById('deleted-images');
+            
+            let files = [];
+            let deletedImages = [];
+            let deletedVideos = [];
+            
+            // Handle drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropzone.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                dropzone.classList.remove('dragover');
+            }
+            
+            // Handle dropped files
+            dropzone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const droppedFiles = dt.files;
+                handleFiles(droppedFiles);
+            }
+            
+            // Handle file input change
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // Browse button click
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle selected files
+            function handleFiles(selectedFiles) {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    files.push(selectedFiles[i]);
+                }
+                updateFileCount();
+                renderPreviews();
+                
+                // Create a new DataTransfer object and set the files
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+            }
+            
+            // Update file count display
+            function updateFileCount() {
+                const existingItems = document.querySelectorAll('.existing-item');
+                const count = files.length + existingItems.length - deletedImages.length - deletedVideos.length;
+                fileCount.textContent = count === 1 ? '1 file selected' : `${count} files selected`;
+            }
+            
+            // Render previews
+            function renderPreviews() {
+                // Clear only new file previews, keep existing ones
+                const newPreviews = document.querySelectorAll('.preview-item:not(.existing-item)');
+                newPreviews.forEach(preview => preview.remove());
+                
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    
+                    if (file.type.match('image.*')) {
+                        // Handle image preview
+                        reader.onload = function(e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'preview-image';
+                            
+                            const mediaBadge = document.createElement('div');
+                            mediaBadge.className = 'media-type-badge';
+                            mediaBadge.textContent = 'Image';
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'remove-btn';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.addEventListener('click', () => removeFile(index));
+                            
+                            previewItem.appendChild(img);
+                            previewItem.appendChild(mediaBadge);
+                            previewItem.appendChild(removeBtn);
+                            previewContainer.appendChild(previewItem);
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    } 
+                    else if (file.type.match('video.*')) {
+                        // Handle video preview
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        const videoPreview = document.createElement('div');
+                        videoPreview.className = 'video-preview';
+                        
+                        const icon = document.createElement('i');
+                        icon.className = 'fas fa-video';
+                        
+                        const mediaBadge = document.createElement('div');
+                        mediaBadge.className = 'media-type-badge';
+                        mediaBadge.textContent = 'Video';
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.innerHTML = '&times;';
+                        removeBtn.addEventListener('click', () => removeFile(index));
+                        
+                        videoPreview.appendChild(icon);
+                        previewItem.appendChild(videoPreview);
+                        previewItem.appendChild(mediaBadge);
+                        previewItem.appendChild(removeBtn);
+                        previewContainer.appendChild(previewItem);
+                        
+                        // Create video element preview if needed
+                        reader.onload = function(e) {
+                            const video = document.createElement('video');
+                            video.src = e.target.result;
+                            video.controls = true;
+                            videoPreview.innerHTML = '';
+                            videoPreview.appendChild(video);
+                            videoPreview.appendChild(mediaBadge);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // Remove file from selection
+            function removeFile(index) {
+                files.splice(index, 1);
+                updateFileCount();
+                renderPreviews();
+                
+                // Update the file input
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+            }
+            
+            // Remove existing image
+            window.removeExistingImage = function(imageId) {
+                deletedImages.push(imageId);
+                const item = document.querySelector(`.existing-item[data-id="${imageId}"]`);
+                if (item) {
+                    item.style.display = 'none';
+                }
+                deletedImagesInput.value = deletedImages.join(',');
+                updateFileCount();
+            }
+
+            const deletedVideosInput = document.getElementById('deleted-videos');
+
+            // Remove existing video
+            // Update the removeExistingVideo function
+            window.removeExistingVideo = function(videoPath) {
+                deletedVideos.push(videoPath);
+                const item = document.querySelector(`.existing-item[data-path="${videoPath}"]`);
+                if (item) {
+                    item.style.display = 'none';
+                }
+                deletedVideosInput.value = deletedVideos.join(','); // Use the correct variable
+                updateFileCount();
+            }
+
+            
+            // Initial file count
+            updateFileCount();
+        });
+    </script>
+{% endblock %}

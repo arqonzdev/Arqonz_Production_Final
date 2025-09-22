@@ -1,0 +1,25 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+
+{% block content %}
+<div class="ArchitectListingcontentSection">
+    {% if customertype == 'Contractor'%}
+        <h1>Contractors for you</h1>
+    {% endif %}
+    {% if customertype == 'Designer'%}
+        <h1>Designers for you</h1>
+    {% endif %}
+    {% if customertype == 'Architect'%}
+        <h1>Architects for you</h1>
+    {% endif %}
+
+</div>
+<div class="ArchitectListingSection">
+    <div class="architect-list">
+        
+        {% for ProProfile in ProProfiles %}
+            {% include '/Professional/ProProfile_listing_card.html.twig' with {'ProProfile': ProProfile, 'listingtype': customertype} %}
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

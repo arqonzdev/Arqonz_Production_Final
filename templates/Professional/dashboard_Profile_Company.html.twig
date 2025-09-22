@@ -1,0 +1,245 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+
+
+
+{% block content %}
+    <!-- Add this in the head section of your HTML -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Profile</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column">
+            <!-- Profile Details -->
+            <div class="profile-details">
+                <div class="sectionheading">
+                    <h2>Profile Details</h2>
+                </div>
+
+                <div class="DashProfileMain">
+
+                    {% include 'Professional/Dashboard/DashboardProfileNavigation.html.twig' %}
+
+                    <div class="PersonalProfile">
+                        <div class="PersonalProfileFrames">
+                            <div class="ProfilePicture"> 
+                                {% set profileImage = customer.getProfilePicture() %}
+                                <img src="{{ profileImage ? profileImage.getThumbnail('galleryCarousel') : '/static/images/icons/DefaultDP.jpg' }}" 
+                                    width="100px" height="100px" alt="Profile Image" class="dashbord-profile-image">
+                            </div>
+                            <div class="PersonalProfileForm">
+
+                                <form>
+                                    <div class="FormRow">
+                                        <div class="form-group personalFirstName">
+                                            <label for="Company-name">Company Name:</label>
+                                            <input type="text" id="Company-name" name="Company-name" value="{{ CompanyName }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="GST-Number">GST Number:</label>
+                                            <input type="text" id="GST-Number" name="GST-Number" value="{{ GSTNumber }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group form-field">
+                                        <label class="col-form-label col-sm-2" for="architect_add_project_form_ProjectGallery">Cover Picture: </label>
+                                        <div class="col-sm-10">
+                                            <input type="file" id="CoverPicture" name="CoverPicture" class="custom-file-input form-control" data-preview-container="image-preview-container"> 
+                                        </div>
+                                        <div class="choosefilebtn">
+                                            <button type="button" id="custom-file-button" class="btn btn-primary" style="margin: 3px 0px;">Choose Files</button>
+                                            <span id="file-selected">No File Chosen</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="Company-Description">Company Description:</label>
+                                        <textarea id="Company-Description" name="Company-Description">{{ Description }}</textarea>
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="Skills">Skills:</label>
+                                            <input type="text" id="Skills" name="Skills" value="{{ Skills }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="Specialization">Specialization:</label>
+                                            <input type="text" id="Specialization" name="Specialization" value="{{ Specialization }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="Cities-Served">Cities Served:</label>
+                                            <input type="text" id="Cities-Served" name="Cities-Served" value="{{ CitiesServed }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="Year-Established">Year Established:</label>
+                                            <input type="text" id="Year-Established" name="Year-Established" value="{{ YearEstablished }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="price-per-hour">Price Per Hour (₹):</label>
+                                            <input type="number" id="price-per-hour" name="price-per-hour" value="{{ PriceForHour }}">
+                                        </div>
+                                    
+                                        {% if customer.getcustomertype() == 'Architect' %}
+                                            <div class="form-group">
+                                                <label for="COA-Number">COA Number:</label>
+                                                <input type="text" id="COA-Number" name="COA-Number" value="{{ CoaNumber }}">
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="Company-Street-Address">Company Street Address:</label>
+                                            <input type="text" id="Company-Street-Address" name="Company-Street-Address" value="{{ StreetAddress }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="Company-City">Company City:</label>
+                                            <input type="text" id="Company-City" name="Company-City" value="{{ City }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="Company-State">State:</label>
+                                            <input type="text" id="Company-State" name="Company-State" value="{{ State }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="Company-Country">Country:</label>
+                                            <input type="text" id="Company-Country" name="Company-Country" value="{{ Country }}">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="FormRow">
+                                        <div class="form-group">
+                                            <label for="Company-pin-code">Pin Code:</label>
+                                            <input type="text" id="Company-pin-code" name="Company-pin-code" value="{{ PinCode }}">
+                                        </div>
+                                    
+                                        <div class="form-group">
+                                            <label for="Company-Website">Company Website:</label>
+                                            <input type="text" id="Company-Website" name="Company-Website" value="{{ CompanyWebsite }}">
+                                        </div>
+                                    </div>
+
+                            
+                                    <div class="form-group" style="align-items:flex-end;">
+                                        <button type="submit">Save</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                
+                </div>
+
+            </div>
+        </div>
+
+        
+    </div>
+    
+    
+    
+    
+
+    <script>
+        document.getElementById('custom-file-button').addEventListener('click', function() {
+            document.querySelector('.custom-file-input').click();
+        });
+
+        document.querySelector('.custom-file-input').addEventListener('change', function() {
+            var input = this;
+            var infoArea = document.getElementById('file-selected');
+            
+            if (input.files.length === 1) {
+                var fileName = input.files[0].name;
+                infoArea.textContent = 'Selected file: ' + fileName;
+            } else if (input.files.length > 1) {
+                infoArea.textContent = input.files.length + ' files selected';
+            } else {
+                infoArea.textContent = 'No file selected';
+            }
+        });
+    </script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            var loadingOverlay = document.getElementById('loadingOverlay');
+
+            fetch('/account/Profile/Company-details/save', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Profile details saved successfully.');
+                    loadingOverlay.style.display = 'none';
+                    // Optionally, redirect to another page
+                } else {
+                    alert('An error occurred while saving your profile details.');
+                    loadingOverlay.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving your profile details.');
+                loadingOverlay.style.display = 'none';
+            });
+        });
+    </script>
+
+    <script>
+    //ADD required Field
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('form[name]');
+        var requiredFields = form.querySelectorAll('[required]');
+
+        for (var i = 0; i < requiredFields.length; i++) {
+        var field = requiredFields[i];
+        var label = form.querySelector('label[for="' + field.id + '"]');
+
+        if (label) {
+            label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+        }
+        }
+    });
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+    $(".js-select-cities").select2();
+    $(".js-select-skills").select2();
+    });
+    </script>
+
+{% endblock %}

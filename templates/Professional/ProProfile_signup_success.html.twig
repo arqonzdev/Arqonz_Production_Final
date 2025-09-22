@@ -1,0 +1,56 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{# @var news \Pimcore\Model\DataObject\ArchitectProfile #}
+
+
+{% block content %}
+    <div id="main-content" class="main-content mb-5">
+
+        <div class="page-header">
+            <h1 class="display-2 text-center">Thank you for submitting your details</h1>
+        </div>
+
+        <p class="text-center text-muted small mb-5">Your Professional Profile is Activated.</p>
+
+        <div class="mb-5 d-flex justify-content-center">
+            <div class="card col-md-8">
+                <div class="card-body">
+
+                    <h6>Portfolio Details</h6>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ 'Company' | trans }}
+                            </strong>
+                            {{ ProProfile.companyname }}
+                        </dd>
+                    </dl>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ 'general.description' | trans }}
+                            </strong>
+                            {{ ProProfile.Description }}
+                        </dd>
+                    </dl>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ customertype }} {{ 'Profile Name' | trans }}
+                            </strong>
+                            {{ ProProfile.customer.firstname }}
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="DashboardGo">
+            <a class="dashboardbuttonLink" href="/en/account/index"><span></span>Go to Dashboard</a>
+        </div>
+    </div>
+
+{% endblock %}

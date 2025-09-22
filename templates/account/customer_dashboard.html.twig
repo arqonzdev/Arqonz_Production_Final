@@ -1,0 +1,20 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('http://localhost:8001/static/css/arqonz_architectdashboard.css') %}
+{% block content %}
+    <div class="dashboard-container">
+        <div class="left-column">
+            <!-- Profile Details -->
+            <div class="profile-details">
+                <div class="sectionheading">
+                    <h2>Profile Details</h2>
+                </div>
+                <div class="details">
+                    <p><strong>Name:</strong>{{ customer.getFirstname() }}</p>
+                    <p><strong>Role:</strong> Customer</p>
+                    
+                    <a href="/" class="btn btn-lg btn-block btn-success btn" target="_blank"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>Visit HomePage</a>
+                </div>
+            </div>
+        
+    </div>
+{% endblock %}

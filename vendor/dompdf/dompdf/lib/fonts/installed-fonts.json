@@ -1,0 +1,15 @@
+{
+    "poppins": {
+        "300": "\/var\/www\/pimcore\/vendor\/dompdf\/dompdf\/lib\/fonts\/poppins_300_6803ad4fe8fecdbaeff0adce8839c330",
+        "normal": "\/var\/www\/pimcore\/vendor\/dompdf\/dompdf\/lib\/fonts\/poppins_normal_c6711d47669d7317aa5bfeda9f1dded3",
+        "500": "\/var\/www\/pimcore\/vendor\/dompdf\/dompdf\/lib\/fonts\/poppins_500_a8989f7b44a711b1b2ef07347b37ec13",
+        "600": "poppins_600_8766355d2de6e5a80a8dfebc31aeaedf"
+    },
+    "mukta": {
+        "normal": "\/var\/www\/pimcore\/vendor\/dompdf\/dompdf\/lib\/fonts\/mukta_normal_4b446821ee68ef3a67abfdcad52765c0",
+        "800": "mukta_800_60b95a10cf5883963e6840be94861b68"
+    },
+    "oswald": {
+        "bold": "oswald_bold_371a3c2fef19bcee663fdd65a31f68e4"
+    }
+}

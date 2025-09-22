@@ -1,0 +1,909 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{# {% do pimcore_head_link().appendStylesheet('/static/css/arqonz_custom.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz-home.css') %} #}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+{% form_theme form1 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+    {# <script src="https://unpkg.com/lenis@1.0.45-dev.0/dist/lenis.min.js"></script>  #}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="static/js/home.js" preload></script>
+    
+    {# <script src="static/js/lenis-script.js" preload></script> #}
+
+    <style>
+        .DashboardRow {
+            position: absolute;
+            top: 0;
+        }
+        .HeroSearch {
+            border: 0px !important;
+        }
+    </style>
+    
+    <div id="X"></div>
+    <div id="Y"></div>
+    <style>
+        .HeroSectionSlide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* align-items: center; */
+            align-items: flex-start;
+            position: relative;
+
+        }
+        .SlideTextContent {
+            max-width: 70rem;
+            color: #fff;
+            position: relative               ;
+        }
+        .SlideLableLine {
+            height: 2px;
+            width: 40px;
+            background-color: rgba(163, 163, 163, .24);
+        }
+        .SlideBackgroundImage img {
+            width: 82vw;
+            height: 82vh;
+        }
+        .SlideBackgroundImage {
+            position: absolute;
+            bottom: -7px;
+            right: 0;
+            z-index: 0;
+        }
+        .SlideBackgroundImage .BlackOverlay {
+            width:100vw;
+            height:100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            background-color: #00000087;
+        }
+        .SlideTextContent h2 {
+            color: #fff;
+            font-size: 65px;
+            line-height: 5.6rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .SlideTextContent p {
+            color: #fff;
+        }
+        .SlideTextlable {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+        .SlideCTAButton a {
+            display: flex;
+            gap: 13px;
+            width: fit-content;
+            padding: 12px 13px;
+            background: #fff;
+            border-radius: 30px;
+        }
+        .SlideCTAButton a .CTAbuttonIcon {
+            background: #000;
+            border-radius: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .SlideCTAButton p {
+            color: #000 !important;
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
+        .CTAbuttonIcon img {
+            max-width: 20px;
+        }
+        .SlideTextTitle {
+            max-width: 63rem;
+            margin-bottom: 24px;
+        }
+        .Hero-Slide-Description {
+            max-width: 34rem;
+        }
+
+        .HeroSectionSlides {
+            position: relative;
+            overflow: hidden;
+        }
+        .HeroSectionSlide {
+            opacity: 0;
+            /* position: relative; */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0px 10vw;
+            background: #000;
+            
+        }
+        .HeroSectionSlide.active {
+            opacity: 1;
+            position: relative;
+        }
+        
+    </style>
+    
+    <div class="HeroNewSection">
+        <div class="HeroSectionSlides">
+            
+            <div class="HeroSectionSlide">
+
+                <div class="SlideBackgroundImage">
+                    <img src="/static/images/HeroSlide-Images/build-beyond-boundaries.png" alt="">
+                    <div class="BlackOverlay"></div>
+                </div>
+                <div class="SlideTextContent">
+                    <div class="SlideTextTitle">
+                        <div class="SlideTextlable">
+                            <div class="SlideLableLine">
+                                
+                            </div>
+                            <p>Arqonz - The construction Eco System</p>
+                        </div>
+                        <h2>Build Beyond Boundaries</h2>
+                        <p class="Hero-Slide-Description">From concept to completion and beyond, ArQonZ offers comprehensive solutions to elevate your Construction & interior business.</p>
+                    </div>
+                    <div class="SlideCTAButton">
+                        <a href="#">
+                            <div class="CTAbuttonIcon">
+                                <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                            </div>
+                            <p>REGISTER</p>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="HeroSectionSlide">
+
+                <div class="SlideBackgroundImage">
+                    <img src="/static/images/HeroSlide-Images/AQ-IQ-Chatbot-Slide.png" alt="">
+                    <div class="BlackOverlay"></div>
+                </div>
+                <div class="SlideTextContent">
+                    <div class="SlideTextTitle">
+                        <div class="SlideTextlable">
+                            <div class="SlideLableLine">
+                                
+                            </div>
+                            <p>CHATBOT</p>
+                        </div>
+                        <h2>The only construction Chatbot platform you need</h2>
+                        <p class="Hero-Slide-Description">The only architecture chatbot platform you need: Our platform streamlines communication for architects, offering intelligent assistance with design queries, project management, and client interactions.</p>
+                    </div>
+                    <div class="SlideCTAButton">
+                        <a href="#">
+                            <div class="CTAbuttonIcon">
+                                <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                            </div>
+                            <p>REGISTER</p>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="HeroSectionSlide">
+
+                <div class="SlideBackgroundImage">
+                    <img src="/static/images/HeroSlide-Images/VR-AR.png" alt="">
+                    <div class="BlackOverlay"></div>
+                </div>
+                <div class="SlideTextContent">
+                    <div class="SlideTextTitle">
+                        <div class="SlideTextlable">
+                            <div class="SlideLableLine">
+                                
+                            </div>
+                            <p>VR/AR</p>
+                        </div>
+                        <h2>Transforming Construction Through VR/AR Innovation</h2>
+                        <p class="Hero-Slide-Description">Elevate your construn business with our VR/AR solutions, offering immersive visualization and real-time collaboration to boost project efficiency and client engagement.</p>
+                    </div>
+                    <div class="SlideCTAButton">
+                        <a href="#">
+                            <div class="CTAbuttonIcon">
+                                <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                            </div>
+                            <p>REGISTER</p>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const slides = document.querySelectorAll('.HeroSectionSlide');
+            let currentSlide = 0;
+    
+            // Function to play animation
+            function animateSlide(slide) {
+                const slideTextContent = slide.querySelector('.SlideTextContent');
+                const label = slideTextContent.querySelector('.SlideTextlable');
+                const heading = slideTextContent.querySelector('h2');
+                const otherContent = slideTextContent.querySelectorAll('p, .SlideCTAButton');
+    
+                // Reset initial positions for animations
+                gsap.set(label, { y: -30, opacity: 0 });
+                gsap.set(heading, { y: -30, opacity: 0 });
+                gsap.set(otherContent, { y: 30, opacity: 0 });
+    
+                // Animate all elements at the same time
+                gsap.to([label, heading], {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                });
+                gsap.to(otherContent, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.5,
+                    ease: 'power2.out',
+                });
+            }
+    
+            // Function to change slides
+            function changeSlide() {
+                // Hide current slide
+                slides[currentSlide].classList.remove('active');
+    
+                // Move to next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+    
+                // Show next slide
+                slides[currentSlide].classList.add('active');
+    
+                // Trigger animation on the new slide
+                animateSlide(slides[currentSlide]);
+            }
+    
+            // Initialize first slide
+            slides[currentSlide].classList.add('active');
+            animateSlide(slides[currentSlide]);
+    
+            // Auto-slide every 5 seconds
+            setInterval(changeSlide, 5000);
+        });
+    </script>
+    
+    
+
+    <div class="homeheroSection">
+        <div class="heroCircle">
+        {# No Content Needed #}
+        </div>
+        <div class="HeroSectionImage">
+            <img src="/static/images/Arqonz-Dashboard-Preview.png" alt="Arqonz Dashboard Preview">
+        </div>
+        <div class="HeroSectionTextCOntent">
+            <div class="heroTitle">
+                <ul id="titleEffects">
+                    <li>Build Beyond Boundaries.</li>
+                    <li>Your Success, Our Focus.</li>
+                    <li>Build Smarter, Not Harder.</li>
+                    <li>Design Destiny Delivered.</li>
+                    <li>Your Vision, Our Platform.</li>
+                    <li>Quotes in Seconds.</li>
+                    <li>Your Success, Our Focus.</li>
+                    <li>Increase revenue.</li>
+                    <li>Reduce mistakes and waste.</li>
+                </ul>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const titleList = gsap.utils.toArray('#titleEffects li');
+                        const titlesTl = gsap.timeline({ repeat: -1 });
+
+                        titleList.forEach((element, index) => {
+                            titlesTl.to(element, {
+                                duration: 0.9,
+                                opacity: 1,
+                                rotationX: 0,
+                                scale: 1, /* Zoom in */
+                                // color: "#FFFFFF", /* Change color on entry */
+                                transformOrigin: 'center',
+                                ease: 'power3.out', /* Smooth easing for entrance */
+                            })
+                            .to(element, {
+                                duration: 0.7,
+                                opacity: 0,
+                                y: 20,
+                                rotationX: -90,
+                                scale: 1, /* Zoom out */
+                                color: "#cecece", /* Transition back to original color */
+                                transformOrigin: 'center',
+                                ease: 'power2.in', /* Subtle exit easing */
+                                delay: 1.5, /* Extended delay to view text longer */
+                            });
+                        });
+                    });
+
+                </script>
+                <!-- <h2>Build Beyond Boundaries.</h2> -->
+              <p>We bring together verified professionals—architects, interior designers, </br>contractors, material suppliers, and blue-collar workers—onto a single</br> platform. Our mission is simple: to enable seamless collaboration, faster decision-making, and smarter building outcomes using technology,</br>data,and deep industry insights.</p>
+            </div>
+            <!-- <div class="HeroSearch">
+                <div class="searchoptions">
+                    <div class="SearchCOl1">
+                        <img src="/static/images/icons/Category.svg" alt="Categories">
+                        <select name="profession" id="profession-dropdown">
+                            <option value="Architect">Architect</option>
+                            <option value="Builder">Builder</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Designer">Designer</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Manufacturer">Manufacturer</option>
+                        </select>
+                    </div>
+                    <div class="SearchCOl2">
+                        <input class="pro-search-input" type="text" placeholder="Search">
+                    </div>
+                </div>
+
+                <div class="SearchCOl3">
+                    <button class="pro-search-icon" id="HerosearchButton">Search</button>
+                </div>
+                
+            </div> -->
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get elements
+                    const professionDropdown = document.getElementById('profession-dropdown');
+                    const searchInput = document.querySelector('.pro-search-input');
+                    const searchButton = document.getElementById('HerosearchButton');
+                
+                    // Function to handle the search action
+                    function performSearch() {
+                        // Get the selected profession and search input value
+                        const selectedProfession = professionDropdown.value;
+                        const searchValue = searchInput.value.trim();
+                
+                        // Check if search input is not empty
+                        if (searchValue) {
+                            // Construct the URL and navigate to it
+                            const searchURL = `/Search/${selectedProfession}/${encodeURIComponent(searchValue)}`;
+                            window.location.href = searchURL;
+                        } else {
+                            alert('Please enter a search term.');
+                        }
+                    }
+                
+                    // Add event listener to the search button
+                    searchButton.addEventListener('click', performSearch);
+                
+                    // Add event listener for 'Enter' key on the search input
+                    searchInput.addEventListener('keydown', function(event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();  // Prevent form submission (if inside a form)
+                            performSearch();
+                        }
+                    });
+                });
+            </script>
+
+            <div class="frequentlysearched">
+            <p><span class="lable">Frequently Searched: </span> Architects, Builders</p>
+            </div>
+        </div>
+    </div>
+    <div class="HomeProductsSection" id="HomeProductsSection">
+        <div class="HomeProductsWrapper">
+            <div class="ProductsTopSection">
+                <div class="ProductsHeadingSection">
+                    <h2 class="HomeSectiontitle">Products</h2>
+                    <p class="HomeSectionSubtitle">Explore the Products to build your dream project.</p>
+                </div>
+                <a href="https://arqonz.com/products">
+                    <div class="ProductsExplore">
+                        <p>Explore All</p>
+                        <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                    </div>
+                </a>
+            </div>
+
+            <div class="HomeProductsList">
+                <a href="/categories/Cement">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Cement.jpg" class="HomeProductfeaturedImage" alt="Cement">
+                    </div>
+                    <h3 class="HomeProductTitle">Cement</h3>
+                    <p class="HomeProductDesc">Strong building material for construction projects.</p>
+                </div>
+                </a>
+
+                <a href="/categories/Bricks-&-Blocks">
+
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Bricks.jpg" class="HomeProductfeaturedImage" alt="Bricks">
+                    </div>
+                    <h3 class="HomeProductTitle">Bricks</h3>
+                    <p class="HomeProductDesc">Solid blocks for building walls and structures.</p>
+                </div>
+                </a>
+
+                <a href="/categories/TMT-Steel-Bars">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/TMT.jpeg" class="HomeProductfeaturedImage" alt="TMT Bars">
+                    </div>
+                    <h3 class="HomeProductTitle">TMT Bars</h3>
+                    <p class="HomeProductDesc">Reinforcement bars for strong concrete structures.</p>
+                </div>
+                </a>
+
+                <a href="/categories/Tiles">
+                <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                    <div class="ProdImgCOntainer">
+                        <img src="/static/images/Tiles.jpg" class="HomeProductfeaturedImage" alt="Tiles">
+                    </div>
+                    <h3 class="HomeProductTitle">Tiles</h3>
+                    <p class="HomeProductDesc">Durable, stylish, versatile flooring for all spaces.</p>
+                </div>
+                </a>
+                
+                <a href="/categories/Wooden-Products">
+                    <div class="HomeProductCard" style="min-width: 1rem; background-color: #fff;">
+                        <div class="ProdImgCOntainer">
+                            <img src="/static/images/Productimages/Wood.png" class="HomeProductfeaturedImage" alt="Wooden Products">
+                        </div>
+                        <h3 class="HomeProductTitle">Wooden Products</h3>
+                        <p class="HomeProductDesc">Discover high-quality wooden products crafted with precision.</p>
+                    </div>
+                </a>
+
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="IndiaFirstSection">
+        <div class="IndiaFirstImage">
+            <img src="/static/images/India-First.jpeg" alt="Indias First Construction SAAS company">
+        </div>
+
+        <div class="IndiaFirstContent">
+            <h1 class="IndiasFirstTitle">India’s First Construction based SaaS Company</h1>
+            <p class="IndiaFirstPara">We are building Indian's first ecommerce construction platform for you and your next generations. From concept to completion and beyond, ArQonZ offers comprehensive solutions to elevate your business. Whether you're marketing your next project, managing the construction process, or providing exceptional aftercare, we've got you covered.</p>
+            <div class="IndiaFirstFeatures">
+                <div class="Indiafeature">
+                    <img src="/static/images/icons/Shield-Done.svg" alt="Done">
+                    <p>Vendor Onboarding</p>
+                </div>
+                <div class="Indiafeature">
+                    <img src="/static/images/icons/Shield-Done.svg" alt="Done">
+                    <p>Instant Quote for BOM.</p>
+                </div>
+                <div class="Indiafeature">
+                    <img src="/static/images/icons/Shield-Done.svg" alt="Done">
+                    <p>E-Negotiations</p>
+                </div>
+                <div class="Indiafeature">
+                    <img src="/static/images/icons/Shield-Done.svg" alt="Done">
+                    <p>Endorsements & Recommendations</p>
+                </div>
+            </div>
+
+            <div class="FirstLearnmoreWorks">
+                <a href="https://arqonz.com/about-us" class="LearnMore">Learn More</a>
+                <!-- <a href="#" class="HowWorks">How it works</a> -->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ProfessionalsForYou Architects">
+        <div class="HomeProductsSection">
+            <div class="HomeProductsWrapper">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Architects for you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Architects for your Projects.</p>
+                    </div>
+                    <a href="https://arqonz.com/architects">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for architect in architects|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ architect.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ architect.description|length > 120 ? architect.description|slice(0, 120) ~ '...' : architect.description }} 
+                                        <a href="/architect/portfolio/{{ architect.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = architect.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ architect.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Designers">
+        <div class="HomeProductsSection" style="background: rgba(0, 167, 157, 0.05);">
+            <div class="HomeProductsWrapper" style="background:none;">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Builders For you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Builders for your Projects.</p>
+                    </div>
+                    <a href="/builders">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Architects">
+        <div class="HomeProductsSection">
+            <div class="HomeProductsWrapper">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Contractors for you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Contractors for your Projects.</p>
+                    </div>
+                    <a href="https://arqonz.com/contractors">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="ProfessionalsForYou Designers">
+        <div class="HomeProductsSection" style="background: rgba(0, 167, 157, 0.05);">
+            <div class="HomeProductsWrapper" style="background:none;">
+                <div class="ProductsTopSection">
+                    <div class="ProductsHeadingSection">
+                        <h2 class="HomeSectiontitle">Interior Designers For you</h2>
+                        <p class="HomeSectionSubtitle">Explore the best Designers for your Projects.</p>
+                    </div>
+                    <a href="/designers">
+                        <div class="ProductsExplore">
+                            <p>Explore All</p>
+                            <img src="/static/images/icons/arrow-down.svg" alt="Explore All Products">
+                        </div>
+                    </a>
+                </div>
+
+                <div class="ProfessionalFeaturedSection">
+                    <div class="Professionalfeatured FeaturedSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Featured</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>New</p>
+                    </div>
+                    <div class="Professionalfeatured FeaturedUnSelected">
+                        <img src="/static/images/icons/Star.svg" alt="Star">
+                        <p>Top-Rated</p>
+                    </div>
+                </div>
+
+                <div class="HomeProfessionalList">
+                    {% for architect in designers|slice(0, 2) %}
+                        <div class="HomeProfessionalCard">
+                            <div class="Row1">
+                                <div class="ProfessionalImageCon">
+                                    <div class="imgCOnt">
+                                        <img src="/static/images/ArchitectDP.jpeg" alt="Architect">
+                                    </div>
+                                    <div class="ProfName">
+                                        <h3>{{ architect.getCompanyName() }}</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="ProfessionalStatsCon">
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getYearEstablished() }}</p>
+                                        <p class="label">Estd. Year</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProjects() |length }}</p>
+                                        <p class="label">Projects</p>
+                                    </div>
+                                    <div class="ProfessionalStat">
+                                        <p class="stat">{{ architect.getProRating() }}</p>
+                                        <p class="label">Rating</p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="Row2">
+                                <div class="ProfessionalProfileDesc">
+                                    <p>
+                                        {{ architect.description|length > 120 ? architect.description|slice(0, 120) ~ '...' : architect.description }} 
+                                        <a href="/designer/portfolio/{{ architect.getKey() }}" class="seeMoreProf">See More</a>
+                                    </p>
+                                </div>
+                            </div>
+                            {% set projects = architect.getProjects() %}
+                            <div class="Row3">
+                                <div class="ProfessionalProjects">
+                                    <div class="ProjCount">
+                                        
+                                        <p>All Projects ({{ architect.getProjects() |length }})</p>
+                                    </div>
+                                    
+                                    <div class="ProjectsList">
+                                        {% for project in projects|slice(0, 2) %}
+                                            <div class="HomeProjCard">
+                                                <div class="ProjectimgContainer">
+                                                    {% if project.ProjectGallery is not empty %}
+                                                        {% set images = project.ProjectGallery.getItems() %}
+                                                        {% if images|length > 0 %}
+                                                            <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <img src="/static/images/no-image-found.png" width="265px" height="171px" alt="Project Thumbnail">
+                                                    {% endif %}
+                                                    <div class="HomeProjectName">
+                                                        <h3>{{ project.getProjectName() }}</h3>
+                                                        <p>{{ project.getLocation() }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all the .Professionalfeatured elements
+            const professionalFeaturedItems = document.querySelectorAll('.Professionalfeatured');
+        
+            // Add click event listener to each item
+            professionalFeaturedItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove "FeaturedSelected" class from any element that has it and add "FeaturedUnSelected"
+                    professionalFeaturedItems.forEach(feature => {
+                        feature.classList.remove('FeaturedSelected');
+                        feature.classList.add('FeaturedUnSelected');
+                    });
+        
+                    // Add "FeaturedSelected" class to the clicked element and remove "FeaturedUnSelected"
+                    this.classList.add('FeaturedSelected');
+                    this.classList.remove('FeaturedUnSelected');
+                });
+            });
+        });
+    </script>
+
+
+
+    
+
+
+    
+
+    {# <div class="Arqfooter">
+        <div class="ArqFootercol">
+            <img src="/static/images/Arqonz-NewLOGO.png" class="FooterLogo" alt="">
+            <p>Chennai, India</p>
+            <p>Call us: 0984453895</p>
+        </div>
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">Explore</h3>
+            <div class="FooterLinks">
+                <a class="FooterLink" href="#">Building Materials</a>
+                <a class="FooterLink" href="#">Architects</a>
+                <a class="FooterLink" href="#">Builders</a>
+                <a class="FooterLink" href="#">Engineers</a>
+                <a class="FooterLink" href="#">Interior</a>
+            </div>
+        </div>
+
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">About</h3>
+            <div class="FooterLinks">
+                <a class="FooterLink" href="#">Building Materials</a>
+                <a class="FooterLink" href="#">Architects</a>
+                <a class="FooterLink" href="#">Builders</a>
+                <a class="FooterLink" href="#">Engineers</a>
+                <a class="FooterLink" href="#">Interior</a>
+            </div>
+        </div>
+        <div class="ArqFootercol">
+            <h3 class="FooterTitle">Coming Soon</h3>
+            <div class="FooterLinks">
+                <img src="/static/images/download-apple.png" alt="">
+                <img src="/static/images/Download-android.png" alt="">
+            </div>
+        </div>
+    </div> #}
+
+
+
+    
+    
+    {# <div class="loading-container">
+        <!-- Create a progress bar -->
+        <p>Loading the experience</p>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+        <!-- Create a text element to display the percentage -->
+        <p class="loading-text">0%</p>
+    </div>
+    <div id="canvas-container">
+        <div id="animatedtext">
+            <p id="uppertext">Welcome To Arqonz</p>
+            <p id="lowertext">A Better Way To Build</p>
+        </div>
+
+        <div class="overlay-div">
+            <div class="scroll-down">
+                <h3>SCROLL DOWN</h3>
+                <i class="fa-solid fa-down"></i>
+            </div>
+        </div>
+
+        <canvas id="canvasA"></canvas>
+
+    </div> #}
+    
+
+    
+
+{% endblock %}

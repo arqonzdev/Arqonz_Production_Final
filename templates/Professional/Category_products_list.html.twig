@@ -1,0 +1,504 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{# {% do pimcore_head_link().appendStylesheet('/static/css/arqonz_custom.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz-home.css') %} #}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+
+<div class="maincontent">
+    <div class="PageheadingSection" style="margin-bottom: 40px;">
+        <div class="ProdPageHeading">
+            <h2>{{Category}}</h2>
+        </div>
+        <div class="ProdPageSubHeading">
+            <p>Buy the materials to build home</p>
+        </div>
+       
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.CategoriesContainer');
+            const scrollSpeed = 1; // Adjust this value to change the scroll speed
+            let scrollInterval;
+
+            function startScrolling() {
+                scrollInterval = setInterval(() => {
+                    container.scrollLeft += scrollSpeed;
+
+                    // Reset scroll position to the beginning if we've reached the end
+                    if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+                        container.scrollLeft = 0;
+                    }
+                }, 20);
+            }
+
+            function stopScrolling() {
+                clearInterval(scrollInterval);
+            }
+
+            // Start scrolling when the page loads
+            startScrolling();
+
+            // Stop scrolling when mouse enters the container
+            container.addEventListener('mouseenter', stopScrolling);
+
+            // Resume scrolling when mouse leaves the container
+            container.addEventListener('mouseleave', startScrolling);
+
+            // Add event listeners to each HomeProductCard
+            const productCards = document.querySelectorAll('.HomeProductCard');
+
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.classList.add('SelectedProductCard');
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.classList.remove('SelectedProductCard');
+                });
+            });
+        });
+    </script>
+
+    
+    {{ form_start(form) }}
+
+    <div class="ProductsMainSection">
+        <div class="ProductsFilterbar">
+            <div class="FilterHeading">
+                <h2>Filter Product</h2>
+            </div>
+            <div class="FilterContent">
+                
+
+                <label for="priceRange">Price Range: </label>
+                <div class="range-slider">
+                    <div class="range-highlight"></div>
+                    <input type="range" id="minPrice" min="1" max="10000" value="1" oninput="updateSlider()">
+                    <input type="range" id="maxPrice" min="1" max="10000" value="10000" oninput="updateSlider()">
+                </div>
+                <div class="price-inputs">
+                
+                    <div class="minInput">
+                        {{ form_row(form.min) }}
+                        {# <label>MIN</label> #}
+                        {# <input type="number" id="minPriceInput" min="1" max="10000" value="1" oninput="updateMinPrice(this.value)"> #}
+                    </div>
+
+                    <div class="maxInput">
+                        {{ form_row(form.max) }}
+                        {# <label>MAX</label>    #}
+                        {# <input type="number" id="maxPriceInput" min="1" max="10000" value="1000000" oninput="updateMaxPrice(this.value)"> #}
+                    </div>
+                </div>
+
+                <div class="applyFilterBtn">
+                    {{ form_row(form._submit) }}
+                    {# <button>Apply</button> #}
+                </div>
+
+                <style>
+                    /* Basic styling for visualization */
+                    .CategoriesSection {
+                        border-top: 1px solid rgba(35, 38, 47, 0.10);
+                        padding: 30px 0px;
+                        margin: 16px 0px;
+                    }
+                    .category {
+                        font-weight: bold;
+                        margin-top: 10px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                    .subcategory {
+                        margin-left: 20px;
+                        display: none; /* Initially hide subcategories */
+                    }
+                    .dropdown-icon {
+                        margin-left: 5px;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+                    }
+                    .rotate {
+                        transform: rotate(-90deg); /* Rotate icon when dropdown is open */
+                    }
+                    .CategoriesSection h3 {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+                    .CategoriesSection .category {
+                        font-size: 14px;
+                        font-weight: 300;
+                        margin-bottom: 9px;
+                    }
+                    .CategoriesSection .subcategory {
+                        font-size: 14px;
+                        font-weight: 300;
+                    }
+                    .CategoriesSection .subcategory div {
+                        border-top: 1px solid #DDD;
+                        padding: 10px 0px;
+                        cursor: pointer;
+                    }
+                </style>
+
+                <div class="CategoriesSection">
+                    <h3>Product Categories:</h3>
+                    <div class="category"><span><a href="/luxury/products">Luxury</a></span><span class="dropdown-icon rotate">↓</span></div>
+                    <div class="SubCategories">
+                        <!-- Categories and subcategories will be inserted here -->
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        // Step 1: Fetch the JSON data
+                        fetch("/static/files/CusProdCategories.json")
+                            .then(response => response.json())
+                            .then(data => {
+                                // Step 2: Parse and iterate through the data
+                                const subCategoriesContainer = document.querySelector('.SubCategories');
+                                for (const [category, subcategories] of Object.entries(data)) {
+                                    // Step 3: Create category element
+                                    const categoryElement = document.createElement('div');
+                                    categoryElement.classList.add('category');
+
+                                    // Append the category name
+                                    const categoryName = document.createElement('span');
+                                    categoryName.textContent = category;
+
+                                    // Append the dropdown icon to the same element
+                                    const iconSpan = document.createElement('span');
+                                    iconSpan.classList.add('dropdown-icon');
+                                    iconSpan.textContent = '↓'; // Down arrow icon
+
+                                    categoryElement.appendChild(categoryName);
+                                    categoryElement.appendChild(iconSpan);
+                                    subCategoriesContainer.appendChild(categoryElement);
+
+                                    // Create a container for subcategories
+                                    const subcategoryContainer = document.createElement('div');
+                                    subcategoryContainer.classList.add('subcategory'); // Apply class for toggling display
+                                    subCategoriesContainer.appendChild(subcategoryContainer);
+
+                                    // Step 4: Create subcategory elements
+                                    for (const subcategory of Object.keys(subcategories)) {
+                                        const subcategoryElement = document.createElement('div');
+                                        subcategoryElement.textContent = subcategory;
+                                        subcategoryContainer.appendChild(subcategoryElement);
+
+                                        // Step 6: Add click event listener to each subcategory
+                                        subcategoryElement.addEventListener('click', function (event) {
+                                            event.stopPropagation(); // Prevent triggering the parent category click event
+                                            const categorySlug = category.replace(/\s+/g, '-').toLowerCase();
+                                            const subcategorySlug = subcategory.replace(/\s+/g, '-').toLowerCase();
+                                            window.location.href = `/categories/${categorySlug}/${subcategorySlug}`;
+                                        });
+                                    }
+
+                                    // Step 5: Add click event listener to toggle subcategories and navigate to category page
+                                    categoryElement.addEventListener('click', function (event) {
+                                        // Prevent dropdown from triggering when clicking the arrow
+                                        if (event.target !== iconSpan) {
+                                            // Redirect to the category page
+                                            const categorySlug = category.replace(/\s+/g, '-').toLowerCase();
+                                            window.location.href = `/categories/${categorySlug}`;
+                                        } else {
+                                            // Toggle subcategories
+                                            const isVisible = subcategoryContainer.style.display === 'block';
+                                            subcategoryContainer.style.display = isVisible ? 'none' : 'block';
+                                            iconSpan.classList.toggle('rotate');
+                                        }
+                                    });
+                                }
+                            })
+                            .catch(error => console.error('Error fetching or processing JSON:', error));
+                    });
+                </script>
+            </div>
+
+        </div>
+
+        
+
+        <div class="ProductsPageListSection">
+            <div class="SortbyBar">
+                <div class="SortByleft">
+
+                    {{ form_widget(form.sort) }}
+                    {{ form_end(form) }}
+                    {# <div class="SortByDropdown">
+                        <label for="sortOptions">Sort by:</label>
+                        <select id="sortOptions" name="sortOptions">
+                            <option value="default">Default</option>
+                            <option value="priceLowHigh">Price (Low to High)</option>
+                            <option value="priceHighLow">Price (High to Low)</option>
+                            <option value="newest">Newest Arrivals</option>
+                            <option value="popularity">Popularity</option>
+                            <option value="customerRating">Customer Rating</option>
+                        </select>
+                    </div> #}
+                </div>
+
+                <div class="SortByRight">
+                    <div class="ProductSearchContainer">
+                        <img src="/static/images/icons/search-normal.svg" alt="Products Search">
+                        <input type="text" class="ProductsSearchBox" placeholder="Search Company">
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const searchBox = document.querySelector('.ProductsSearchBox');
+                    
+                            searchBox.addEventListener('keypress', function (event) {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();  // Prevent the default form submission behavior
+                    
+                                    let searchQuery = searchBox.value.trim();
+                                    if (searchQuery.length > 0) {
+                                        // Create a form dynamically and submit with POST
+                                        let form = document.createElement('form');
+                                        form.method = 'POST';
+                                        form.action = '/products-search';
+                    
+                                        let input = document.createElement('input');
+                                        input.type = 'hidden';
+                                        input.name = 'search';
+                                        input.value = searchQuery;
+                    
+                                        form.appendChild(input);
+                                        document.body.appendChild(form);
+                                        form.submit();
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+
+            <div class="PageProductsList" id="products-container">
+                {% for product in products %}
+                    <div class="PageProductCard">
+                        <div class="ProductFeaImg">
+                            {% if product.isProProduct %}
+                                {% if product.Image_Path %}
+                                    <img src="{{ product.Image_Path }}" alt="{{ product.Product_Name }}">
+                                {% else %}
+                                    <img src="/static/images/default-product.jpg" alt="{{ product.Product_Name }}">
+                                {% endif %}
+                            {% else %}
+                                <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="{{ product.Product_Name }}">
+                            {% endif %}
+                        </div>
+                        <div class="ProductPropertiesSection">
+                            <a href="{{ product.viewLink }}" class="ProductCardName">
+                                <div class="ProdName">
+                                    <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                                </div>
+                            </a>
+                            <div class="ProdPrice">
+                                <p class="ProductcardPrice">
+                                    <span class="ProdPriceRs">
+                                        <span class="RupeeSymbol">₹</span> 
+                                        <span class="ProductPriceAmt">{{ product.Product_Price }}</span>
+                                        <span class="PriceUnits">/ {{ product.Product_Unit }}</span>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="ProdReviews">
+                                <p class="ProdCardReviews">24 Reviews</p>
+                            </div>
+                            <a href="{{ product.viewLink }}" class="ProductCardName">
+                                <div class="ProdEnquire">
+                                    <p class="ProdCardEnquire">View</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="loading-indicator" id="loading-indicator" style="display: none; text-align: center; padding: 20px;">
+                <div class="spinner"></div>
+                <p>Loading more products...</p>
+            </div>
+        </div>
+    </div>
+
+    {# Add the infinite scroll JavaScript at the end of the template #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const productsContainer = document.getElementById('products-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        let isLoading = false;
+        let offset = {{ products|length }};
+        const totalProducts = {{ totalProducts }};
+        let hasMore = offset < totalProducts;
+
+        // Function to load more products
+        function loadMoreProducts() {
+            if (isLoading || !hasMore) return;
+            
+            isLoading = true;
+            loadingIndicator.style.display = 'block';
+            
+            fetch('{{ path("Products_Categories_Load_More", {url: categorySlug}) }}?offset=' + offset + 
+                '&minPrice={{ minPrice }}&maxPrice={{ maxPrice }}&sortOption={{ sortOption }}', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.html) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data.html;
+                    while (tempDiv.firstChild) {
+                        productsContainer.appendChild(tempDiv.firstChild);
+                    }
+                    offset += 10;
+                    hasMore = data.hasMore;
+                    
+                    // If no more products, remove the sentinel
+                    if (!hasMore) {
+                        const sentinel = document.getElementById('scroll-sentinel');
+                        if (sentinel) sentinel.remove();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error loading more products:', error);
+                loadingIndicator.innerHTML = '<p>Error loading products. Please try again.</p>';
+            })
+            .finally(() => {
+                isLoading = false;
+                loadingIndicator.style.display = 'none';
+            });
+        }
+
+        // Intersection Observer for infinite scroll
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && hasMore && !isLoading) {
+                loadMoreProducts();
+            }
+        }, {
+            rootMargin: '200px', // Load more when 200px away from bottom
+            threshold: 0.01
+        });
+
+        // Create a sentinel element at the bottom of the container
+        const sentinel = document.createElement('div');
+        sentinel.id = 'scroll-sentinel';
+        sentinel.style.height = '1px';
+        productsContainer.appendChild(sentinel);
+        observer.observe(sentinel);
+
+        // Fallback for older browsers
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const pageHeight = document.body.offsetHeight;
+            const threshold = 500; // pixels from bottom
+            
+            if (scrollPosition > pageHeight - threshold && hasMore && !isLoading) {
+                loadMoreProducts();
+            }
+        });
+    });
+    </script>
+
+    <style>
+    .loading-indicator {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        width: 100%;
+    }
+
+    .loading-indicator .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #3498db;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+    }
+
+    .loading-indicator p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Error state */
+    .loading-indicator.error {
+        color: #e74c3c;
+    }
+    </style>
+
+    <script>
+        function updateSlider() {
+            const minPrice = parseInt(document.getElementById('minPrice').value);
+            const maxPrice = parseInt(document.getElementById('maxPrice').value);
+            const minPriceInput = document.getElementById('products_page_filter_form_min');
+            const maxPriceInput = document.getElementById('products_page_filter_form_max');
+
+            if (minPrice > maxPrice - 100) {
+                document.getElementById('minPrice').value = maxPrice - 100;
+            }
+
+            minPriceInput.value = minPrice;
+            maxPriceInput.value = maxPrice;
+
+            updateRangeHighlight(minPrice, maxPrice);
+        }
+
+        function updateMinPrice(value) {
+            const maxPrice = parseInt(document.getElementById('maxPrice').value);
+            if (parseInt(value) > maxPrice - 100) {
+                value = maxPrice - 100;
+            }
+            document.getElementById('minPrice').value = value;
+            updateSlider();
+        }
+
+        function updateMaxPrice(value) {
+            const minPrice = parseInt(document.getElementById('minPrice').value);
+            if (parseInt(value) < minPrice + 100) {
+                value = minPrice + 100;
+            }
+            document.getElementById('maxPrice').value = value;
+            updateSlider();
+        }
+
+        function updateRangeHighlight(minPrice, maxPrice) {
+            const rangeHighlight = document.querySelector('.range-highlight');
+            const rangeSlider = document.querySelector('.range-slider');
+            const rangeWidth = rangeSlider.clientWidth;
+            const minPercent = ((minPrice - 1) / (10000 - 1)) * rangeWidth;
+            const maxPercent = ((maxPrice - 1) / (10000 - 1)) * rangeWidth;
+
+            rangeHighlight.style.left = `${minPercent}px`;
+            rangeHighlight.style.width = `${maxPercent - minPercent}px`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSlider();
+        });
+    </script>
+</div>
+
+{% endblock %}

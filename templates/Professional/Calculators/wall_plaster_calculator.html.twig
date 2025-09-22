@@ -1,0 +1,196 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Wall Plaster Calculator</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Wall Plaster Calculator</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>Enter the height of the wall in feet in the input field labeled "Wall Height".</li>
+                    <li>Enter the length of the wall in feet in the input field labeled "Wall Length".</li>
+                    <li>Click the "Calculate" button to determine the required materials.</li>
+                    <li>The result will display:
+                      <ul>
+                        <li>The amount of cement needed (in Kg).</li>
+                        <li>The amount of sand needed (in cubic feet).</li>
+                      </ul>
+                    </li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Wall Plaster Calculator</h2>
+    
+            <!-- Wall Length -->
+            <div class="FormField">
+                <label for="wall-length">Wall Length (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-length" placeholder="0" />
+                </div>
+            </div>
+    
+            <!-- Wall Height -->
+            <div class="FormField">
+                <label for="wall-height">Wall Height (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-height" placeholder="0" />
+                </div>
+            </div>
+
+    
+            <!-- Calculate and Reset Buttons -->
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const calculateBtn = document.getElementById("calculate-btn");
+                const resetBtn = document.getElementById("reset-btn");
+                const resultDiv = document.getElementById("result");
+                const resultSection = document.getElementById("resultssection");
+        
+                calculateBtn.addEventListener("click", () => {
+                    // Get input values
+                    const wallLength = parseFloat(document.getElementById("wall-length").value) || 0;
+                    const wallHeight = parseFloat(document.getElementById("wall-height").value) || 0;
+        
+                    // Validate input
+                    if (wallLength <= 0 || wallHeight <= 0) {
+                        resultDiv.innerHTML = `<p style="color: red;">Please enter valid dimensions for the wall.</p>`;
+                        resultSection.style.display = "block"; // Ensure result section is visible for errors
+                        return;
+                    }
+        
+                    // Constants
+                    const plasterThickness = 0.012; // in meters (interior side assumed)
+                    const mortarMixRatio = { cement: 1, sand: 4 }; // 1:4 ratio
+                    const plasterWastage = 1.15; // 15% extra
+                    const cementDensity = 1440; // kg/m³
+                    const cubicMeterToCubicFeet = 35.3147; // Conversion factor
+        
+                    // Calculations
+                    const wallArea = wallLength * 0.3048 * wallHeight * 0.3048; // Convert feet to meters and calculate area
+                    const plasterVolume = wallArea * plasterThickness * plasterWastage; // Volume of plaster needed in m³
+        
+                    const cementVolume = (plasterVolume / (mortarMixRatio.cement + mortarMixRatio.sand)) * mortarMixRatio.cement; // Cement in m³
+                    const sandVolumeInCubicFeet = (plasterVolume / (mortarMixRatio.cement + mortarMixRatio.sand)) * mortarMixRatio.sand * cubicMeterToCubicFeet; // Sand in ft³
+        
+                    const cementWeight = cementVolume * cementDensity; // Cement in kg
+        
+                    // Display result
+                    resultDiv.innerHTML = `
+                        <p><strong>Results:</strong></p>
+                        <p>Cement Required: <span>${cementWeight.toFixed(2)} kg</span></p>
+                        <p>Sand Required: <span>${sandVolumeInCubicFeet.toFixed(2)} ft³</span></p>
+                    `;
+                    resultSection.style.display = "block"; // Ensure result section is visible
+                });
+        
+                resetBtn.addEventListener("click", () => {
+                    // Reset form fields
+                    document.getElementById("wall-length").value = "";
+                    document.getElementById("wall-height").value = "";
+        
+                    // Clear result
+                    resultDiv.innerHTML = "";
+                    resultSection.style.display = "none"; // Hide result section
+                });
+            });
+        </script>
+    
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const wallLength = document.getElementById("wall-length");
+            const wallHeight = document.getElementById("wall-height");
+
+            function checkFields() {
+                if (wallLength.value !== "" && wallHeight.value !== "") {
+                    calculateBtn.style.color = "#000"; // Set color to black
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            wallLength.addEventListener("input", checkFields);
+            wallHeight.addEventListener("input", checkFields);
+        });
+    </script>
+
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<!-- <div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div> -->
+
+{% endblock %}

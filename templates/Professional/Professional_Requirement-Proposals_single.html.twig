@@ -1,0 +1,67 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{# {% form_theme form 'bootstrap_5_layout_custom.html.twig' %} #}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="/static/css/boq_list.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+<div class="ArchitectListingcontentSection">
+    <h1>Proposals Recieved</h1>
+    
+    {# {% if filterform != '0' %}
+        <div class="FilterForm">
+            <div class="CityField">
+                {{ form_start(form) }}
+                {{ form_row(form.FilterCity, {'attr': {'class': 'js-select-cities', 'id':'cityfilterinput', 'value': 'FilterCity'}}) }}
+            </div>
+            <div class="SubmitButton">
+                {{ form_row(form._submit, {'attr': {'class': 'btn btn-lg btn-block btn-success'}}) }}
+            </div>
+        </div>
+
+        {{ form(form) }}
+    {% endif %} #}
+</div>
+
+<div class="ArchitectListingSection">
+    <div class="architect-list">
+        <table class="requirements-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Product Name</th>
+                    <th>Bid Amount</th>
+                    <th>Proposals</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ProProposal in ProProposals %}
+                    <tr class="requirement-item">
+                        <td>{{ ProProposal.getkey() }}</td>
+                        <td>{{ ProProposal.getCreationDate()|date('d-m-Y') }}</td>
+                        <td>{{ ProProposal.getProRequirementProduct().getProductName() ?: 'N/A' }}</td>
+                        <td>₹{{ ProProposal.getBidAmount() ?: 'N/A' }}</td>
+                        <td>
+                            <a href="/proposals/{{ ProProposal.getProRequirementProduct().getKey() }}" class="details-button">View</a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination profilepagination">
+        {% include 'includes/projectpagination.html.twig' with {'paginationVariables': paginationVariables} %}
+    </div>
+</div>
+
+{# <script type="text/javascript">
+$(document).ready(function() {
+  $(".js-select-cities").select2();
+});
+</script> #}
+{% endblock %}

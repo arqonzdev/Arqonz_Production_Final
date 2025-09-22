@@ -1,0 +1,304 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">BOQ Listing</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; height: 100%; justify-content:center;">
+            <!-- Active Requirements -->
+            <div class="projectssection">
+
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>BOQs Listing</h2>
+                        <p class="sectionsubheading">See the latest BOQ listing on Arqonz</p> 
+                    </div>
+                    <!-- <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if ProRequirements |length < 10 %}
+                                <p>0{{ ProRequirements |length }}</p>
+                            {% else %}
+                                <p>{{ ProRequirements |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            {% if ProRequirements |length < 2 %}
+                                <p>BOQ</br>Found</p>
+                            {% else %}
+                                <p>BOQs</br>Found</p>
+                            {% endif %}    
+                            
+                        </div>
+                    </div> -->
+                </div>
+
+
+                <div class="RequirementsMain">
+                    <!-- <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/account/Add-Requirements" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Requirement
+                        </a>
+                    </div> -->
+
+                    <div class="DashboardRequirements">
+                        <table class="requirements-table">
+                            <thead>
+                                <tr>
+                                    <!-- <th>ID</th> -->
+                                    <th>Title</th>
+                                    <th>Expire Date</th>
+                                    <th>City</th>
+                                    <!-- <th>No. of Products</th> -->
+                                    <!-- <th>View</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {# Render Enabled BOQs First #}
+                                {% for requirement in enabledRequirements %}
+                                    
+                                    <tr class="requirement-item BOQEnabled" data-link="/account/BOQ/{{ requirement.getKey() }}">
+                                        <!-- <td>{{ requirement.getKey() }}</td> -->
+                                        <td>
+                                            <a href="/account/BOQ/{{ requirement.getKey() }}" class="requirementTitle">{{ requirement.getTitle() }}</a>
+                                        </td>
+                                        <!-- <td>{{ requirement.getExpireDate()|date('d-m-Y') }}</td> -->
+                                         <td>
+                                            <span class="countdown" data-expire="{{ requirement.getExpireDate()|date('Y-m-d H:i:s') }}">
+                                                <!-- Countdown will be dynamically updated -->
+                                            </span>
+                                         </td>
+                                        <td>{{ requirement.getCity() ?: 'N/A' }}</td>
+                                        <!-- <td>{{ requirement.getProRequirementProduct() | length }}</td> -->
+                                        <!-- <td>
+                                            <a href="/BOQ/customize/{{ requirement.getKey() }}" class="custimize-quote-btn">View</a>
+                                        </td> -->
+                                    </tr>
+                                    
+                                {% endfor %}
+
+                                
+                                <script>
+                                    document.querySelectorAll('.requirement-item').forEach(row => {
+                                        row.addEventListener('click', () => {
+                                            window.location.href = row.getAttribute('data-link');
+                                        });
+                                    });
+                                </script>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        function updateCountdown() {
+                                            // Get current time
+                                            const now = new Date();
+
+                                            // Loop through each row and update the countdown
+                                            document.querySelectorAll('.countdown').forEach(function(countdownElement) {
+                                                const expireDate = new Date(countdownElement.getAttribute('data-expire'));
+                                                const timeDiff = expireDate - now;
+
+                                                if (timeDiff > 0) {
+                                                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                                                    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                                                    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                                                    // Construct the countdown text dynamically
+                                                    let countdownText = "";
+                                                    if (days > 0) {
+                                                        countdownText += `${days}Days `;
+                                                    }
+                                                    countdownText += `${hours}hrs ${minutes}mins ${seconds}secs`;
+
+                                                    // Update the countdown text
+                                                    countdownElement.innerText = countdownText;
+                                                } else {
+                                                    countdownElement.innerText = "Expired";
+                                                }
+                                            });
+                                        }
+
+                                        // Update countdown every second
+                                        setInterval(updateCountdown, 1000);
+
+                                        // Initial call to display countdown on page load
+                                        updateCountdown();
+                                    });
+                                </script>
+
+                                <!-- <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        function updateCountdown() {
+                                            // Get current time
+                                            const now = new Date();
+
+                                            // Loop through each row and update the countdown
+                                            document.querySelectorAll('.countdown').forEach(function(countdownElement) {
+                                                const expireDate = new Date(countdownElement.getAttribute('data-expire'));
+                                                const timeDiff = expireDate - now;
+
+                                                if (timeDiff > 0) {
+                                                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                                                    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                                                    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                                                    // Update the countdown text
+                                                    countdownElement.innerText = `${days}Days ${hours}hrs ${minutes}mins ${seconds}secs`;
+                                                } else {
+                                                    countdownElement.innerText = "Expired";
+                                                }
+                                            });
+                                        }
+
+                                        // Update countdown every second
+                                        setInterval(updateCountdown, 1000);
+
+                                        // Initial call to display countdown on page load
+                                        updateCountdown();
+                                    });
+                                </script> -->
+
+                                {# Render Disabled BOQs Second #}
+                                {% for requirement in disabledRequirements %}
+                                    <tr class="requirement-item BOQDisabled">
+                                        <!-- <td>{{ requirement.getKey() }}</td> -->
+                                        <td>
+                                            <a href="/account/BOQ/{{ requirement.getKey() }}" class="requirementTitle">{{ requirement.getTitle() }}</a>
+                                        </td>
+                                        <td>{{ requirement.getExpireDate()|date('d-m-Y') }}</td>
+                                        <td>{{ requirement.getCity() ?: 'N/A' }}</td>
+                                        <!-- <td>{{ requirement.getProRequirementProduct() | length }}</td> -->
+                                        <!-- <td>
+                                            <a href="/BOQ/customize/{{ requirement.getKey() }}" class="custimize-quote-btn">View</a>
+                                        </td> -->
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+             <!-- <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const downloadButtons = document.querySelectorAll('.download-quote-btn');
+                    downloadButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const id = this.getAttribute('data-id');
+
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', '{{ path('generate_quote') }}', true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.responseType = 'blob';
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    const blob = new Blob([xhr.response], { type: 'application/pdf' });
+                                    const link = document.createElement('a');
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = 'InstantQuote.pdf';
+                                    link.click();
+                                }
+                            };
+                            xhr.send('id=' + encodeURIComponent(id));
+                        });
+                    });
+                });
+            </script> -->
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const downloadButtons = document.querySelectorAll('.download-quote-btn');
+                    const loadingOverlay = document.querySelector('.loading-overlay'); // Select the overlay container
+            
+                    downloadButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const id = this.getAttribute('data-id');
+            
+                            // Show loading overlay
+                            loadingOverlay.style.display = 'flex';
+            
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', '{{ path('generate_quote') }}', true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.responseType = 'blob';
+            
+                            xhr.onload = function () {
+                                // Hide loading overlay when the request is completed
+                                loadingOverlay.style.display = 'none';
+            
+                                if (xhr.status === 200) {
+                                    const blob = new Blob([xhr.response], { type: 'application/pdf' });
+                                    const link = document.createElement('a');
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = 'InstantQuote.pdf';
+                                    link.click();
+                                } else {
+                                    console.error('Error downloading the PDF:', xhr.statusText);
+                                }
+                            };
+            
+                            xhr.onerror = function () {
+                                // Hide loading overlay in case of error
+                                loadingOverlay.style.display = 'none';
+                                console.error('An error occurred while making the request.');
+                            };
+            
+                            xhr.send('id=' + encodeURIComponent(id));
+                        });
+                    });
+                });
+            </script>
+
+            
+            {# <!-- Expired Requirements -->
+            <div class="projectssection">
+                <div class="sectionheading">
+                    <h2>Expired Requirements</h2>
+                </div>
+
+                
+
+
+                <div class="details">
+                    <div class="pro-projects">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Requirement Title</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if expiredRequirements is not empty %}
+                                    {% for requirement in expiredRequirements %}
+                                        {% if requirement.Professional == ProProfile %}
+                                            <tr>
+                                                <td><input type="checkbox"></td>
+                                                <td>
+                                                    <strong>{{ requirement.getTitle() }}</strong>
+                                                </td>
+                                                <td><a href="/account/Requirements/view/{{ requirement.getKey() }}">View</a></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="3">No expired requirements found.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> #}
+            
+        </div>
+    </div>
+{% endblock %}

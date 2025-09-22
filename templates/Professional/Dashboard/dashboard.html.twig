@@ -1,0 +1,820 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    <div class="welcomeMessage">
+        <p>Welcome {{ ProProfile.getCompanyName() }}<p>
+        <div class="ProductSearch">
+            <input type="text" id="supplier-search-input" class="search-input" placeholder="Search">
+            <div id="supplier-search-btn" class="search-icon">
+                <img src="https://arqonz.in/static/icons/SearchIcon.svg" alt="">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('supplier-search-input');
+            const searchButton = document.getElementById('supplier-search-btn');
+
+            // Function to redirect to the search page
+            function redirectToSearch() {
+                const keyword = searchInput.value.trim();
+                if (keyword) {
+                    // Encode keyword to handle special characters in URL
+                    const encodedKeyword = encodeURIComponent(keyword);
+                    window.location.href = `/suppliers-search/${encodedKeyword}`;
+                }
+            }
+
+            // Listen for Enter key in the input field
+            searchInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    redirectToSearch();
+                }
+            });
+
+            // Listen for click on the search button
+            searchButton.addEventListener('click', function () {
+                redirectToSearch();
+            });
+        });
+    </script>
+
+    <style>
+        .welcomeMessage {
+            display: flex;
+            justify-content: space-between;
+        }
+        .ProductSearch {
+            display: flex;
+            padding: 0px 0px 0px 13px;
+            border-radius: 8px;
+            gap: 10px;
+            background-color: #fff;
+            margin-bottom: 12px;
+            border: 1px solid #e7dfdf;
+        }
+    </style>
+
+    
+
+    <div class="dashboardQuickStats">
+        <a href="/account/Profile">
+            <div class="DashboardQuickStatContainer DashboardQuickStatProfile">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Profile</h3>
+                        <h2>{{ customer.getProfileCompletion() }}%</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#8280FF"/>
+                                <path opacity="0.587821" fill-rule="evenodd" clip-rule="evenodd" d="M20.6666 23.3333C20.6666 26.2789 23.0544 28.6667 26 28.6667C28.9455 28.6667 31.3333 26.2789 31.3333 23.3333C31.3333 20.3878 28.9455 18 26 18C23.0544 18 20.6666 20.3878 20.6666 23.3333ZM34 28.6667C34 30.8758 35.7908 32.6667 38 32.6667C40.2091 32.6667 42 30.8758 42 28.6667C42 26.4575 40.2091 24.6667 38 24.6667C35.7908 24.6667 34 26.4575 34 28.6667Z" fill="#8280FF"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M25.9778 31.3333C19.6826 31.3333 14.5177 34.5686 14.0009 40.9322C13.9727 41.2788 14.6356 41.9999 14.97 41.9999H36.9956C37.9972 41.9999 38.0128 41.1939 37.9972 40.9333C37.6065 34.3908 32.3616 31.3333 25.9778 31.3333ZM45.2746 41.9999L40.1333 41.9999C40.1333 38.9987 39.1417 36.229 37.4683 34.0007C42.0103 34.0504 45.7189 36.3468 45.998 41.1999C46.0092 41.3954 45.998 41.9999 45.2746 41.9999Z" fill="#8280FF"/>
+                            </svg>
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">Profile Pending</p>
+
+            </div>
+        </a>
+
+        {% if customer.getcustomertype() != 'Manufacturer' %}
+            <a href="/account/Requirements">
+                <div class="DashboardQuickStatContainer DashboardQuickStatProducts">
+                    <div class="QuickStatWrapper">
+                        <div class="quickstatCol1">
+                            <h3>Requirements</h3>
+                            <h2>{{ activeRequirements|length }}</h2>
+                            
+                        </div>
+                        <div class="quickstatCol2">
+                            <div class="QuickStatIcon">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#FEC53D"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15 24.3164L27.9005 31.7645C28.0394 31.8447 28.1851 31.9026 28.3333 31.9394V46.3846L15.9201 39.0385C15.3498 38.701 15 38.0875 15 37.4248V24.3164ZM45 24.1184V37.4248C45 38.0875 44.6502 38.701 44.0799 39.0385L31.6667 46.3846V31.8129C31.6969 31.7978 31.7269 31.7816 31.7566 31.7645L45 24.1184Z" fill="#FEC53D"/>
+                                    <path opacity="0.499209" fill-rule="evenodd" clip-rule="evenodd" d="M15.4053 20.7014C15.5628 20.5024 15.7617 20.3343 15.9936 20.2108L29.1186 13.2201C29.6696 12.9266 30.3305 12.9266 30.8815 13.2201L44.0065 20.2108C44.1852 20.306 44.3444 20.4277 44.4801 20.5697L30.0899 28.8778C29.9953 28.9325 29.9081 28.995 29.8286 29.064C29.7491 28.995 29.6618 28.9325 29.5672 28.8778L15.4053 20.7014Z" fill="#FEC53D"/>
+                                </svg>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#1BA89D;">New Requirements: {{ activeRequirements|length }}</p>
+                </div>
+            </a>
+        {% endif %}
+
+        {% if customer.getcustomertype() == 'Manufacturer' %}
+            <a href="/account/Products">
+                <div class="DashboardQuickStatContainer DashboardQuickStatProducts">
+                    <div class="QuickStatWrapper">
+                        <div class="quickstatCol1">
+                            <h3>Products</h3>
+                            <h2>{{ ProProfile.getProducts()|length }}</h2>
+                        </div>
+                        <div class="quickstatCol2">
+                            <div class="QuickStatIcon">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#FEC53D"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15 24.3164L27.9005 31.7645C28.0394 31.8447 28.1851 31.9026 28.3333 31.9394V46.3846L15.9201 39.0385C15.3498 38.701 15 38.0875 15 37.4248V24.3164ZM45 24.1184V37.4248C45 38.0875 44.6502 38.701 44.0799 39.0385L31.6667 46.3846V31.8129C31.6969 31.7978 31.7269 31.7816 31.7566 31.7645L45 24.1184Z" fill="#FEC53D"/>
+                                    <path opacity="0.499209" fill-rule="evenodd" clip-rule="evenodd" d="M15.4053 20.7014C15.5628 20.5024 15.7617 20.3343 15.9936 20.2108L29.1186 13.2201C29.6696 12.9266 30.3305 12.9266 30.8815 13.2201L44.0065 20.2108C44.1852 20.306 44.3444 20.4277 44.4801 20.5697L30.0899 28.8778C29.9953 28.9325 29.9081 28.995 29.8286 29.064C29.7491 28.995 29.6618 28.9325 29.5672 28.8778L15.4053 20.7014Z" fill="#FEC53D"/>
+                                </svg>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#1BA89D;">New Products: {{ ProProfile.getProducts()|length }}</p>
+                </div>
+            </a>
+        {% endif %}
+
+        
+        
+
+        <a href="/account/Enquiries">
+            <div class="DashboardQuickStatContainer DashboardQuickStatEnquiries">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Enquiries</h3>
+                        <h2>{{ProEnquiries | length}}</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon" >
+                            <img src="/static/icons/enquiriesIcon.svg" alt="">
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">New Enquiries: {{ProEnquiries | length}}</p>
+            </div>
+        </a>
+
+        <a href="/account/Endorsements">
+            <div class="DashboardQuickStatContainer DashboardQuickStatEndorsement">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Endorsements</h3>
+                        <h2>{{ProEndorsements | length}}</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon">
+                            <img src="/static/icons/EndorsementIcon.svg" alt="">
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">Average Rating: N/A</p>
+                {# <p style="color:#1BA89D;">Average Rating: 4.5/5</p> #}
+            </div>
+        </a>
+
+    </div>
+
+    {% if customer.getcustomertype() not in ['Manufacturer', 'Supplier', 'Dealer', 'Distributor', 'Retailer'] %}
+        <div class="dashboardProjectsAreaContainer" id="ProjectsArea">
+            <h3>Projects</h3>
+
+            <div class="DashboardProjects">
+                {% for ProProject in ProProjects %}
+                    <a href="/{{ ProProfile.PortfolioType|lower }}/project/{{ ProProject.getKey() }}">
+                        <div class="Projectssinglecontainer">
+                            <div class="DashprojectfeaturedImg">
+                                {% if ProProject.ProjectGallery is not empty %}
+                                    {% set images = ProProject.ProjectGallery.getItems() %}
+                                    {% if images|length > 0 %}
+                                        <img src="{{ images[0].getThumbnail('ProjectFeaturedThumbnail') }}" alt="Project Thumbnail">
+                                    {% endif %}
+                                {% else %}
+                                    <img src="/static/images/no-image-found.png" width="262px" height="161px" alt="Project Thumbnail">
+                                {% endif %}
+                            </div>
+                            <div class="Dashprojecttitle">
+                                <h3>{{ ProProject.ProjectName() }}</h3>
+                            </div>
+                            <div class="DashprojectLocation">
+                                <div class="pleftcol">
+                                    <img src="/static/icons/locationIcon.svg" alt="Project Location">
+                                    <p>{{ ProProject.getLocation() }}</p>
+                                </div>
+                                <div class="prightcol">
+                                    <span><a href="/account/Project/edit/{{ ProProject.getKey() }}">Edit</a></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+                <div class="addprojectbutton">
+                    <a href="/{{ customer.getcustomertype()|lower }}/portfolio/add-project">
+                        <img src="/static/icons/addprojectsbtn.svg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if customer.getcustomertype() in ['Manufacturer', 'Supplier', 'Distributor', 'Dealer', 'Retailer'] %}
+        <div class="dashboardBOQSection">
+            <div class="RequirementheadingSection">
+                <h3>Bill Of Quantities</h3>
+                <a href="/account/BOQ-List" class="addRequireButton">View All</a>
+            </div>
+            <div class="DashboardBOQAlert">
+                <div class="ExpiringBOQs">
+                    <p class="DashbaordBOQAlertTitle">BOQ Expiring</p>
+                    <div class="DashboardBOQAlertimgCont">
+                        <img src="/static/images/avg_pace.png" alt="" class="DashboardBOQAlertimg">
+                    </div>
+                    <div class="DashboardBOQAlertDesc">
+                        <p>You have {{ ExpiringBOQCount }} BOQs expiring in the next 48 hours.</p>
+                    </div>
+                    <a href="/account/BOQ-List" class="DashboardAlertviewBtn">View</a>
+                </div>
+
+                <div class="ExpiringBOQs">
+                    <p class="DashbaordBOQAlertTitle">Waiting for Quote</p>
+                    <div class="DashboardBOQAlertimgCont">
+                        <img src="/static/images/avg_pace.png" alt="" class="DashboardBOQAlertimg">
+                    </div>
+                    <div class="DashboardBOQAlertDesc">
+                        <p>You have {{ AwaitingBOQCount }} BOQs awaiting quotes</p>
+                    </div>
+                    <a href="/account/BOQ-List" class="DashboardAlertviewBtn">View</a>
+                </div>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- important -->
+
+    <!-- {% if customer.getcustomertype() == 'Manufacturer' %}
+        <div class="dashboardRequirementsAreaContainer" id="dashboardRequirements">
+            <h3>Important Notifications</h3>
+
+            <div class="DashboardRequirements">
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Brand</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Response</th>
+                            <th>Current Bid</th>
+                            <th>Expire In</th>
+                            
+                        </tr>
+                    </thead>
+                   
+                    <tbody>
+                        {% for SupplierPinnedNotification in ProProfile.getSupplierPinnedNotification() | reverse %}
+                            {% set timer_id = 'countdown-timer-' ~ loop.index %}
+                            {% set ProRequirementProduct =  SupplierPinnedNotification.getProRequirementProduct() %}
+                            {% set L1SupplierKey =  ProRequirementProduct.getL1() %}
+                            {% if SupplierPinnedNotification.getCurrentBid() %}
+                                {% set SupplierKey =  SupplierPinnedNotification.getCurrentBid().getKey() %}
+                            {% endif %}
+                            <tr class="requirement-item">
+                                <td class="ImpProductName">{{ SupplierPinnedNotification.getProductName() }}</td>
+                                <td class="ImpProductBrand">{{ SupplierPinnedNotification.getBrand() }}</td>
+                                <td class="ImpProductQuantity">{{ SupplierPinnedNotification.getProductQuantity() }}</td>
+                                <td class="ImpProductUnit">{{ SupplierPinnedNotification.getProductUnit() }}</td>
+                                
+                                {% if SupplierPinnedNotification.getStatus() != 'Accepted' %}
+                                    <td class="ImpsupplierChoice nochoice">
+                                        <span class="yesAccepted yesButton" id="yesButton"><img src="/static/icons/yestick.svg" alt="">Yes</span>
+                                        <span class="NoRejected" data-key="{{ SupplierPinnedNotification.getKey() }}"><img src="/static/icons/nocross.svg" alt="">No</span>
+                                    </td>
+                                {% endif %}
+                                {% if SupplierPinnedNotification.getStatus() == 'Accepted' %}
+                                    <td>
+                                        <span class="editBidLink">Edit Bid</span>
+                                    </td>
+
+
+                                {% endif %}
+
+
+                                {% if SupplierPinnedNotification.getCurrentBid() %}
+                                    {% if SupplierKey == L1SupplierKey %}
+                                    <td> 
+                                        <div class="wonBidWrapper">
+                                            <p>L1 : ₹ {{ ProRequirementProduct.getL1Amt() }}</p>
+                                        </div>
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
+                                {% if SupplierPinnedNotification.getCurrentBid() %}
+                                    {% if SupplierKey != L1SupplierKey %}
+                                    <td> 
+                                        <p>L1 : {{ ProRequirementProduct.getL1Amt() }}</p>
+                                    </td>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if not SupplierPinnedNotification.getCurrentBid() %}
+                                    
+                                    <td> 
+                                        <p>L1 : - </p>
+                                    </td>
+                                    
+                                {% endif %}
+
+
+
+
+                                <td class="ImpProdExpiryDate">
+                                    {% if SupplierPinnedNotification.getEndDate() %}
+                                    
+                                        <div class="countdown-container" style="margin-bottom: 0px;">
+                                            <div id="{{ timer_id }}" class="countdown-timer" style="padding:0;">
+                                                <div class="time-section">
+                                                    <span class="time-number days" style="font-size: 0.8rem;">00</span>
+                                                    <span class="time-label" style="font-size: 0.5rem;">D</span>
+                                                </div>
+                                                <div class="time-section">
+                                                    <span class="time-number hours" style="font-size: 0.8rem;">00</span>
+                                                    <span class="time-label" style="font-size: 0.5rem;">H</span>
+                                                </div>
+                                                <div class="time-section">
+                                                    <span class="time-number minutes" style="font-size: 0.8rem;">00</span>
+                                                    <span class="time-label" style="font-size: 0.5rem;">M</span>
+                                                </div>
+                                                <div class="time-section" style="width: 30px;">
+                                                    <span class="time-number seconds" style="font-size: 0.8rem;">00</span>
+                                                    <span class="time-label" style="font-size: 0.5rem;">S</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                function startCountdown(endTime, timerId) {
+                                                    function updateCountdown() {
+                                                        const now = new Date().getTime();
+                                                        const distance = endTime - now;
+                                                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                                        document.querySelector(`#${timerId} .days`).innerText = String(days).padStart(2, '0');
+                                                        document.querySelector(`#${timerId} .hours`).innerText = String(hours).padStart(2, '0');
+                                                        document.querySelector(`#${timerId} .minutes`).innerText = String(minutes).padStart(2, '0');
+                                                        document.querySelector(`#${timerId} .seconds`).innerText = String(seconds).padStart(2, '0');
+
+                                                        if (distance < 0) {
+                                                            clearInterval(timerInterval);
+                                                            document.getElementById(timerId).innerHTML = "EXPIRED";
+                                                        }
+                                                    }
+
+                                                    updateCountdown();
+                                                    const timerInterval = setInterval(updateCountdown, 1000);
+                                                }
+
+                                                const endDateString = '{{ SupplierPinnedNotification.getEndDate().format("Y-m-d H:i:s") }}';
+                                                const endDate = new Date(endDateString.replace(' ', 'T') + 'Z');
+
+                                                // Convert UTC time to IST
+                                                const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC +5:30
+                                                const istTime = new Date(endDate.getTime() + istOffset);
+
+                                                startCountdown(istTime.getTime(), '{{ timer_id }}');
+                                            });
+                                        </script>
+                                    {% endif %}
+                                </td>
+                                <td class="ImpMaterial" style="display:none">{{ SupplierPinnedNotification.getMaterial() }}</td>
+                                <td class="ImpLocation" style="display:none">{{ SupplierPinnedNotification.getLocation() }}</td>
+                                <td class="ImpNotifPAth" style="display:none">{{ SupplierPinnedNotification.getFullPath() }}</td>
+                                {% if SupplierPinnedNotification.getCurrentBid() %}
+                                    <td class="ImpNotBidAmt" style="display:none">{{ SupplierPinnedNotification.getCurrentBid().getBidAmount() }}</td>
+                                {% endif %}
+                                {% if SupplierPinnedNotification.getCurrentBid() %}
+                                    <td class="ImpBidDate" style="display:none">{{ SupplierPinnedNotification.getCurrentBid().getEndDate() }}</td>
+                                {% endif %}
+
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.querySelectorAll('.NoRejected').forEach(function(button) {
+                            button.addEventListener('click', function() {
+                                let notificationKey = this.getAttribute('data-key');
+
+                                if (confirm("Are you sure you want to reject this quote?")) {
+                                    fetch(`/supplier-pinned-notification/delete/${notificationKey}`, {
+                                        method: 'DELETE',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            // Remove the row from the table
+                                            let row = this.closest('tr');
+                                            row.parentNode.removeChild(row);
+                                        } else {
+                                            alert(data.message);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        alert('An error occurred while deleting the notification.');
+                                    });
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <div id="popup" class="popup">
+                    <div class="popup-content">
+                        <span class="close">&times;</span>
+                        <h2 id="productName" class="currProductName" style="margin-bottom:0px;">Enter Quote</h2>
+                        <p style="margin-bottom: 32px; font-size: 12px;">You can Only edit the Bid Amount and Delivery Date</p>
+                        <form id="quoteForm">
+                            <label for="productNameField">Product Name:</label>
+                            <input type="text" id="productNameField" name="productName" placeholder="Product Name" readonly/>
+
+                            <label for="productBrandField">Brand:</label>
+                            <input type="text" id="productBrandField" name="productBrand" placeholder="Brand" readonly/>
+
+                            <label for="productQuantityField">Quantity:</label>
+                            <input type="text" id="productQuantityField" name="productQuantity" placeholder="Quantity" readonly/>
+
+                            <label for="productUnitField">Unit:</label>
+                            <input type="text" id="productUnitField" name="productUnit" placeholder="Unit" readonly/>
+
+                            <label for="productMeterial">Material:</label>
+                            <input type="text" id="productMeterial" name="productMeterial" placeholder="Material" readonly/>
+
+                            <label for="productLocation">Location:</label>
+                            <input type="text" id="productLocation" name="productLocation" placeholder="Delivery Location" readonly/>
+                            
+                            <label for="bidAmount">Bid Amount</label>
+                            <input type="number" id="bidAmount" name="bidAmount" placeholder="Enter Bid Amount" required>
+
+                            <label for="deliveryTime">Delivery Time</label>
+                            <input type="datetime-local" id="deliveryTime" name="deliveryTime" value="">
+                            {# <input type="date" id="deliveryTime" name="deliveryTime" required> #}
+
+                            <input type="hidden" id="SupplierPinnedNotificationPath" name="SupplierPinnedNotificationPath" value="">
+                            
+                            <button type="submit">Submit</button>
+                        </form>
+                        <div id="quoteSuccess" style="display: none;">Your bid has been submitted successfully!</div>
+                    </div>
+                </div>
+
+                <script>
+                    // Get the popup
+                    var popup = document.getElementById("popup");
+
+                    // Get the <span> element that closes the popup
+                    var closeButton = document.getElementsByClassName("close")[0];
+
+                    // When the user clicks a yesButton, open the popup
+                    document.querySelectorAll('.yesButton').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            // Find the closest row
+                            var row = button.closest('tr');
+
+                            // Extract data from the row
+                            var productName = row.querySelector('.ImpProductName').textContent;
+                            var productBrand = row.querySelector('.ImpProductBrand').textContent;
+                            var productQuantity = row.querySelector('.ImpProductQuantity').textContent;
+                            var productUnit = row.querySelector('.ImpProductUnit').textContent;
+                            var productMaterial = row.querySelector('.ImpMaterial').textContent;
+                            var productLocation = row.querySelector('.ImpLocation').textContent;
+                            var supplierPinnedNotification = row.querySelector('.ImpNotifPAth').textContent;
+                            
+                            
+
+                            // Populate the form fields
+                            document.getElementById("productNameField").value = productName;
+                            document.getElementById("productBrandField").value = productBrand;
+                            document.getElementById("productQuantityField").value = productQuantity;
+                            document.getElementById("productUnitField").value = productUnit;
+                            document.getElementById("productMeterial").value = productMaterial;
+                            document.getElementById("productLocation").value = productLocation;
+                            document.getElementById("SupplierPinnedNotificationPath").value = supplierPinnedNotification;
+
+                            // Show the popup
+                            popup.style.display = "block";
+                        });
+                    });
+
+                    // When the user clicks on <span> (x), close the popup
+                    closeButton.onclick = function() {
+                        popup.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the popup, close it
+                    window.addEventListener('click', function(event) {
+                        if (event.target == popup) {
+                            popup.style.display = "none";
+                        }
+                    });
+
+                    // Handle form submission
+                    var quoteForm = document.getElementById("quoteForm");
+                    var quoteSuccess = document.getElementById("quoteSuccess");
+
+                    document.getElementById('quoteForm').addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        // Gather form data
+                        var formData = new FormData(quoteForm);
+
+                        // Send data to API
+                        fetch('/api/supplier-bid', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Show success message
+                                quoteSuccess.style.display = "block";
+
+                                // Hide the popup and success message after 2 seconds
+                                setTimeout(function() {
+                                    popup.style.display = "none";
+                                    quoteSuccess.style.display = "none";
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                console.error('Error:', data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    });
+                </script>
+
+                <div id="Edit-popup" class="Edit-popup">
+                    <div class="Edit-popup-content">
+                        <span class="Edit-close">&times;</span>
+                        <h2 id="productName" class="currProductName" style="margin-bottom:0px;">Edit Bid</h2>
+                        <p style="margin-bottom: 32px; font-size: 12px;">You can Only edit the Bid Amount and Delivery Date</p>
+                        <form id="Edit-quoteForm">
+                            <label for="Edit-productNameField">Product Name:</label>
+                            <input type="text" id="Edit-productNameField" name="Edit-productNameField" placeholder="Edit-productNameField" readonly/>
+
+                            <label for="Edit-productBrandField">Brand:</label>
+                            <input type="text" id="Edit-productBrandField" name="Edit-productBrandField" placeholder="Edit-productBrandField" readonly/>
+
+                            <label for="Edit-productQuantityField">Quantity:</label>
+                            <input type="text" id="Edit-productQuantityField" name="Edit-productQuantityField" placeholder="Edit-productQuantityField" readonly/>
+
+                            <label for="Edit-productUnitField">Unit:</label>
+                            <input type="text" id="Edit-productUnitField" name="Edit-productUnitField" placeholder="Unit" readonly/>
+
+                            <label for="Edit-productMeterial">Material:</label>
+                            <input type="text" id="Edit-productMeterial" name="Edit-productMeterial" placeholder="Material" readonly/>
+
+                            <label for="Edit-productLocation">Location:</label>
+                            <input type="text" id="Edit-productLocation" name="Edit-productLocation" placeholder="Delivery Location" readonly/>
+                            
+                            <label for="Edit-bidAmount">Bid Amount</label>
+                            <input type="number" id="Edit-bidAmount" name="Edit-bidAmount" placeholder="Enter Bid Amount" required>
+
+                            <label for="EditdeliveryTime">Delivery Time</label>
+                            <input type="datetime-local" id="EditdeliveryTime" name="EditdeliveryTime" value="">
+                            {# <input type="date" id="deliveryTime" name="deliveryTime" required> #}
+
+                            <input type="hidden" id="Edit-SupplierPinnedNotificationPath" name="Edit-SupplierPinnedNotificationPath" value="">
+                            
+                            <button type="submit">Submit</button>
+                        </form>
+                        <div id="Edit-quoteSuccess" style="display: none;">Your bid has been submitted successfully!</div>
+                    </div>
+                </div>
+
+                <script>
+                    // Get the popup
+                    var editpopup = document.getElementById("Edit-popup");
+
+                    // Get the <span> element that closes the popup
+                    var editcloseButton = document.getElementsByClassName("Edit-close")[0];
+
+                    // When the user clicks a yesButton, open the popup
+                    document.querySelectorAll('.editBidLink').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            // Find the closest row
+                            var row = button.closest('tr');
+
+                            // Extract data from the row
+                            var productName = row.querySelector('.ImpProductName').textContent;
+                            var productBrand = row.querySelector('.ImpProductBrand').textContent;
+                            var productQuantity = row.querySelector('.ImpProductQuantity').textContent;
+                            var productUnit = row.querySelector('.ImpProductUnit').textContent;
+                            var productMaterial = row.querySelector('.ImpMaterial').textContent;
+                            var productLocation = row.querySelector('.ImpLocation').textContent;
+                            var supplierPinnedNotification = row.querySelector('.ImpNotifPAth').textContent;
+                            var CurrentBidAmt = row.querySelector('.ImpNotBidAmt').textContent;
+                            var CurrentBidDate = row.querySelector('.ImpBidDate').textContent;
+
+                            // Populate the form fields
+                            document.getElementById("Edit-productNameField").value = productName;
+                            document.getElementById("Edit-productBrandField").value = productBrand;
+                            document.getElementById("Edit-productQuantityField").value = productQuantity;
+                            document.getElementById("Edit-productUnitField").value = productUnit;
+                            document.getElementById("Edit-productMeterial").value = productMaterial;
+                            document.getElementById("Edit-productLocation").value = productLocation;
+                            document.getElementById("Edit-bidAmount").value = CurrentBidAmt;
+                            document.getElementById("EditdeliveryTime").value = CurrentBidDate;
+                            document.getElementById("Edit-SupplierPinnedNotificationPath").value = supplierPinnedNotification;
+
+                            // Show the popup
+                            editpopup.style.display = "block";
+                        });
+                    });
+
+                    // When the user clicks on <span> (x), close the popup
+                    editcloseButton.onclick = function() {
+                        editpopup.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the popup, close it
+                    window.addEventListener('click', function(event) {
+                        if (event.target == editpopup) {
+                            editpopup.style.display = "none";
+                        }
+                    });
+
+                    
+                    
+
+                    // Handle form submission
+                    var editquoteForm = document.getElementById("Edit-quoteForm");
+                    var editquoteSuccess = document.getElementById("Edit-quoteSuccess");
+
+                    document.getElementById('Edit-quoteForm').addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        // Gather form data
+                        var EditformData = new FormData(editquoteForm);
+
+                        // Send data to API
+                        fetch('/api/edit-supplier-bid', {
+                            method: 'POST',
+                            body: EditformData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Show success message
+                                editquoteSuccess.style.display = "block";
+
+                                // Hide the popup and success message after 2 seconds
+                                setTimeout(function() {
+                                    editpopup.style.display = "none";
+                                    editquoteSuccess.style.display = "none";
+                                }, 2000);
+                            } else {
+                                console.error('Error:', data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    });
+                </script>
+                    
+
+            </div>
+        </div>
+    {% endif %} -->
+
+    {% if customer.getcustomertype() not in ['Manufacturer', 'Supplier', 'Distributor', 'Dealer', 'Retailer'] %}
+        <div class="dashboardRequirementsAreaContainer" id="dashboardRequirements">
+            <div class="RequirementheadingSection">
+                <h3>Requirements</h3>
+                <a href="/account/Add-Requirements" class="addRequireButton">Add</a>
+            </div>
+
+            
+
+            <div class="DashboardRequirements">
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Published Date</th>
+                            <th>City</th>
+                            <th>Instant Quote</th>
+                            <th>Customize</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for requirement in activeRequirements %}
+                            <tr class="requirement-item">
+                                <td>{{ requirement.getKey() }}</td>
+                                <td>
+                                    {% if requirement %}
+                                        <!-- <a href="/requirements/{{ requirement.getKey() }}" class="requirementTitle">{{ requirement.getTitle() }}</a> -->
+                                        <a href="javascript:void(0);" class="requirementTitle">{{ requirement.getTitle() }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ requirement.getCreationDate()|date('d-m-Y') }}</td>
+                                <td>{{ requirement.getCity() ?: 'N/A' }}</td>
+                                <td>
+                                    <span class="download-quote-btn" data-id="{{ requirement.getKey() }}">
+                                        <img src="/static/icons/quickbid-downloadbtn.svg" alt="Download Quote">
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/BOQ/customize/{{ requirement.getKey() }}" class="custimize-quote-btn"><img src="/static/icons/boqEditbutton.svg" alt="Customize Quote"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const downloadButtons = document.querySelectorAll('.download-quote-btn');
+        downloadButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '{{ path('generate_quote') }}', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.responseType = 'blob';
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        const blob = new Blob([xhr.response], { type: 'application/pdf' });
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'InstantQuote.pdf';
+                        link.click();
+                    }
+                };
+                xhr.send('id=' + encodeURIComponent(id));
+            });
+        });
+    });
+    </script>
+
+
+
+    <div class="dashboardEnquiriesAreaContainer" id="dashboardEnquiries">
+        <h3>Enquiries</h3>
+
+        <div class="DashboardEnquiries">
+            <table class="Enquiries-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ProEnquiry in ProEnquiries %}
+                        {% if ProEnquiry.Professional == ProProfile %}
+                            <tr>
+                                <td class="EnquiryID">{{ ProEnquiry.getKey() }}</td>
+                                <td>
+                                    {{ ProEnquiry.getfullname() }}
+                                </td>
+                                {% if ProEnquiry.Unlock != 'true' %}
+                                    <td> Locked</td>
+                                {% endif %}
+                                {% if ProEnquiry.Unlock == 'true' %}
+                                    <td> Unlocked</td>
+                                {% endif %}
+                                <td><a class="details-button" href="/en/enquiry/{{ ProProfile.getPortfolioType() }}s/{{ ProEnquiry.getkey() }}">View</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

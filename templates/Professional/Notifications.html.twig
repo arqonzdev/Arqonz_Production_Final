@@ -1,0 +1,43 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+
+{% block content %}
+
+<div class="ArchitectListingcontentSection">
+    <h1>Notifications</h1>
+</div>
+<div class="ArchitectListingSection">
+    <div class="architect-list">
+        {% for notification in notifications %}
+            {% include '/Professional/Notifications_card.html.twig' with {'notification': notification, 'customertype': customertype} %}
+            {# {{ notification.getMessage() }} #}
+            {# {% include '/Architect/architect_listing_card.html.twig' with {'architect': architect} %} #}
+        {% endfor %}
+    </div>
+    <script>
+        // Add click event handler to notification links
+        document.querySelectorAll('.notification-link').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                var notificationId = this.getAttribute('data-notification-id');
+                markNotificationAsRead(notificationId, this.href); // Pass the URL to navigate to
+            });
+        });
+
+        // Function to mark notification as read via AJAX
+        function markNotificationAsRead(notificationId, url) {
+            // Make an AJAX request to update the read status
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/mark-notification-as-read/' + notificationId);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    // After marking as read, navigate to the URL
+                    window.location.href = url;
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</div>
+{% endblock %}
+

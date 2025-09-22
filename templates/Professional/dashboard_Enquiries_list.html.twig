@@ -1,0 +1,97 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Enquiries</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="projectssection">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Enquiries</h2>
+                        <p class="sectionsubheading">Manage Your Enquiries from here.</p> 
+                    </div>
+                    <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if ProEnquiries |length < 10 %}
+                                <p>0{{ ProEnquiries |length }}</p>
+                            {% else %}
+                                <p>{{ ProEnquiries |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            {% if ProEnquiries |length < 2 %}
+                                <p>Enquiry</br>Found</p>
+                            {% else %}
+                                <p>Enquiries</br>Found</p>
+                            {% endif %}    
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="DashboardProjectsMain">
+                    <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Unlock</th>
+                                    <th>View</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for ProEnquiry in ProEnquiries %}
+                                
+                                <tr>
+                                    <td>
+                                        {{ ProEnquiry.getfullname() }}
+                                    </td>
+                                    <td>
+                                        {{ ProEnquiry.getCity() }}
+                                    </td>
+                                    <td>
+                                        <div class="enquiryMessage">
+                                            {% if ProEnquiry.getMessage()|length > 30 %}
+                                                <p>{{ ProEnquiry.getMessage()|slice(0, 30) ~ '...' }}</p>
+                                            {% else %}
+                                                <p>{{ ProEnquiry.getMessage() }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ ProEnquiry.getCreationDate()|date('Y-m-d') }}
+                                    </td>
+                                    {% if ProEnquiry.Unlock != 'true' %}
+                                        <td><img style="max-width: 15px;" src="/static/icons/locked-svgrep.svg" alt="Locked"></td>
+                                    {% endif %}
+                                    {% if ProEnquiry.Unlock == 'true' %}
+                                        <td><img style="max-width: 15px;" src="/static/icons/Unlocked-Vector.svg" alt="UnLocked"></td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="/en/enquiry/{{ ProProfile.getPortfolioType() }}s/{{ ProEnquiry.getkey() }}" class="enquiriesView"><img src="/static/icons/view-svgrep.svg" alt="View"> View</a>
+                                    </td>
+                                </tr>
+                                
+                            {% endfor %}
+
+                </div>
+
+
+            
+            </div> 
+        </div>
+    
+    
+{% endblock %}

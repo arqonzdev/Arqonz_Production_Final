@@ -1,0 +1,38 @@
+<div class="ProfileNavigation">
+    <ul class="ProfileTopNavigation">
+        <li>
+            <a href="/account/Profile">Personal Profile</a>
+        </li>
+        <li>
+            <a href="/account/Profile/Professional-details">Professional Profile</a>
+        </li>
+        <li>
+            <a href="/account/Profile/Company-details">Company Profile</a>
+        </li>
+        <li>
+            <a href="/account/Profile/social-media">Social Media Profiles</a>
+        </li>
+        <!-- <li>
+            <a href="">Notifications</a>
+        </li> -->
+    </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the current URL path
+        var currentPath = window.location.pathname;
+
+        // Get all navigation links
+        var navLinks = document.querySelectorAll('.ProfileTopNavigation a');
+
+        // Loop through each link and compare its href with the current path
+        navLinks.forEach(function(link) {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('selectedProfile');
+            } else {
+                link.classList.remove('selectedProfile');
+            }
+        });
+    });
+</script>

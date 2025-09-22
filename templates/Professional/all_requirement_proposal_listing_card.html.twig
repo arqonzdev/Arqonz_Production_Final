@@ -1,0 +1,13 @@
+<tr class="requirement-item">
+    <td>{{ requirement.getkey() }}</td>
+    <td>{{ requirement.getCreationDate()|date('d-m-Y') }}</td>
+    <td>{{ requirement.getCity() ?: 'N/A' }}</td>
+    <td>
+        {% if requirement %}
+            <h3><a href="/requirements/{{ requirement.getKey() }}">{{ requirement.getTitle() }}</a></h3>
+        {% endif %}
+    </td>
+    <td>
+        <a href="/Proposals/{{ requirement.getKey() }}" class="details-button">View</a>
+    </td>
+</tr>

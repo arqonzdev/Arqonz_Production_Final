@@ -1,0 +1,21 @@
+{% if notification.geturl() %}
+    <a href="{{ notification.geturl() }}" class="notification-link" data-notification-id="{{ notification.getKey() }}" style="text-decoration:none;">
+{% endif %}
+    <div class="notification-item">
+        <div class="customnotification-box">
+            <div class="Notification">
+                <div class="listicon">
+                    <i class="fa-solid fa-bell"></i> 
+                </div>
+                <div class="NotificationTitle">
+                    {{ notification.getMessage() }}
+                </div>
+            </div>
+            <div class="Date">
+                <p><i class="fa-solid fa-clock"></i> {{ notification.getTime() }}</p>
+            </div>
+        </div>
+    </div>
+{% if notification.geturl() %}
+    </a>
+{% endif %}

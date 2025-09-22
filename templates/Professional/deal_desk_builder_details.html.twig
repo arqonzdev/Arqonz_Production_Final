@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO Meta Tags -->
+  <meta name="keywords" content="ArQonZ Deal Desk - Book Slots">
+  <meta name="author" content="ArQonZ Global">
+
+  <!-- Title -->
+  <title>{{ builder.getname() }}</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts (Optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/dealdeskdetails.css">
+
+
+</head>
+<body>
+    <div class="FullContentheight">
+        <!-- Navigation Header -->
+        <nav class="navbar navbar-expand-lg" style="border-bottom: 1px solid #fff;">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <div class="logo-icon">
+                        <img src="/static/images/deal-desk/assets/dealdesk-Logo.png" alt="">
+                    </div>
+                    
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://arqonz.com/deal-desk/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://arqonz.com/about-us">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Careers</a>
+                        </li>
+                    </ul>
+                    <a href="https://arqonz.com/contact-us" class="btn btn-contact">Contact Us</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <!-- Construction site background image will be applied via CSS -->
+        </div>
+
+        <style>
+            .hero-section {
+                background-image: url('{{ builder.getcoverpic().getFullPath() }}');
+            }
+        </style>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="container">
+                <!-- Company Profile Section -->
+                <div class="company-profile">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4 text-center text-md-start">
+                            <div class="company-logo mx-auto mx-md-0">
+                                <img src="{{ builder.getProfileLogo().getFullPath() }}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-8" style="min-height: 10rem;display: flex;flex-direction: column;justify-content: center;">
+                            <h1 class="mb-3">{{ builder.getname() }}</h1>
+                            <div class="company-tags">
+                                <span class="tag">Construction</span>
+                                <span class="tag">Architecture</span>
+                                <span class="tag">Residential</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Pills -->
+                    <ul class="nav nav-pills" id="companyTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">Overview</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="meeting-tab" data-bs-toggle="pill" data-bs-target="#meeting" type="button" role="tab">Meeting Slot</button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="companyTabsContent">
+                        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <h3 class="mb-4">Our Story</h3>
+                                   
+                                </div>
+                                <div class="col-lg-9">
+                                    
+                                    <p class="text-muted" style="font-weight: 500;">
+                                        {{ builder.getDescription() }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                        <div class="tab-pane fade" id="meeting" role="tabpanel">
+                            <div class="text-center py-5">
+
+
+                                <!-- Booking Modal -->
+                                <div class="booking-modal-overlay" id="bookingModal">
+                                    <div class="booking-modal">
+                                        <h2 class="text-center mb-4">Available Time Slots</h2>
+                                        <p class="text-center">Select a time slot to meet with {{ builder.getName() }}. It Costs <b>1 credit</b> to book a slot.</p>
+                                        
+                                        <div class="time-slots-container">
+                                        {% for slot in timeSlots.time_slots %}
+                                            <div class="time-slot {% if slot.availability %}available{% else %}unavailable{% endif %}" 
+                                                data-slot="{{ slot.s_no }}"
+                                                data-time="{{ slot.time_slot }}"
+                                                {% if not slot.availability %}data-bookedby-email="{{ slot.bookedby_email }}"{% endif %}
+                                                {% if not slot.availability %}disabled{% endif %}>
+                                                <strong>{{ slot.time_slot }}</strong>
+                                                <div>
+                                                    {% if slot.availability %}
+                                                        Available
+                                                    {% else %}
+                                                        Booked {% if slot.bookedby_email == app.user.email %}(by You){% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        
+                                        
+                                    </div>
+                                        
+                                        <div class="booking-form" id="bookingForm">
+                                            <h4>Confirm Your Booking</h4>
+                                            <p>You're booking: <strong id="selectedTimeSlot"></strong></p>
+                                            
+                                            
+                                            
+                                            
+                                            <input type="hidden" id="userEmail" value="user@example.com" placeholder="Enter your email address" required>
+                                            
+                                            
+                                            <button class="confirm-booking-btn" id="confirmBookingBtn">Confirm Booking</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script>
+    
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const bookingModal = document.getElementById('bookingModal');
+                                        
+                                        
+                                        const timeSlots = document.querySelectorAll('.time-slot');
+                                        const bookingForm = document.getElementById('bookingForm');
+                                        const selectedTimeSlot = document.getElementById('selectedTimeSlot');
+                                        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+                                        const userEmail = "{{ app.user.email ?? '' }}";
+                                        
+                                        let selectedSlot = null;
+                                        let actionType = 'book'; // can be 'book', 'cancel', or 'reschedule'
+                                        let oldSlotForReschedule = null;
+                                        
+                                        
+                                        
+                                        
+                                        // Handle slot selection
+                                        timeSlots.forEach(slot => {
+                                            slot.addEventListener('click', function() {
+                                                if (this.classList.contains('unavailable')) {
+                                                    const slotEmail = this.dataset.bookedbyEmail || '';
+                                                    
+                                                    // If this is the user's own booking, show cancel/reschedule options
+                                                    if (slotEmail === userEmail) {
+                                                        showCancelRescheduleOptions(this);
+                                                    }
+                                                    return;
+                                                }
+                                                
+                                                if (actionType === 'reschedule') {
+                                                    // For reschedule, select the new slot
+                                                    document.querySelectorAll('.time-slot').forEach(s => {
+                                                        s.classList.remove('selected');
+                                                    });
+                                                    
+                                                    this.classList.add('selected');
+                                                    selectedSlot = {
+                                                        number: this.dataset.slot,
+                                                        time: this.dataset.time
+                                                    };
+                                                    
+                                                    // Show confirmation for reschedule
+                                                    showRescheduleConfirmation(oldSlotForReschedule, selectedSlot);
+                                                } else {
+                                                    // Normal booking flow
+                                                    document.querySelectorAll('.time-slot').forEach(s => {
+                                                        s.classList.remove('selected');
+                                                    });
+                                                    
+                                                    this.classList.add('selected');
+                                                    selectedSlot = {
+                                                        number: this.dataset.slot,
+                                                        time: this.dataset.time
+                                                    };
+                                                    
+                                                    bookingForm.classList.add('active');
+                                                    selectedTimeSlot.textContent = selectedSlot.time;
+                                                    confirmBookingBtn.classList.add('active');
+                                                    confirmBookingBtn.textContent = 'Confirm Booking';
+                                                }
+                                            });
+                                        });
+                                        
+                                        // Handle booking confirmation
+                                        confirmBookingBtn.addEventListener('click', function() {
+                                            if (actionType === 'book') {
+                                                bookSlot();
+                                            }
+                                        });
+                                        
+                                        function showCancelRescheduleOptions(slotElement) {
+                                            const slotNumber = slotElement.dataset.slot;
+                                            const slotTime = slotElement.dataset.time;
+                                            
+                                            Swal.fire({
+                                                title: 'Your Booked Slot',
+                                                html: `You have booked <strong>${slotTime}</strong>. What would you like to do?`,
+                                                showDenyButton: true,
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Reschedule',
+                                                denyButtonText: 'Cancel Booking',
+                                                cancelButtonText: 'Close',
+                                                icon: 'question'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    // Reschedule flow
+                                                    actionType = 'reschedule';
+                                                    oldSlotForReschedule = {
+                                                        element: slotElement,
+                                                        number: slotNumber,
+                                                        time: slotTime
+                                                    };
+                                                    
+                                                    // Highlight available slots
+                                                    document.querySelectorAll('.time-slot').forEach(s => {
+                                                        if (s.classList.contains('available')) {
+                                                            s.style.opacity = '1';
+                                                            s.style.cursor = 'pointer';
+                                                        } else {
+                                                            s.style.opacity = '0.5';
+                                                            s.style.cursor = 'default';
+                                                        }
+                                                    });
+                                                    
+                                                    Swal.fire({
+                                                        title: 'Select New Slot',
+                                                        text: 'Please select an available slot to reschedule to',
+                                                        icon: 'info'
+                                                    });
+                                                } else if (result.isDenied) {
+                                                    // Cancel flow
+                                                    Swal.fire({
+                                                        title: 'Are you sure?',
+                                                        html: `You are about to cancel your booking for <strong>${slotTime}</strong>. <br><br><span style="color: red;">Note: No refund of credits will be given for cancellation.</span>`,
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#d33',
+                                                        confirmButtonText: 'Yes, cancel it!'
+                                                    }).then((cancelResult) => {
+                                                        if (cancelResult.isConfirmed) {
+                                                            cancelSlot(slotNumber);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        
+                                        function showRescheduleConfirmation(oldSlot, newSlot) {
+                                            Swal.fire({
+                                                title: 'Confirm Reschedule',
+                                                html: `You are rescheduling from <strong>${oldSlot.time}</strong> to <strong>${newSlot.time}</strong>.`,
+                                                icon: 'question',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Confirm Reschedule'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    rescheduleSlot(oldSlot.number, newSlot.number);
+                                                } else {
+                                                    resetSelection();
+                                                }
+                                            });
+                                        }
+                                        
+                                        function bookSlot() {
+                                            // Show loading state
+                                            const swalInstance = Swal.fire({
+                                                title: 'Processing...',
+                                                html: 'Please wait while we book your slot',
+                                                allowOutsideClick: false,
+                                                didOpen: () => {
+                                                    Swal.showLoading();
+                                                }
+                                            });
+                                            
+                                            fetch('{{ path('deal_desk_book_slot', {key: builder.getKey()}) }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                                },
+                                                body: new URLSearchParams({
+                                                    'slotNumber': selectedSlot.number,
+                                                })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                swalInstance.close();
+                                                
+                                                if (data.success) {
+                                                    Swal.fire(
+                                                        'Success!',
+                                                        'Your slot has been booked successfully!',
+                                                        'success'
+                                                    ).then(() => {
+                                                        bookingModal.style.display = 'none';
+                                                        window.location.reload();
+                                                    });
+                                                } else {
+                                                    Swal.fire('Error', data.message, 'error');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                swalInstance.close();
+                                                Swal.fire('Error', 'An error occurred while booking your slot', 'error');
+                                                console.error('Error:', error);
+                                            });
+                                        }
+                                        
+                                        function cancelSlot(slotNumber) {
+                                            const swalInstance = Swal.fire({
+                                                title: 'Processing...',
+                                                html: 'Cancelling your booking',
+                                                allowOutsideClick: false,
+                                                didOpen: () => {
+                                                    Swal.showLoading();
+                                                }
+                                            });
+                                            
+                                            fetch('{{ path('deal_desk_cancel_slot', {key: builder.getKey()}) }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                                },
+                                                body: new URLSearchParams({
+                                                    'slotNumber': slotNumber,
+                                                })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                swalInstance.close();
+                                                
+                                                if (data.success) {
+                                                    Swal.fire(
+                                                        'Cancelled!',
+                                                        'Your booking has been cancelled.',
+                                                        'success'
+                                                    ).then(() => {
+                                                        bookingModal.style.display = 'none';
+                                                        window.location.reload();
+                                                    });
+                                                } else {
+                                                    Swal.fire('Error', data.message, 'error');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                swalInstance.close();
+                                                Swal.fire('Error', 'An error occurred while cancelling your booking', 'error');
+                                                console.error('Error:', error);
+                                            });
+                                        }
+                                        
+                                        function rescheduleSlot(oldSlotNumber, newSlotNumber) {
+                                            const swalInstance = Swal.fire({
+                                                title: 'Processing...',
+                                                html: 'Rescheduling your booking',
+                                                allowOutsideClick: false,
+                                                didOpen: () => {
+                                                    Swal.showLoading();
+                                                }
+                                            });
+                                            
+                                            fetch('{{ path('deal_desk_reschedule_slot', {key: builder.getKey()}) }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                                },
+                                                body: new URLSearchParams({
+                                                    'oldSlotNumber': oldSlotNumber,
+                                                    'newSlotNumber': newSlotNumber
+                                                })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                swalInstance.close();
+                                                
+                                                if (data.success) {
+                                                    Swal.fire(
+                                                        'Rescheduled!',
+                                                        'Your booking has been rescheduled successfully.',
+                                                        'success'
+                                                    ).then(() => {
+                                                        bookingModal.style.display = 'none';
+                                                        window.location.reload();
+                                                    });
+                                                } else {
+                                                    Swal.fire('Error', data.message, 'error');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                swalInstance.close();
+                                                Swal.fire('Error', 'An error occurred while rescheduling your booking', 'error');
+                                                console.error('Error:', error);
+                                            });
+                                        }
+                                        
+                                        // Reset selection when modal is closed
+                                        function resetSelection() {
+                                            selectedSlot = null;
+                                            oldSlotForReschedule = null;
+                                            actionType = 'book';
+                                            bookingForm.classList.remove('active');
+                                            confirmBookingBtn.classList.remove('active');
+                                            document.querySelectorAll('.time-slot').forEach(s => {
+                                                s.classList.remove('selected');
+                                                s.style.opacity = '';
+                                                s.style.cursor = '';
+                                            });
+                                        }
+                                        
+                                        // Add bookedby_email data attribute to all slots during initialization
+                                        document.querySelectorAll('.time-slot.unavailable').forEach(slot => {
+                                            const slotNumber = slot.dataset.slot;
+                                            const timeSlotsData = {{ timeSlots|json_encode|raw }};
+                                            const slotData = timeSlotsData.time_slots.find(s => s.s_no == slotNumber);
+                                            if (slotData) {
+                                                slot.dataset.bookedbyEmail = slotData.bookedby_email || '';
+                                            }
+                                        });
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Milestones -->
+
+                    <div class="col-lg-12" style="border-radius: 20px; background: #FFF; box-shadow: 0 18px 50px 0 rgba(0, 0, 0, 0.25); padding: 29px 32px; margin: 30px 5px;">
+                        <h3 class="mb-4">Key Milestones</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="milestone-card">
+                                    <div class="milestone-icon orange">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 65 64" fill="none">
+                                            <g clip-path="url(#clip0_1_3095)">
+                                                <path d="M19.7 58.5876C23.675 54.6126 23.5 48.0626 19.1875 44.3126C15.5125 41.1251 9.94997 41.1626 6.31247 44.4126C4.22497 46.2751 3.14997 48.8001 3.06247 51.3626C2.99997 53.4126 2.41247 55.4001 1.49997 57.2251C0.274972 59.6876 0.124972 61.9626 1.32497 63.1626C2.52497 64.3626 4.79997 64.2126 7.26247 62.9876C9.09997 62.0751 11.1 61.5001 13.15 61.4251C15.5375 61.3501 17.8875 60.4126 19.7 58.5876Z" fill="url(#paint0_linear_1_3095)"/>
+                                                <path d="M19.7 58.5876C23.675 54.6126 23.5 48.0626 19.1875 44.3126C15.5125 41.1251 9.94997 41.1626 6.31247 44.4126C4.22497 46.2751 3.14997 48.8001 3.06247 51.3626C2.99997 53.4126 2.41247 55.4001 1.49997 57.2251C0.274972 59.6876 0.124972 61.9626 1.32497 63.1626C2.52497 64.3626 4.79997 64.2126 7.26247 62.9876C9.09997 62.0751 11.1 61.5001 13.15 61.4251C15.5375 61.3501 17.8875 60.4126 19.7 58.5876Z" fill="url(#paint1_linear_1_3095)"/>
+                                                <path d="M19.7 58.5876C23.675 54.6126 23.5 48.0626 19.1875 44.3126C15.5125 41.1251 9.94997 41.1626 6.31247 44.4126C4.22497 46.2751 3.14997 48.8001 3.06247 51.3626C2.99997 53.4126 2.41247 55.4001 1.49997 57.2251C0.274972 59.6876 0.124972 61.9626 1.32497 63.1626C2.52497 64.3626 4.79997 64.2126 7.26247 62.9876C9.09997 62.0751 11.1 61.5001 13.15 61.4251C15.5375 61.3501 17.8875 60.4126 19.7 58.5876Z" fill="url(#paint2_linear_1_3095)"/>
+                                                <path d="M17.3247 55.3256C19.6747 52.9756 19.5747 49.1131 17.0247 46.9006C14.8497 45.0131 11.5622 45.0381 9.42475 46.9631C8.19975 48.0631 7.54975 49.5631 7.49975 51.0631C7.46225 52.2756 7.11225 53.4506 6.57475 54.5256C5.84975 55.9881 5.76225 57.3256 6.47475 58.0381C7.18725 58.7506 8.52475 58.6506 9.98725 57.9381C11.0747 57.4006 12.2497 57.0631 13.4622 57.0131C14.8622 56.9506 16.2497 56.3881 17.3247 55.3256Z" fill="url(#paint3_linear_1_3095)"/>
+                                                <path d="M29.287 19.625H5.53702C3.23702 19.625 2.08702 22.4125 3.71202 24.0375L15.3745 35.7L29.287 19.625Z" fill="url(#paint4_linear_1_3095)"/>
+                                                <path d="M29.287 19.625H5.53702C3.23702 19.625 2.08702 22.4125 3.71202 24.0375L15.3745 35.7L29.287 19.625Z" fill="url(#paint5_linear_1_3095)"/>
+                                                <path d="M44.8748 35.2129V58.9504C44.8748 61.2504 42.0873 62.4004 40.4623 60.7754L28.7998 49.1254L44.8748 35.2129Z" fill="url(#paint6_linear_1_3095)"/>
+                                                <path d="M44.8748 35.2129V58.9504C44.8748 61.2504 42.0873 62.4004 40.4623 60.7754L28.7998 49.1254L44.8748 35.2129Z" fill="url(#paint7_linear_1_3095)"/>
+                                                <path d="M44.8748 35.2129V58.9504C44.8748 61.2504 42.0873 62.4004 40.4623 60.7754L28.7998 49.1254L44.8748 35.2129Z" fill="url(#paint8_linear_1_3095)"/>
+                                                <path d="M44.8748 35.2129V58.9504C44.8748 61.2504 42.0873 62.4004 40.4623 60.7754L28.7998 49.1254L44.8748 35.2129Z" fill="url(#paint9_linear_1_3095)"/>
+                                                <path d="M20.3374 57.6379L6.86244 44.1629C6.42494 43.7254 6.62494 43.0004 7.21244 42.8254L14.4499 40.7754L23.7374 50.0629L21.6874 57.3004C21.5124 57.8879 20.7749 58.0754 20.3374 57.6379Z" fill="url(#paint10_linear_1_3095)"/>
+                                                <path d="M20.3374 57.6379L6.86244 44.1629C6.42494 43.7254 6.62494 43.0004 7.21244 42.8254L14.4499 40.7754L23.7374 50.0629L21.6874 57.3004C21.5124 57.8879 20.7749 58.0754 20.3374 57.6379Z" fill="url(#paint11_linear_1_3095)"/>
+                                                <path d="M20.3374 57.6379L6.86244 44.1629C6.42494 43.7254 6.62494 43.0004 7.21244 42.8254L14.4499 40.7754L23.7374 50.0629L21.6874 57.3004C21.5124 57.8879 20.7749 58.0754 20.3374 57.6379Z" fill="url(#paint12_linear_1_3095)"/>
+                                                <path d="M20.3374 57.6379L6.86244 44.1629C6.42494 43.7254 6.62494 43.0004 7.21244 42.8254L14.4499 40.7754L23.7374 50.0629L21.6874 57.3004C21.5124 57.8879 20.7749 58.0754 20.3374 57.6379Z" fill="url(#paint13_linear_1_3095)"/>
+                                                <path d="M18.4746 55.7756L8.72461 46.0256L16.1496 42.4756L22.0246 48.3506L18.4746 55.7756Z" fill="url(#paint14_linear_1_3095)"/>
+                                                <path d="M15.1754 52.4754L12.0254 49.3254L18.1379 44.4629L20.0379 46.3629L15.1754 52.4754Z" fill="url(#paint15_linear_1_3095)"/>
+                                                <path d="M15.9502 36.4125L28.1002 48.5625C28.6377 49.1 28.6377 49.9875 28.1002 50.525L25.6377 52.9875C25.1002 53.525 24.2127 53.525 23.6752 52.9875L11.5252 40.8375C10.9877 40.3 10.9877 39.4125 11.5252 38.875L13.9877 36.4125C14.5252 35.8625 15.4127 35.8625 15.9502 36.4125Z" fill="url(#paint16_linear_1_3095)"/>
+                                                <path d="M15.9502 36.4125L28.1002 48.5625C28.6377 49.1 28.6377 49.9875 28.1002 50.525L25.6377 52.9875C25.1002 53.525 24.2127 53.525 23.6752 52.9875L11.5252 40.8375C10.9877 40.3 10.9877 39.4125 11.5252 38.875L13.9877 36.4125C14.5252 35.8625 15.4127 35.8625 15.9502 36.4125Z" fill="url(#paint17_linear_1_3095)"/>
+                                                <path d="M15.9502 36.4125L28.1002 48.5625C28.6377 49.1 28.6377 49.9875 28.1002 50.525L25.6377 52.9875C25.1002 53.525 24.2127 53.525 23.6752 52.9875L11.5252 40.8375C10.9877 40.3 10.9877 39.4125 11.5252 38.875L13.9877 36.4125C14.5252 35.8625 15.4127 35.8625 15.9502 36.4125Z" fill="url(#paint18_linear_1_3095)"/>
+                                                <path d="M25.7252 52.8877L28.0002 50.6127C28.5877 50.0252 28.5877 49.0627 28.0002 48.4752L21.4752 41.9502L17.5752 45.3502V46.9002L23.5627 52.8877C24.1752 53.4752 25.1377 53.4752 25.7252 52.8877Z" fill="url(#paint19_linear_1_3095)"/>
+                                                <path d="M27.9996 48.4633L22.4621 42.9258L18.0371 47.3508L23.5746 52.8883C24.1621 53.4758 25.1246 53.4758 25.7121 52.8883L27.9871 50.6133C28.5996 50.0133 28.5996 49.0508 27.9996 48.4633Z" fill="url(#paint20_linear_1_3095)"/>
+                                                <path d="M50.987 33.55C49.9745 34.5625 48.9245 35.5 47.8495 36.375L29.8995 50.775C29.1745 51.35 28.137 51.3 27.4745 50.6375L13.8495 37.0125C13.1995 36.3625 13.137 35.3125 13.712 34.5875L28.1245 16.6375C32.562 11.1375 38.862 6.5 46.687 3.3125L57.7495 6.75L61.187 17.8125C58.6245 24.1 55.1245 29.4 50.987 33.55Z" fill="url(#paint21_linear_1_3095)"/>
+                                                <path d="M61.1879 17.8008L57.7504 6.75078L52.2879 5.05078L17.0879 40.2508L27.4754 50.6383C28.1254 51.2883 29.1754 51.3508 29.9004 50.7758L47.8504 36.3633C48.9379 35.4883 49.9879 34.5508 50.9879 33.5383C55.1254 29.4008 58.6254 24.1008 61.1879 17.8008Z" fill="url(#paint22_linear_1_3095)"/>
+                                                <path d="M61.1879 17.8008L57.7504 6.75078L52.2879 5.05078L17.0879 40.2508L27.4754 50.6383C28.1254 51.2883 29.1754 51.3508 29.9004 50.7758L47.8504 36.3633C48.9379 35.4883 49.9879 34.5508 50.9879 33.5383C55.1254 29.4008 58.6254 24.1008 61.1879 17.8008Z" fill="url(#paint23_linear_1_3095)"/>
+                                                <path d="M33.7002 21.4625V47.725L47.8377 36.375C48.9252 35.5 49.9752 34.5625 50.9752 33.55C51.5252 33 52.0627 32.425 52.6002 31.825V21.4375L33.7002 21.4625Z" fill="url(#paint24_linear_1_3095)"/>
+                                                <path d="M61.1875 17.8131C59.1 15.4256 56.7375 12.9006 54.175 10.3256C51.6125 7.75058 49.075 5.40058 46.6875 3.31308C49.925 2.00058 53.425 0.925584 57.1625 0.138084C59.3125 -0.311916 61.3375 0.413084 62.7125 1.78808C64.0875 3.16308 64.8125 5.18808 64.3625 7.33808C63.575 11.0756 62.5 14.5756 61.1875 17.8131Z" fill="url(#paint25_linear_1_3095)"/>
+                                                <path d="M61.1871 17.8127C59.0996 15.4252 56.7371 12.9002 54.1746 10.3252C52.9496 9.10016 51.7371 7.92516 50.5371 6.80016L57.2121 0.125157C59.3371 -0.299843 61.3496 0.425157 62.7121 1.78766C64.0871 3.16266 64.8121 5.18766 64.3621 7.33766C63.5746 11.0752 62.4996 14.5752 61.1871 17.8127Z" fill="url(#paint26_linear_1_3095)"/>
+                                                <path d="M20.8626 25.7129L13.7251 34.6129C13.1501 35.3379 13.2001 36.3754 13.8626 37.0254L27.4876 50.6504C28.1376 51.3004 29.1876 51.3629 29.9001 50.7879L38.8001 43.6504L20.8626 25.7129Z" fill="url(#paint27_linear_1_3095)"/>
+                                                <path d="M43.1502 30.8004C48.3693 30.8004 52.6002 26.5695 52.6002 21.3504C52.6002 16.1313 48.3693 11.9004 43.1502 11.9004C37.9311 11.9004 33.7002 16.1313 33.7002 21.3504C33.7002 26.5695 37.9311 30.8004 43.1502 30.8004Z" fill="url(#paint28_linear_1_3095)"/>
+                                                <path d="M43.1498 29.7625C47.7959 29.7625 51.5623 25.9961 51.5623 21.35C51.5623 16.7039 47.7959 12.9375 43.1498 12.9375C38.5037 12.9375 34.7373 16.7039 34.7373 21.35C34.7373 25.9961 38.5037 29.7625 43.1498 29.7625Z" fill="url(#paint29_linear_1_3095)"/>
+                                                <path d="M36.4746 14.6629C32.7871 18.3504 32.7871 24.3379 36.4746 28.0379C40.1621 31.7379 46.1496 31.7254 49.8496 28.0379C50.5121 27.3754 51.0621 26.6254 51.4871 25.8379L38.6621 13.0254C37.8746 13.4504 37.1371 13.9879 36.4746 14.6629Z" fill="url(#paint30_linear_1_3095)"/>
+                                                <path d="M49.8379 14.6631C49.0754 13.9006 48.2129 13.3006 47.3004 12.8506L34.6504 25.4881C35.1004 26.4006 35.7004 27.2631 36.4629 28.0256C40.1504 31.7131 46.1379 31.7131 49.8379 28.0256C53.5379 24.3381 53.5379 18.3506 49.8379 14.6631Z" fill="url(#paint31_linear_1_3095)"/>
+                                                <path d="M43.1502 28.4879C47.0921 28.4879 50.2877 25.2923 50.2877 21.3504C50.2877 17.4085 47.0921 14.2129 43.1502 14.2129C39.2083 14.2129 36.0127 17.4085 36.0127 21.3504C36.0127 25.2923 39.2083 28.4879 43.1502 28.4879Z" fill="url(#paint32_linear_1_3095)"/>
+                                                <path d="M43.1502 28.4879C47.0921 28.4879 50.2877 25.2923 50.2877 21.3504C50.2877 17.4085 47.0921 14.2129 43.1502 14.2129C39.2083 14.2129 36.0127 17.4085 36.0127 21.3504C36.0127 25.2923 39.2083 28.4879 43.1502 28.4879Z" fill="url(#paint33_linear_1_3095)"/>
+                                                <path d="M43.1502 28.4879C47.0921 28.4879 50.2877 25.2923 50.2877 21.3504C50.2877 17.4085 47.0921 14.2129 43.1502 14.2129C39.2083 14.2129 36.0127 17.4085 36.0127 21.3504C36.0127 25.2923 39.2083 28.4879 43.1502 28.4879Z" fill="url(#paint34_linear_1_3095)"/>
+                                                <path d="M43.1502 28.4879C47.0921 28.4879 50.2877 25.2923 50.2877 21.3504C50.2877 17.4085 47.0921 14.2129 43.1502 14.2129C39.2083 14.2129 36.0127 17.4085 36.0127 21.3504C36.0127 25.2923 39.2083 28.4879 43.1502 28.4879Z" fill="url(#paint35_linear_1_3095)"/>
+                                                <path d="M29.0496 28.3006L36.1996 35.4506C36.6121 35.8631 36.6121 36.5256 36.1996 36.9256L30.9246 42.2006C30.5121 42.6131 29.8496 42.6131 29.4496 42.2006L22.2996 35.0506C21.8871 34.6381 21.8871 33.9756 22.2996 33.5756L27.5746 28.3006C27.9746 27.8881 28.6371 27.8881 29.0496 28.3006Z" fill="url(#paint36_linear_1_3095)"/>
+                                                <path d="M29.0496 28.3006L36.1996 35.4506C36.6121 35.8631 36.6121 36.5256 36.1996 36.9256L30.9246 42.2006C30.5121 42.6131 29.8496 42.6131 29.4496 42.2006L22.2996 35.0506C21.8871 34.6381 21.8871 33.9756 22.2996 33.5756L27.5746 28.3006C27.9746 27.8881 28.6371 27.8881 29.0496 28.3006Z" fill="url(#paint37_linear_1_3095)"/>
+                                                <path d="M29.0496 28.3006L36.1996 35.4506C36.6121 35.8631 36.6121 36.5256 36.1996 36.9256L30.9246 42.2006C30.5121 42.6131 29.8496 42.6131 29.4496 42.2006L22.2996 35.0506C21.8871 34.6381 21.8871 33.9756 22.2996 33.5756L27.5746 28.3006C27.9746 27.8881 28.6371 27.8881 29.0496 28.3006Z" fill="url(#paint38_linear_1_3095)"/>
+                                                <path d="M32.7004 48.5256V32.1631L20.0254 43.2006L27.4629 50.6381C28.1129 51.2881 29.1629 51.3506 29.8879 50.7756L32.7004 48.5256Z" fill="url(#paint39_linear_1_3095)"/>
+                                                <path d="M30.4873 35.6878C31.1498 34.8003 31.7873 33.8878 32.3748 32.9503C32.7123 32.4128 32.7748 32.0378 32.6248 31.8753C32.4623 31.7128 32.0873 31.7753 31.5498 32.1253C30.6123 32.7253 29.6998 33.3503 28.8123 34.0128C26.6748 35.6128 24.7248 37.3628 23.0998 39.1128L17.8248 44.8003C17.6123 45.0253 17.5123 45.2628 17.5873 45.3378L19.1623 46.9128C19.2373 46.9878 19.4748 46.8878 19.6998 46.6753L25.3873 41.4003C25.7248 41.0878 26.0748 40.7503 26.4123 40.4128C27.8123 39.0003 29.1998 37.4003 30.4873 35.6878Z" fill="url(#paint40_linear_1_3095)"/>
+                                                <path d="M21.9123 40.4004L17.8248 44.8004C17.6123 45.0254 17.5123 45.2629 17.5873 45.3379L19.1623 46.9129C19.2373 46.9879 19.4748 46.8879 19.6998 46.6754L24.0998 42.5879L21.9123 40.4004Z" fill="url(#paint41_linear_1_3095)"/>
+                                            </g>
+                                            <defs>
+                                                <linearGradient id="paint0_linear_1_3095" x1="7.95357" y1="44.9454" x2="13.9323" y2="63.2004" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FEF48B"/>
+                                                <stop offset="0.165" stop-color="#FDF286"/>
+                                                <stop offset="0.335" stop-color="#FDEE7A"/>
+                                                <stop offset="0.509" stop-color="#FCE765"/>
+                                                <stop offset="0.684" stop-color="#FCDE48"/>
+                                                <stop offset="0.859" stop-color="#FBD123"/>
+                                                <stop offset="1" stop-color="#FAC600"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint1_linear_1_3095" x1="9.32775" y1="55.1752" x2="13.7374" y2="50.7655" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FE9738" stop-opacity="0"/>
+                                                <stop offset="0.121" stop-color="#FE9738" stop-opacity="0.016"/>
+                                                <stop offset="0.246" stop-color="#FE9738" stop-opacity="0.065"/>
+                                                <stop offset="0.373" stop-color="#FE9738" stop-opacity="0.147"/>
+                                                <stop offset="0.502" stop-color="#FE9738" stop-opacity="0.262"/>
+                                                <stop offset="0.632" stop-color="#FE9738" stop-opacity="0.41"/>
+                                                <stop offset="0.762" stop-color="#FE9738" stop-opacity="0.59"/>
+                                                <stop offset="0.892" stop-color="#FE9738" stop-opacity="0.8"/>
+                                                <stop offset="1" stop-color="#FE9738"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint2_linear_1_3095" x1="11.7802" y1="57.1661" x2="12.8564" y2="62.0686" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FE9738" stop-opacity="0"/>
+                                                <stop offset="0.121" stop-color="#FE9738" stop-opacity="0.016"/>
+                                                <stop offset="0.246" stop-color="#FE9738" stop-opacity="0.065"/>
+                                                <stop offset="0.373" stop-color="#FE9738" stop-opacity="0.147"/>
+                                                <stop offset="0.502" stop-color="#FE9738" stop-opacity="0.262"/>
+                                                <stop offset="0.632" stop-color="#FE9738" stop-opacity="0.41"/>
+                                                <stop offset="0.762" stop-color="#FE9738" stop-opacity="0.59"/>
+                                                <stop offset="0.892" stop-color="#FE9738" stop-opacity="0.8"/>
+                                                <stop offset="1" stop-color="#FE9738"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint3_linear_1_3095" x1="9.9778" y1="43.6271" x2="14.1629" y2="60.4873" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.138" stop-color="#C41926" stop-opacity="0.021"/>
+                                                <stop offset="0.281" stop-color="#C41926" stop-opacity="0.085"/>
+                                                <stop offset="0.426" stop-color="#C41926" stop-opacity="0.191"/>
+                                                <stop offset="0.573" stop-color="#C41926" stop-opacity="0.339"/>
+                                                <stop offset="0.722" stop-color="#C41926" stop-opacity="0.53"/>
+                                                <stop offset="0.869" stop-color="#C41926" stop-opacity="0.761"/>
+                                                <stop offset="1" stop-color="#C41926"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint4_linear_1_3095" x1="16.8697" y1="17.6631" x2="12.8341" y2="34.3192" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#60B7FF"/>
+                                                <stop offset="0.189" stop-color="#5EB2FC"/>
+                                                <stop offset="0.385" stop-color="#58A6F6"/>
+                                                <stop offset="0.585" stop-color="#4F91EB"/>
+                                                <stop offset="0.786" stop-color="#4274DD"/>
+                                                <stop offset="0.987" stop-color="#324FCA"/>
+                                                <stop offset="1" stop-color="#314DC9"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint5_linear_1_3095" x1="10.4232" y1="27.1624" x2="7.97536" y2="29.6102" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint6_linear_1_3095" x1="46.8322" y1="47.6128" x2="30.1761" y2="51.6485" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#60B7FF"/>
+                                                <stop offset="0.189" stop-color="#5EB2FC"/>
+                                                <stop offset="0.385" stop-color="#58A6F6"/>
+                                                <stop offset="0.585" stop-color="#4F91EB"/>
+                                                <stop offset="0.786" stop-color="#4274DD"/>
+                                                <stop offset="0.987" stop-color="#324FCA"/>
+                                                <stop offset="1" stop-color="#314DC9"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint7_linear_1_3095" x1="41.251" y1="48.0677" x2="37.142" y2="42.589" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint8_linear_1_3095" x1="40.5038" y1="48.0392" x2="47.2543" y2="48.8219" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint9_linear_1_3095" x1="37.3379" y1="54.0772" x2="34.8901" y2="56.525" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint10_linear_1_3095" x1="10.82" y1="42.6472" x2="20.4462" y2="52.2734" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#7B7179"/>
+                                                <stop offset="0.265" stop-color="#766D74"/>
+                                                <stop offset="0.54" stop-color="#6A6369"/>
+                                                <stop offset="0.818" stop-color="#555255"/>
+                                                <stop offset="1" stop-color="#444444"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint11_linear_1_3095" x1="15.1663" y1="49.3345" x2="18.199" y2="46.3018" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint12_linear_1_3095" x1="17.3827" y1="49.2444" x2="23.8446" y2="51.9757" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint13_linear_1_3095" x1="15.6992" y1="48.8016" x2="13.3341" y2="51.1667" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint14_linear_1_3095" x1="19.6141" y1="42.1934" x2="12.0198" y2="53.1853" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint15_linear_1_3095" x1="19.3667" y1="43.0118" x2="12.8336" y2="52.4677" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint16_linear_1_3095" x1="22.2454" y1="42.2553" x2="17.2247" y2="47.2759" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FE646F"/>
+                                                <stop offset="0.236" stop-color="#FC5F6B"/>
+                                                <stop offset="0.48" stop-color="#F7535F"/>
+                                                <stop offset="0.729" stop-color="#EF3E4B"/>
+                                                <stop offset="0.979" stop-color="#E5212F"/>
+                                                <stop offset="1" stop-color="#E41F2D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint17_linear_1_3095" x1="18.6959" y1="45.8048" x2="21.0459" y2="43.4547" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.186" stop-color="#C01926" stop-opacity="0.038"/>
+                                                <stop offset="0.38" stop-color="#B61C26" stop-opacity="0.152"/>
+                                                <stop offset="0.576" stop-color="#A62126" stop-opacity="0.343"/>
+                                                <stop offset="0.775" stop-color="#8F2826" stop-opacity="0.609"/>
+                                                <stop offset="0.973" stop-color="#713126" stop-opacity="0.949"/>
+                                                <stop offset="1" stop-color="#6D3326"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint18_linear_1_3095" x1="19.1361" y1="45.3645" x2="17.519" y2="46.9817" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.186" stop-color="#C01926" stop-opacity="0.038"/>
+                                                <stop offset="0.38" stop-color="#B61C26" stop-opacity="0.152"/>
+                                                <stop offset="0.576" stop-color="#A62126" stop-opacity="0.343"/>
+                                                <stop offset="0.775" stop-color="#8F2826" stop-opacity="0.609"/>
+                                                <stop offset="0.973" stop-color="#713126" stop-opacity="0.949"/>
+                                                <stop offset="1" stop-color="#6D3326"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint19_linear_1_3095" x1="23.0921" y1="48.7029" x2="22.3583" y2="43.6646" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.186" stop-color="#C01926" stop-opacity="0.038"/>
+                                                <stop offset="0.38" stop-color="#B61C26" stop-opacity="0.152"/>
+                                                <stop offset="0.576" stop-color="#A62126" stop-opacity="0.343"/>
+                                                <stop offset="0.775" stop-color="#8F2826" stop-opacity="0.609"/>
+                                                <stop offset="0.973" stop-color="#713126" stop-opacity="0.949"/>
+                                                <stop offset="1" stop-color="#6D3326"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint20_linear_1_3095" x1="23.4341" y1="48.3246" x2="27.1778" y2="52.0683" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.186" stop-color="#C01926" stop-opacity="0.038"/>
+                                                <stop offset="0.38" stop-color="#B61C26" stop-opacity="0.152"/>
+                                                <stop offset="0.576" stop-color="#A62126" stop-opacity="0.343"/>
+                                                <stop offset="0.775" stop-color="#8F2826" stop-opacity="0.609"/>
+                                                <stop offset="0.973" stop-color="#713126" stop-opacity="0.949"/>
+                                                <stop offset="1" stop-color="#6D3326"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint21_linear_1_3095" x1="32.5278" y1="18.6178" x2="48.4046" y2="34.4945" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#EAF6FF"/>
+                                                <stop offset="0.268" stop-color="#E5F3FC"/>
+                                                <stop offset="0.545" stop-color="#D9EAF6"/>
+                                                <stop offset="0.826" stop-color="#C4DDEB"/>
+                                                <stop offset="1" stop-color="#B4D2E2"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint22_linear_1_3095" x1="40.8069" y1="28.1" x2="47.6308" y2="37.3451" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint23_linear_1_3095" x1="44.8617" y1="30.1589" x2="52.1258" y2="34.7816" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint24_linear_1_3095" x1="42.5832" y1="34.8411" x2="43.6104" y2="20.0194" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint25_linear_1_3095" x1="54.1875" y1="2.04059" x2="62.2829" y2="10.136" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FE646F"/>
+                                                <stop offset="0.236" stop-color="#FC5F6B"/>
+                                                <stop offset="0.48" stop-color="#F7535F"/>
+                                                <stop offset="0.729" stop-color="#EF3E4B"/>
+                                                <stop offset="0.979" stop-color="#E5212F"/>
+                                                <stop offset="1" stop-color="#E41F2D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint26_linear_1_3095" x1="59.2342" y1="8.24007" x2="64.4683" y2="10.9305" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#C41926" stop-opacity="0"/>
+                                                <stop offset="0.186" stop-color="#C01926" stop-opacity="0.038"/>
+                                                <stop offset="0.38" stop-color="#B61C26" stop-opacity="0.152"/>
+                                                <stop offset="0.576" stop-color="#A62126" stop-opacity="0.343"/>
+                                                <stop offset="0.775" stop-color="#8F2826" stop-opacity="0.609"/>
+                                                <stop offset="0.973" stop-color="#713126" stop-opacity="0.949"/>
+                                                <stop offset="1" stop-color="#6D3326"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint27_linear_1_3095" x1="23.0738" y1="41.4271" x2="20.6524" y2="43.8485" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint28_linear_1_3095" x1="43.1512" y1="11.0942" x2="43.1511" y2="31.6587" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#60B7FF"/>
+                                                <stop offset="0.189" stop-color="#5EB2FC"/>
+                                                <stop offset="0.385" stop-color="#58A6F6"/>
+                                                <stop offset="0.585" stop-color="#4F91EB"/>
+                                                <stop offset="0.786" stop-color="#4274DD"/>
+                                                <stop offset="0.987" stop-color="#324FCA"/>
+                                                <stop offset="1" stop-color="#314DC9"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint29_linear_1_3095" x1="43.1507" y1="30.4416" x2="43.1507" y2="10.0071" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#60B7FF"/>
+                                                <stop offset="0.189" stop-color="#5EB2FC"/>
+                                                <stop offset="0.385" stop-color="#58A6F6"/>
+                                                <stop offset="0.585" stop-color="#4F91EB"/>
+                                                <stop offset="0.786" stop-color="#4274DD"/>
+                                                <stop offset="0.987" stop-color="#324FCA"/>
+                                                <stop offset="1" stop-color="#314DC9"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint30_linear_1_3095" x1="41.8116" y1="22.6889" x2="33.4868" y2="31.0137" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint31_linear_1_3095" x1="44.1779" y1="22.9015" x2="51.1882" y2="33.4965" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint32_linear_1_3095" x1="43.1511" y1="12.3065" x2="43.1511" y2="27.8875" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#7B7179"/>
+                                                <stop offset="0.265" stop-color="#766D74"/>
+                                                <stop offset="0.54" stop-color="#6A6369"/>
+                                                <stop offset="0.818" stop-color="#555255"/>
+                                                <stop offset="1" stop-color="#444444"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint33_linear_1_3095" x1="45.5082" y1="23.7071" x2="36.8499" y2="15.0488" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint34_linear_1_3095" x1="42.9217" y1="24.8421" x2="43.8022" y2="11.4391" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint35_linear_1_3095" x1="41.491" y1="23.0101" x2="49.7439" y2="14.7571" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#444444" stop-opacity="0"/>
+                                                <stop offset="0.39" stop-color="#3D3D3D" stop-opacity="0.16"/>
+                                                <stop offset="0.793" stop-color="#292929" stop-opacity="0.637"/>
+                                                <stop offset="1" stop-color="#1A1A1A"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint36_linear_1_3095" x1="33.2334" y1="12.5767" x2="27.9217" y2="42.7501" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#EAF6FF"/>
+                                                <stop offset="0.268" stop-color="#E5F3FC"/>
+                                                <stop offset="0.545" stop-color="#D9EAF6"/>
+                                                <stop offset="0.826" stop-color="#C4DDEB"/>
+                                                <stop offset="1" stop-color="#B4D2E2"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint37_linear_1_3095" x1="27.3657" y1="37.1349" x2="25.1618" y2="39.3389" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint38_linear_1_3095" x1="31.7075" y1="37.7277" x2="34.3163" y2="40.3366" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint39_linear_1_3095" x1="31.2449" y1="42.4468" x2="26.2065" y2="37.9465" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8D9CA8" stop-opacity="0"/>
+                                                <stop offset="0.149" stop-color="#8D9CA8" stop-opacity="0.025"/>
+                                                <stop offset="0.304" stop-color="#8D9CA8" stop-opacity="0.099"/>
+                                                <stop offset="0.461" stop-color="#8D9CA8" stop-opacity="0.222"/>
+                                                <stop offset="0.62" stop-color="#8D9CA8" stop-opacity="0.395"/>
+                                                <stop offset="0.781" stop-color="#8D9CA8" stop-opacity="0.618"/>
+                                                <stop offset="0.94" stop-color="#8D9CA8" stop-opacity="0.887"/>
+                                                <stop offset="1" stop-color="#8D9CA8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint40_linear_1_3095" x1="24.2326" y1="37.7427" x2="26.8141" y2="40.3241" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#60B7FF"/>
+                                                <stop offset="0.189" stop-color="#5EB2FC"/>
+                                                <stop offset="0.385" stop-color="#58A6F6"/>
+                                                <stop offset="0.585" stop-color="#4F91EB"/>
+                                                <stop offset="0.786" stop-color="#4274DD"/>
+                                                <stop offset="0.987" stop-color="#324FCA"/>
+                                                <stop offset="1" stop-color="#314DC9"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint41_linear_1_3095" x1="20.0652" y1="44.4356" x2="17.9613" y2="46.5395" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#192A7D" stop-opacity="0"/>
+                                                <stop offset="0.174" stop-color="#192A7D" stop-opacity="0.033"/>
+                                                <stop offset="0.354" stop-color="#192A7D" stop-opacity="0.133"/>
+                                                <stop offset="0.537" stop-color="#192A7D" stop-opacity="0.299"/>
+                                                <stop offset="0.722" stop-color="#192A7D" stop-opacity="0.531"/>
+                                                <stop offset="0.907" stop-color="#192A7D" stop-opacity="0.827"/>
+                                                <stop offset="1" stop-color="#192A7D"/>
+                                                </linearGradient>
+                                                <clipPath id="clip0_1_3095">
+                                                <rect width="64" height="64" fill="white" transform="translate(0.5)"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">50+ Years</h5>
+                                        <small class="text-muted">Since</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="milestone-card">
+                                    <div class="milestone-icon teal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 65 64" fill="none">
+                                            <path d="M57.3987 1.38989C57.3987 1.38989 57.0178 11.911 49.4719 15.9556C43.5642 19.1223 41.2996 14.652 41.2996 14.652L57.3987 1.38989Z" fill="url(#paint0_linear_1_1399)"/>
+                                            <path d="M46.6274 16.5414C43.0171 17.7424 39.5712 14.2634 40.8391 10.6761C41.2812 9.42514 42.0304 8.08852 43.2442 6.75289C48.0201 1.49839 57.3987 1.38989 57.3987 1.38989C57.3987 1.38989 56.1292 13.3804 46.6274 16.5414Z" fill="url(#paint1_linear_1_1399)"/>
+                                            <path d="M55.3283 2.83643C55.3283 2.83643 49.6169 6.6733 45.7477 10.8391C42.6023 14.2254 40.9533 16.2721 40.6559 17.0873C40.6352 17.1442 40.6352 17.2066 40.6558 17.2636C40.6764 17.3206 40.7163 17.3685 40.7687 17.399C40.7995 17.4173 40.8339 17.429 40.8695 17.4334C40.9051 17.4377 40.9412 17.4346 40.9756 17.4242C41.0099 17.4139 41.0418 17.3965 41.0691 17.3732C41.0964 17.3499 41.1185 17.3212 41.1342 17.2889C41.5897 16.3444 43.956 13.4919 46.9108 10.5789C50.5452 6.99593 55.3283 2.83643 55.3283 2.83643Z" fill="url(#paint2_linear_1_1399)"/>
+                                            <path d="M11.1233 25.3435V50.6574C11.1233 51.5036 11.4119 52.0933 11.8649 52.3333L11.8648 52.3336L31.8678 63.8794L51.5762 26.7693L11.1233 25.3435Z" fill="url(#paint3_linear_1_1399)"/>
+                                            <path d="M11.1233 25.3435V49.0914L25.2345 50.1916C27.2903 50.3519 29.3461 49.8816 31.1278 48.8435L37.747 26.2819L11.1233 25.3435Z" fill="url(#paint4_linear_1_1399)"/>
+                                            <path d="M53.8769 26.2408L42.5024 23.4009L31.1279 36.89V62.2038C31.1279 63.7136 32.0459 64.4076 33.1783 63.7538L51.8267 52.9871C52.9591 52.3334 53.8771 50.5794 53.8771 49.0695L53.8769 26.2408Z" fill="url(#paint5_linear_1_1399)"/>
+                                            <path d="M44.447 16.4743L24.3701 4.87975L24.3682 4.88338C23.2387 4.241 21.5354 5.28738 20.465 7.33275L7.6216 31.8723C6.49885 34.0175 6.49885 36.4444 7.6216 37.2933C7.71085 37.3606 7.80573 37.4119 7.90298 37.4556L27.6262 48.8435L44.447 16.4743Z" fill="url(#paint6_linear_1_1399)"/>
+                                            <path d="M55.3457 33.9625C54.61 34.3873 53.8742 34.4379 53.3129 34.0134L42.5025 25.841L31.692 46.4963C30.5694 48.6415 28.7489 49.6923 27.6262 48.8437C26.5035 47.9949 26.5035 45.5679 27.6262 43.4227L40.4696 18.8832C41.5921 16.738 43.4126 15.687 44.5354 16.5358L57.3786 26.245C58.5014 27.0938 58.5014 29.5208 57.3786 31.666C56.8172 32.7387 56.0815 33.5377 55.3457 33.9625Z" fill="#2F878A"/>
+                                            <path d="M41.6142 35.3695L37.2761 37.874V43.6581L41.6142 41.1535V35.3695ZM37.2761 46.0264V51.8104L41.6142 49.3057V43.5217L37.2761 46.0264ZM43.3904 48.2804L47.7284 45.7757V39.9917L43.3904 42.4962V48.2804ZM43.3904 34.344V40.128L47.7284 37.6235V31.8394L43.3904 34.344Z" fill="#1A4C4E"/>
+                                            <path d="M24.8697 0.0275879C24.8697 0.0275879 24.5035 5.81859 30.3724 11.665C34.1016 15.38 37.1236 16.5816 39.4477 16.8886C41.8511 17.206 44.3116 15.2168 44.5162 12.8012L24.8697 0.0275879Z" fill="url(#paint7_linear_1_1399)"/>
+                                            <path d="M38.6595 16.1933C42.4035 17.42 45.8388 13.6074 44.1708 10.0382C43.385 8.35667 42.1795 6.60404 40.3368 5.04929C33.549 -0.677708 24.8698 0.0275421 24.8698 0.0275421C24.8698 0.0275421 24.3633 5.28204 30.8839 11.5494C33.4179 13.985 36.2021 15.388 38.6595 16.1933Z" fill="url(#paint8_linear_1_1399)"/>
+                                            <path d="M43.8615 15.8615C43.8884 15.8343 43.9096 15.802 43.9239 15.7666C43.9383 15.7312 43.9455 15.6933 43.9452 15.6551C43.9448 15.6168 43.9369 15.5791 43.9219 15.5439C43.9069 15.5088 43.8851 15.4769 43.8578 15.4502C42.1733 13.8063 39.5996 11.4182 37.5493 9.58946C33.89 6.32571 27.4209 1.35083 27.4209 1.35083C27.4209 1.35083 33.2429 6.62608 37.5851 10.5982C39.6031 12.4443 41.9015 14.4613 43.4609 15.8733C43.5759 15.9777 43.7524 15.9722 43.8615 15.8615Z" fill="url(#paint9_linear_1_1399)"/>
+                                            <defs>
+                                                <linearGradient id="paint0_linear_1_1399" x1="41.2996" y1="1.38989" x2="57.3987" y2="1.38989" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint1_linear_1_1399" x1="40.571" y1="1.38989" x2="57.3987" y2="1.38989" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint2_linear_1_1399" x1="40.6404" y1="2.83643" x2="55.3283" y2="2.83643" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint3_linear_1_1399" x1="11.1233" y1="25.3435" x2="51.5762" y2="25.3435" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#D7D1EB"/>
+                                                <stop offset="1" stop-color="#F2EFFA"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint4_linear_1_1399" x1="24.7773" y1="24.46" x2="16.3258" y2="57.886" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#7662BD"/>
+                                                <stop offset="1" stop-color="#7662BD" stop-opacity="0"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint5_linear_1_1399" x1="31.1279" y1="23.4009" x2="53.8771" y2="23.4009" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#D7D1EB"/>
+                                                <stop offset="1" stop-color="#F2EFFA"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint6_linear_1_1399" x1="14.1214" y1="45.2708" x2="34.666" y2="9.6865" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#1A4C4E"/>
+                                                <stop offset="0.426" stop-color="#1B4F51"/>
+                                                <stop offset="0.752" stop-color="#1E585B"/>
+                                                <stop offset="1" stop-color="#236568"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint7_linear_1_1399" x1="24.8652" y1="0.0275879" x2="44.5162" y2="0.0275879" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint8_linear_1_1399" x1="24.8606" y1="0" x2="44.6034" y2="0" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint9_linear_1_1399" x1="27.4209" y1="1.35083" x2="43.9452" y2="1.35083" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#2F878A"/>
+                                                <stop offset="1" stop-color="#9BF0DF"/>
+                                                </linearGradient>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">400+ Residential</h5>
+                                        <small class="text-muted">Projects Completed</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="milestone-card">
+                                    <div class="milestone-icon yellow">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Smart Living Focus</h5>
+                                        <small class="text-muted">Innovation</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="milestone-card">
+                                    <div class="milestone-icon blue">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 65 64" fill="none">
+                                            <g clip-path="url(#clip0_1_1419)">
+                                                <path d="M63.9253 25.9376C63.7734 25.1495 63.0807 24.581 62.2776 24.581H58.3535C57.6395 24.581 57.007 24.128 56.7698 23.4541C56.4611 22.5744 56.1047 21.7161 55.7044 20.8828C55.3957 20.2378 55.5212 19.4698 56.0269 18.9653L58.8002 16.192C59.3675 15.6235 59.4553 14.7313 59.0048 14.0675C57.8637 12.3838 56.5658 10.8119 55.1284 9.37286L55.1271 9.37161C53.6885 7.93385 52.1165 6.6359 50.4326 5.49522C49.7687 5.04471 48.8765 5.13255 48.308 5.69976L45.5347 8.4731C45.0302 8.97882 44.2622 9.10431 43.6172 8.79561C42.7839 8.39529 41.9256 8.0389 41.0459 7.7302C40.372 7.49302 39.919 6.86055 39.919 6.14651V2.22243C39.919 1.41929 39.3505 0.726588 38.5624 0.574745C36.5998 0.198275 34.5731 0 32.5 0C30.4269 0 28.4002 0.198275 26.4376 0.574745C25.6495 0.726588 25.081 1.41929 25.081 2.22243V6.14651C25.081 6.86055 24.628 7.49302 23.9541 7.7302C23.0744 8.0389 22.2161 8.39529 21.3828 8.79561C20.7378 9.10431 19.9698 8.97882 19.4653 8.4731L16.692 5.69976C16.1235 5.13255 15.2313 5.04471 14.5675 5.49522C12.8834 6.63633 11.3115 7.9347 9.87286 9.37286C8.43466 10.8115 7.13628 12.3834 5.99522 14.0675C5.54471 14.7313 5.63255 15.6235 6.19976 16.192L8.9731 18.9653C9.47882 19.4698 9.60431 20.2378 9.29561 20.8828C8.89529 21.7161 8.5389 22.5744 8.2302 23.4541C7.99302 24.128 7.36055 24.581 6.64651 24.581H2.72243C1.91929 24.581 1.22659 25.1495 1.07475 25.9376C0.698275 27.9002 0.5 29.9269 0.5 32C0.5 34.0731 0.698275 36.0998 1.07475 38.0624C1.22659 38.8505 1.91929 39.419 2.72243 39.419H6.64651C7.36055 39.419 7.99302 39.872 8.2302 40.5459C8.5389 41.4256 8.89529 42.2839 9.29561 43.1172C9.60431 43.7622 9.47882 44.5302 8.9731 45.0347L6.19976 47.808C5.63255 48.3765 5.54471 49.2687 5.99522 49.9326C7.13633 51.6166 8.4347 53.1885 9.87286 54.6271C11.3115 56.0653 12.8834 57.3637 14.5675 58.5048C15.2313 58.9553 16.1235 58.8675 16.692 58.3002L19.4653 55.5269C19.9698 55.0212 20.7378 54.8957 21.3828 55.2044C22.2161 55.6047 23.0744 55.9611 23.9541 56.2698C24.628 56.507 25.081 57.1395 25.081 57.8535V61.7776C25.081 62.5807 25.6495 63.2734 26.4376 63.4253C28.4002 63.8017 30.4269 64 32.5 64C34.5731 64 36.5998 63.8017 38.5624 63.4253C39.3505 63.2734 39.919 62.5807 39.919 61.7776V57.8535C39.919 57.1395 40.372 56.507 41.0459 56.2698C41.9256 55.9611 42.7839 55.6047 43.6172 55.2044C44.2622 54.8957 45.0302 55.0212 45.5347 55.5269L48.308 58.3002C48.8765 58.8675 49.7687 58.9553 50.4326 58.5048C52.1165 57.3641 53.6885 56.0662 55.1271 54.6284L55.1284 54.6271C56.5658 53.1881 57.8637 51.6162 59.0048 49.9326C59.4553 49.2687 59.3675 48.3765 58.8002 47.808L56.0269 45.0347C55.5212 44.5302 55.3957 43.7622 55.7044 43.1172C56.1047 42.2839 56.4611 41.4256 56.7698 40.5459C57.007 39.872 57.6395 39.419 58.3535 39.419H62.2776C63.0807 39.419 63.7734 38.8505 63.9253 38.0624C64.3017 36.0998 64.5 34.0731 64.5 32C64.5 29.9269 64.3017 27.9002 63.9253 25.9376ZM32.5 39.7791C28.2622 39.7791 24.8263 36.2955 24.8263 32C24.8263 27.7045 28.2622 24.2209 32.5 24.2209C36.7378 24.2209 40.1737 27.7045 40.1737 32C40.1737 36.2955 36.7378 39.7791 32.5 39.7791Z" fill="url(#paint0_linear_1_1419)"/>
+                                                <path d="M10.8517 8.43555C9.77065 9.42804 8.75931 10.4939 7.82488 11.6255C7.17668 12.4101 6.56611 13.225 5.99523 14.0675C5.54472 14.7314 5.63257 15.6236 6.19978 16.1921L8.97312 18.9654C9.47884 19.4699 9.60433 20.2379 9.29563 20.8829C9.29563 20.8829 11.5319 17.1536 13.7824 14.4888C14.5911 13.5312 14.5304 12.1142 13.6441 11.2278L10.8517 8.43555Z" fill="url(#paint1_linear_1_1419)"/>
+                                                <path d="M59.0048 14.0675C57.8637 12.3838 56.5658 10.812 55.1284 9.37296L55.1271 9.3717C54.8071 9.0517 54.4808 8.73923 54.1483 8.43555L51.3559 11.228C50.4695 12.1142 50.4089 13.5313 51.2176 14.4889C53.4681 17.1536 55.7044 20.8829 55.7044 20.8829C55.3957 20.2379 55.5212 19.4699 56.0269 18.9654L58.8002 16.1921C59.3674 15.6236 59.4553 14.7314 59.0048 14.0675Z" fill="url(#paint2_linear_1_1419)"/>
+                                                <path d="M8.2302 40.5359V40.546C7.99302 39.8721 7.36055 39.4191 6.64651 39.4191H2.72243C1.91929 39.4191 1.22659 38.8506 1.07475 38.0625C0.698275 36.0999 0.5 34.0732 0.5 32.0001C0.5 31.7629 0.503765 31.5258 0.508784 31.2886H5.59239C5.84864 31.2886 6.09636 31.3252 6.33053 31.3937C6.59644 31.4714 6.77451 31.7188 6.77451 31.9958V32.0001C6.77451 34.9905 7.28777 37.8643 8.2302 40.5359Z" fill="url(#paint3_linear_1_1419)"/>
+                                                <path d="M64.5 32.0001C64.5 34.0732 64.3017 36.0999 63.9252 38.0625C63.7734 38.8506 63.0807 39.4191 62.2775 39.4191H58.3535C57.6394 39.4191 57.007 39.8721 56.7698 40.546V40.5359C57.7122 37.8643 58.2255 34.9905 58.2255 32.0001V31.9958C58.2255 31.7188 58.4035 31.4715 58.6694 31.3937C58.9092 31.3238 59.1578 31.2884 59.4076 31.2886H64.4912C64.4962 31.5258 64.5 31.7629 64.5 32.0001Z" fill="url(#paint4_linear_1_1419)"/>
+                                                <path d="M9.40581 43.4204C9.55589 43.991 9.40154 44.6073 8.97312 45.0346L6.19978 47.8079C5.63257 48.3764 5.54472 49.2686 5.99523 49.9325C7.13635 51.6165 8.43472 53.1884 9.87288 54.6271C11.3115 56.0653 12.8834 57.3636 14.5675 58.5047C15.2313 58.9552 16.1235 58.8674 16.692 58.3002L19.4654 55.5268C19.9698 55.0211 20.7378 54.8956 21.3828 55.2043C22.2161 55.6046 23.0745 55.961 23.9541 56.2697C24.628 56.5069 25.081 57.1394 25.081 57.8534V61.7775C25.081 62.5806 25.6495 63.2733 26.4376 63.4252C28.4003 63.8017 30.4269 63.9999 32.5 63.9999C34.5731 63.9999 36.5998 63.8017 38.5625 63.4252C39.3505 63.2733 39.919 62.5806 39.919 61.7775V57.8534C39.919 57.1394 40.372 56.5069 41.0459 56.2697C41.9256 55.961 42.7839 55.6046 43.6172 55.2043C44.2622 54.8956 45.0302 55.0211 45.5347 55.5268L48.308 58.3002C48.8765 58.8674 49.7687 58.9552 50.4326 58.5047C52.1166 57.364 53.6885 56.0661 55.1272 54.6283L55.1284 54.6271C56.5658 53.1881 57.8637 51.6162 59.0048 49.9325C59.4553 49.2686 59.3675 48.3764 58.8003 47.8079L56.0269 45.0346C55.5985 44.6073 55.4441 43.991 55.5942 43.4204H9.40581Z" fill="url(#paint5_linear_1_1419)"/>
+                                                <path d="M32.5001 10.1648C20.4601 10.1648 10.6648 19.9601 10.6648 32.0001C10.6648 44.0401 20.4601 53.8354 32.5001 53.8354C44.5401 53.8354 54.3354 44.0401 54.3354 32.0001C54.3354 19.9601 44.5401 10.1648 32.5001 10.1648ZM32.5001 39.7792C28.2623 39.7792 24.8264 36.2956 24.8264 32.0001C24.8264 27.7046 28.2623 24.221 32.5001 24.221C36.7379 24.221 40.1738 27.7046 40.1738 32.0001C40.1738 36.2956 36.7379 39.7792 32.5001 39.7792Z" fill="url(#paint6_linear_1_1419)"/>
+                                                <path d="M56.7699 40.546C57.0071 39.8721 57.6395 39.4191 58.3536 39.4191H62.2776C63.0808 39.4191 63.7735 38.8506 63.9253 38.0625C63.9787 37.7842 64.0275 37.5042 64.0737 37.2232L46.1896 19.3391C42.7865 15.7313 37.9648 13.4753 32.6256 13.4753C22.3418 13.4753 13.9753 21.8418 13.9753 32.1256C13.9753 37.4649 16.2313 42.2866 19.8392 45.6897L37.7234 63.5738C38.0042 63.5276 38.2842 63.4788 38.5626 63.4255C39.3507 63.2736 39.9192 62.5809 39.9192 61.7778V57.8537C39.9192 57.1397 40.3722 56.5072 41.0461 56.27C41.9258 55.9613 42.7841 55.6049 43.6174 55.2046C44.2624 54.8959 45.0304 55.0214 45.5349 55.5271L48.3082 58.3004C48.8767 58.8677 49.7689 58.9555 50.4328 58.505C52.1167 57.3643 53.6887 56.0664 55.1273 54.6286L55.1286 54.6273C56.566 53.1883 57.8639 51.6165 59.005 49.9328C59.4555 49.2689 59.3677 48.3767 58.8004 47.8082L56.0271 45.0349C55.5214 44.5304 55.3959 43.7624 55.7046 43.1174C56.1067 42.2805 56.4623 41.422 56.7699 40.546ZM32.5001 39.7792C28.2623 39.7792 24.8264 36.2956 24.8264 32.0001C24.8264 27.7046 28.2623 24.2209 32.5001 24.2209C36.7379 24.2209 40.1738 27.7046 40.1738 32.0001C40.1738 36.2956 36.7379 39.7792 32.5001 39.7792Z" fill="url(#paint7_linear_1_1419)"/>
+                                                <path d="M46.1896 19.3392C46.034 19.1736 45.8747 19.0117 45.7128 18.8523C48.9981 22.2154 51.0248 26.8121 51.0248 31.8744C51.0248 42.1583 42.6583 50.5248 32.3744 50.5248C27.3121 50.5248 22.7154 48.4981 19.3523 45.2128C19.5117 45.3747 19.6736 45.534 19.8392 45.6896L37.7228 63.5732C38.0039 63.5268 38.2837 63.4791 38.5623 63.4252C39.3504 63.2733 39.9189 62.5806 39.9189 61.7775V57.8534C39.9189 57.1394 40.3719 56.5069 41.0458 56.2697C41.9255 55.961 42.7838 55.6046 43.6171 55.2043C44.2621 54.8956 45.0301 55.0211 45.5346 55.5268L48.3079 58.3001C48.8764 58.8674 49.7686 58.9552 50.4325 58.5047C52.1164 57.364 53.6884 56.0661 55.127 54.6283L55.1283 54.627C56.5657 53.188 57.8636 51.6162 59.0047 49.9325C59.4552 49.2686 59.3674 48.3764 58.8001 47.8079L56.0268 45.0346C55.5211 44.5301 55.3956 43.7621 55.7043 43.1171C56.1046 42.2838 56.461 41.4255 56.7697 40.5458C57.0069 39.8719 57.6394 39.4189 58.3534 39.4189H62.2775C63.0806 39.4189 63.7733 38.8504 63.9252 38.0623C63.9791 37.7837 64.0268 37.5039 64.0732 37.2228L46.1896 19.3392Z" fill="url(#paint8_linear_1_1419)"/>
+                                                <path d="M32.5001 50.6503C22.2163 50.6503 13.8499 42.2839 13.8499 32.0001C13.8499 21.7163 22.2163 13.3499 32.5001 13.3499C42.7839 13.3499 51.1503 21.7163 51.1503 32.0001C51.1503 42.2839 42.7839 50.6503 32.5001 50.6503ZM32.5001 18.9969C25.3301 18.9969 19.4969 24.8301 19.4969 32.0001C19.4969 39.1701 25.3301 45.0033 32.5001 45.0033C39.6701 45.0033 45.5033 39.1701 45.5033 32.0001C45.5033 24.8301 39.6701 18.9969 32.5001 18.9969Z" fill="url(#paint9_linear_1_1419)"/>
+                                                <path d="M45.3271 34.1333C44.3063 40.2919 38.9435 45.0031 32.4999 45.0031C26.0564 45.0031 20.6935 40.2919 19.6727 34.1333H13.9724C15.0344 43.4161 22.9376 50.6502 32.4999 50.6502C42.0623 50.6502 49.9654 43.4161 51.0274 34.1333H45.3271Z" fill="url(#paint10_linear_1_1419)"/>
+                                                <path d="M15.8257 51.5085C18.318 53.5012 21.3829 55.2045 21.3829 55.2045C20.7379 54.8958 19.9699 55.0213 19.4654 55.527L16.6921 58.3004C16.1236 58.8676 15.2314 58.9554 14.5676 58.5049C12.8496 57.3409 11.2484 56.0132 9.78638 54.5404V54.5394L12.6413 51.6846C13.5029 50.8229 14.874 50.7475 15.8257 51.5085Z" fill="url(#paint11_linear_1_1419)"/>
+                                                <path d="M55.215 54.5404L55.1284 54.627L55.1271 54.6283C53.6885 56.066 52.1165 57.364 50.4326 58.5047C49.7687 58.9552 48.8765 58.8673 48.308 58.3001L45.5347 55.5268C45.0302 55.0211 44.2622 54.8956 43.6172 55.2043C43.6172 55.2043 46.6822 53.501 49.1743 51.5082C50.126 50.7472 51.4972 50.8227 52.3588 51.6843L55.215 54.5404Z" fill="url(#paint12_linear_1_1419)"/>
+                                            </g>
+                                            <defs>
+                                                <linearGradient id="paint0_linear_1_1419" x1="11.2726" y1="10.772" x2="50.0694" y2="49.5688" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#EEF4FF"/>
+                                                <stop offset="1" stop-color="#CFE7FD"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint1_linear_1_1419" x1="10.661" y1="14.0512" x2="6.24684" y2="18.4654" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint2_linear_1_1419" x1="53.4898" y1="13.0397" x2="58.4467" y2="18.373" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint3_linear_1_1419" x1="4.3651" y1="32.5439" x2="4.3651" y2="40.6589" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint4_linear_1_1419" x1="60.6349" y1="32.5439" x2="60.6349" y2="40.6589" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint5_linear_1_1419" x1="32.5" y1="47.6862" x2="32.5" y2="63.1297" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint6_linear_1_1419" x1="46.8973" y1="46.3973" x2="18.5711" y2="18.0711" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#EEF4FF"/>
+                                                <stop offset="1" stop-color="#CFE7FD"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint7_linear_1_1419" x1="38.0634" y1="37.5634" x2="22.5928" y2="22.0928" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint8_linear_1_1419" x1="53.624" y1="53.124" x2="41.9584" y2="41.4584" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint9_linear_1_1419" x1="19.7425" y1="19.2425" x2="45.178" y2="44.678" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#76CCF8"/>
+                                                <stop offset="0.833" stop-color="#518EF8"/>
+                                                <stop offset="1" stop-color="#4981F8"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint10_linear_1_1419" x1="32.4999" y1="37.7725" x2="32.4999" y2="50.5823" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#4071F7" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#30569F"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint11_linear_1_1419" x1="15.3042" y1="54.5921" x2="18.065" y2="57.3529" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <linearGradient id="paint12_linear_1_1419" x1="50.5434" y1="53.7452" x2="46.9103" y2="57.3782" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#8AAADC" stop-opacity="0"/>
+                                                <stop offset="1" stop-color="#8AAADC"/>
+                                                </linearGradient>
+                                                <clipPath id="clip0_1_1419">
+                                                <rect width="64" height="64" fill="white" transform="translate(0.5)"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Premium Quality</h5>
+                                        <small class="text-muted">Standards</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Projects Section -->
+                    <div class="mt-5">
+                        <div class="project-nav">
+                            <a href="#" class="project-nav-item active">Completed Projects</a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="project-card">
+                                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="RTS Enclave">
+                                    <div class="project-overlay">
+                                        <div class="project-title">RTS Enclave</div>
+                                        <div class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Chennai</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="project-card">
+                                    <img src="https://images.unsplash.com/photo-1522444195799-478538b28823?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Apartment">
+                                    <div class="project-overlay">
+                                        <div class="project-title">APARTMENT</div>
+                                        <div class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Chennai</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="project-card">
+                                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Apartment">
+                                    <div class="project-overlay">
+                                        <div class="project-title">APARTMENT</div>
+                                        <div class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Chennai</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="project-card">
+                                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Apartment">
+                                    <div class="project-overlay">
+                                        <div class="project-title">APARTMENT</div>
+                                        <div class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Chennai</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="project-card">
+                                    <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Apartment">
+                                    <div class="project-overlay">
+                                        <div class="project-title">APARTMENT</div>
+                                        <div class="project-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Chennai</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="py-5" style="border-top:1px solid #fff; background-color: #0097A7;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- Left side - Navigation and Contact -->
+                    <div class="col-lg-8 col-md-6">
+                        <!-- Navigation Links -->
+                        <div class="mb-4">
+                            <nav class="navbar navbar-expand p-0" style="width: fit-content; background: none; border: none;">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item me-4" style="font-size: 18px; font-weight: 500; font-family: 'Poppins';">
+                                        <a class="nav-link text-white fw-normal px-0" href="#" >Home</a>
+                                    </li>
+                                    <!-- <li class="nav-item me-4">
+                                        <a class="nav-link text-white fw-normal px-0" href="#" style="font-size: 18px; font-weight: 500; font-family: 'Poppins';">About Us</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white fw-normal px-0" href="#" style="font-size: 18px; font-weight: 800; font-family: 'Poppins';">Support</a>
+                                    </li> -->
+                                </ul>
+                            </nav>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div>
+                            <div class="d-flex align-items-center mb-3 gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                    <path d="M3.75 3.75H26.25V26.25H3.75V3.75Z" fill="#ECEFF1"/>
+                                    <path d="M15 17.3659L26.25 26.2497V8.71094L15 17.3659Z" fill="#CFD8DC"/>
+                                    <path d="M27.1875 3.75H26.25L15 12.6337L3.75 3.75H2.8125C1.26 3.75 0 5.01 0 6.5625V23.4375C0 24.99 1.26 26.25 2.8125 26.25H3.75V8.71125L15 17.3644L26.25 8.70937V26.25H27.1875C28.74 26.25 30 24.99 30 23.4375V6.5625C30 5.01 28.74 3.75 27.1875 3.75Z" fill="#F44336"/>
+                                </svg>
+                                <span class="text-white" style="font-size: 16px; font-weight: 500; font-family: 'Poppins';">support@arqonz.com</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="/static/images/deal-desk/assets/Whatsapp.png" width="30" height="30" alt="">
+                                <span class="text-white" style="font-size: 16px; font-weight: 500; font-family: 'Poppins';">+91 9150002241</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right side - Social Media -->
+                    <div class="col-lg-4 col-md-6 text-md-end text-start mt-4 mt-md-0">
+                        <div class="mb-3">
+                            <h5 class="text-white mb-3 footertitle" style="font-size: 20px; text-align: center;">Follow Us</h5>
+                        </div>
+                        
+                        <!-- Social Media Icons -->
+                        <div class="d-flex justify-content-center gap-3 mb-3">
+                            <a href="https://www.facebook.com/Constructionecosystem" class="text-decoration-none">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background-color: #4267B2; border-radius: 8px;">
+                                    <i class="fab fa-facebook-f text-white" style="font-size: 20px;"></i>
+                                </div>
+                            </a>
+                            <a href="https://www.instagram.com/arqonz/" class="text-decoration-none">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); border-radius: 8px;">
+                                    <i class="fab fa-instagram text-white" style="font-size: 20px;"></i>
+                                </div>
+                            </a>
+                            <a href="https://www.linkedin.com/company/arqonz-com/" class="text-decoration-none">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background-color: #0077B5; border-radius: 8px;">
+                                    <i class="fab fa-linkedin-in text-white" style="font-size: 20px;"></i>
+                                </div>
+                            </a>
+                            <a href="https://www.youtube.com/@arqonztheconstructionecosy6063" class="text-decoration-none">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background-color: #FF0000; border-radius: 8px;">
+                                    <i class="fab fa-youtube text-white" style="font-size: 20px;"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Powered by text -->
+                        <div class="text-md-center text-start">
+                            <small class="text-white" style="font-size: 14px; opacity: 0.9;">Powered by Arqonz - Construction Market</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- Bootstrap JS Bundle -->
+
+    <!-- WhatsApp Float Button Styles -->
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            left: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .whatsapp-float:hover {
+            background-color: #20c157;
+            transform: scale(1.1);
+            box-shadow: 3px 3px 6px #999;
+        }
+        
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+        
+        /* Pulse animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+        
+        .whatsapp-float {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Mobile responsive */
+        @media screen and (max-width: 768px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                left: 20px;
+                font-size: 24px;
+            }
+            
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    </style>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://api.whatsapp.com/send?phone=919150002241&text=Hello%20Arqonz%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.703z"/>
+        </svg>
+    </a>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>               

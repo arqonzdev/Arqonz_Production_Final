@@ -1,0 +1,474 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+
+{% block content %}
+    
+
+    <div class="survey-container">
+        <div class="survey-header">
+            <h1>{{ survey.getTitle() }}</h1>
+        </div>
+        
+        <div class="survey-progress">
+            <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+        </div>
+        
+        <div class="survey-body">
+            <form id="surveyForm">
+                {% for section in sections %}
+                    <div class="section-container" id="section-{{ loop.index }}">
+                        <h2 class="section-title">{{ section.title }}</h2>
+                        
+                        {% for question in section.questions %}
+                            <div class="question-container" data-question-type="{{ question.type }}">
+                                <div class="question-text">{{ question.question }}{% if question.required is defined and question.required %}<span class="text-danger">*</span>{% endif %}</div>
+                                
+                                {% if question.type == 'text' %}
+                                    <input type="text" class="form-control" 
+                                           name="answers[{{ section.title|escape('js') }}][{{ question.question|escape('js') }}]" 
+                                           {% if question.required is defined and question.required %}required{% endif %}>
+                                
+                                {% elseif question.type == 'single_select' %}
+                                    <div class="radio-group">
+                                        {% for option in question.options %}
+                                            {% if option|trim is not empty %}
+                                                <label class="radio-option">
+                                                    <input type="radio" class="form-check-input" 
+                                                           name="answers[{{ section.title|escape('js') }}][{{ question.question|escape('js') }}]" 
+                                                           value="{{ option|escape('js') }}"
+                                                           {% if question.required is defined and question.required %}required{% endif %}>
+                                                    <span class="form-check-label">{{ option }}</span>
+                                                </label>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                
+                                {% elseif question.type == 'multi_select' %}
+                                    <div class="checkbox-group">
+                                        {% for option in question.options %}
+                                            {% if option|trim is not empty %}
+                                                <label class="checkbox-option">
+                                                    <input type="checkbox" class="form-check-input" 
+                                                           name="answers[{{ section.title|escape('js') }}][{{ question.question|escape('js') }}][]" 
+                                                           value="{{ option|escape('js') }}">
+                                                    <span class="form-check-label">{{ option }}</span>
+                                                </label>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                
+                <div class="thank-you-container" id="thankYou">
+                    <div class="thank-you-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Thank You!</h2>
+                    <p>Your responses have been submitted successfully.</p>
+                    
+                </div>
+            </form>
+        </div>
+        
+        <div class="survey-footer">
+            <button type="button" class="btn btn-outline-secondary btn-back" id="backButton" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-primary btn-next" id="nextButton">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        .survey-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .survey-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .survey-header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .survey-progress {
+            height: 6px;
+            background-color: #e9ecef;
+        }
+        
+        .progress-bar {
+            background-color: var(--success-color);
+            transition: width 0.3s ease;
+        }
+        
+        .survey-body {
+            padding: 2rem;
+        }
+        
+        .section-container {
+            display: none;
+        }
+        
+        .section-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .question-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+        }
+        
+        .form-check-input {
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0.15em;
+        }
+        
+        .form-check-label {
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--light-bg);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .radio-option:hover, .checkbox-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .survey-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8c;
+            border-color: #3a5a8c;
+        }
+        
+        .btn-outline-secondary {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-next {
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .btn-next i {
+            margin-left: 0.5rem;
+        }
+        
+        .btn-back i {
+            margin-right: 0.5rem;
+        }
+        
+        .thank-you-container {
+            text-align: center;
+            padding: 3rem 2rem;
+            display: none;
+        }
+        
+        .thank-you-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .thank-you-container p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .thank-you-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .survey-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .survey-body {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section-container');
+            const nextButton = document.getElementById('nextButton');
+            const backButton = document.getElementById('backButton');
+            const progressBar = document.getElementById('progressBar');
+            const surveyForm = document.getElementById('surveyForm');
+            const thankYouContainer = document.getElementById('thankYou');
+            const surveyId = '{{ surveyId }}';
+            
+            let currentSection = 0;
+            const totalSections = sections.length;
+            
+            // Initialize the survey
+            function initSurvey() {
+                if (totalSections === 0) return;
+                
+                sections[0].classList.add('active');
+                updateProgress();
+                updateButtons();
+            }
+            
+            // Update progress bar
+            function updateProgress() {
+                const progress = ((currentSection + 1) / totalSections) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Update button states
+            function updateButtons() {
+                backButton.style.display = currentSection === 0 ? 'none' : 'block';
+                nextButton.textContent = currentSection === totalSections - 1 ? 'Submit' : 'Next';
+                nextButton.innerHTML = currentSection === totalSections - 1 ? 
+                    'Submit <i class="fas fa-check"></i>' : 
+                    'Next <i class="fas fa-arrow-right"></i>';
+            }
+            
+            // Validate current section
+            function validateCurrentSection() {
+                const currentSectionElement = sections[currentSection];
+                const requiredFields = currentSectionElement.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (field.type === 'checkbox' || field.type === 'radio') {
+                        const name = field.name;
+                        const checked = currentSectionElement.querySelector(`[name="${name}"]:checked`);
+                        if (!checked) {
+                            isValid = false;
+                            // Highlight the question
+                            const questionContainer = field.closest('.question-container');
+                            questionContainer.style.borderLeft = '3px solid #dc3545';
+                            questionContainer.style.paddingLeft = '10px';
+                        }
+                    } else if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    }
+                });
+                
+                if (!isValid) {
+                    alert('Please fill in all required fields before proceeding.');
+                }
+                
+                return isValid;
+            }
+            
+            // Go to next section
+            function nextSection() {
+                if (currentSection < totalSections - 1) {
+                    if (!validateCurrentSection()) return;
+                    
+                    sections[currentSection].classList.remove('active');
+                    currentSection++;
+                    sections[currentSection].classList.add('active');
+                    updateProgress();
+                    updateButtons();
+                    
+                    // Scroll to top of section
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    // Submit the form
+                    submitSurvey();
+                }
+            }
+            
+            // Go to previous section
+            function prevSection() {
+                if (currentSection > 0) {
+                    sections[currentSection].classList.remove('active');
+                    currentSection--;
+                    sections[currentSection].classList.add('active');
+                    updateProgress();
+                    updateButtons();
+                    
+                    // Scroll to top of section
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+            
+            // Submit survey
+            function submitSurvey() {
+                if (!validateCurrentSection()) return;
+                
+                // Collect form data
+                const formData = new FormData(surveyForm);
+                const answers = {};
+                
+                // Process form data into structured format
+                formData.forEach((value, key) => {
+                    // Handle checkbox arrays
+                    if (key.endsWith('[]')) {
+                        const baseKey = key.slice(0, -2);
+                        if (!answers[baseKey]) {
+                            answers[baseKey] = [];
+                        }
+                        answers[baseKey].push(value);
+                    } else {
+                        answers[key] = value;
+                    }
+                });
+                
+                // Send data to server
+                fetch(`/api/survey/${surveyId}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ answers: answers })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show thank you message
+                        document.querySelector('.survey-body').style.padding = '0';
+                        sections.forEach(section => section.style.display = 'none');
+                        thankYouContainer.style.display = 'block';
+                        document.querySelector('.survey-footer').style.display = 'none';
+                    } else {
+                        alert('Error submitting survey: ' + (data.message || 'Please try again.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the survey.');
+                });
+            }
+            
+            // Event listeners
+            nextButton.addEventListener('click', nextSection);
+            backButton.addEventListener('click', prevSection);
+            
+            // Initialize the survey
+            initSurvey();
+            
+            // Add input validation for required fields
+            document.querySelectorAll('[required]').forEach(field => {
+                field.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                        const questionContainer = this.closest('.question-container');
+                        if (questionContainer) {
+                            questionContainer.style.borderLeft = '';
+                            questionContainer.style.paddingLeft = '';
+                        }
+                    }
+                });
+                
+                // For radio/checkbox groups
+                if (field.type === 'radio' || field.type === 'checkbox') {
+                    const name = field.name;
+                    document.querySelectorAll(`[name="${name}"]`).forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const questionContainer = this.closest('.question-container');
+                            if (questionContainer) {
+                                questionContainer.style.borderLeft = '';
+                                questionContainer.style.paddingLeft = '';
+                            }
+                        });
+                    });
+                }
+            });
+            
+            // Allow Enter key to submit text inputs (but not textareas)
+            surveyForm.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type === 'text') {
+                    e.preventDefault();
+                    nextSection();
+                }
+            });
+        });
+    </script>
+{% endblock %}

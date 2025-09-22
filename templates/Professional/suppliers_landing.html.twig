@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Arqonz</title>
+    <link rel="stylesheet" href="/static/css/supplier_landing.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="/static/images/Arqonz-logo-icon.png" type="image/x-icon">
+    
+
+
+</head>
+<body>
+    <div id="main">
+        <section class="accisSection1">
+            <div class="accessibleexcellence">
+                <div class="accessiblelogo">
+                    <img src="/static/files/SupplieLanding/AriQon_logo.png" alt="Supplier Landing page">
+                </div>
+    
+                <div class="accessibleRight">
+                    <div class="ARtitle">
+                        <h2>Accessible Excellence for your Construction:</h2>
+                        <p>Perfect Match for everyone !</p>
+                        <p>With over decades of Research and planning , you’ve meticulously crafted collections that epitomize enduring quality and technological innovation, catering to the diverse needs of your clients.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <style>
+                .HeroSectionSlide {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    /* align-items: center; */
+                    align-items: flex-start;
+                    position: relative;
+        
+                }
+                .SlideTextContent {
+                    max-width: 70rem;
+                    color: #fff;
+                    position: relative               ;
+                }
+                .SlideLableLine {
+                    height: 2px;
+                    width: 40px;
+                    background-color: rgba(163, 163, 163, .24);
+                }
+                .SlideBackgroundImage img {
+                    width: 82vw;
+                    height: 82vh;
+                }
+                .SlideBackgroundImage {
+                    position: absolute;
+                    bottom: -7px;
+                    right: 0;
+                    z-index: 0;
+                }
+                .SlideBackgroundImage .BlackOverlay {
+                    width:100vw;
+                    height:100vh;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 0;
+                    background-color: #00000087;
+                }
+                .SlideTextContent h2 {
+                    color: #fff;
+                    font-size: 65px;
+                    line-height: 5.6rem;
+                    margin-bottom: 12px;
+                    font-weight: 500;
+                }
+                .SlideTextContent p {
+                    color: #fff;
+                }
+                .SlideTextlable {
+                    display: flex;
+                    align-items: center;
+                    gap: 11px;
+                }
+                .SlideCTAButton a {
+                    display: flex;
+                    gap: 13px;
+                    width: fit-content;
+                    padding: 12px 13px;
+                    background: #fff;
+                    border-radius: 30px;
+                }
+                .SlideCTAButton a .CTAbuttonIcon {
+                    background: #000;
+                    border-radius: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .SlideCTAButton p {
+                    color: #000 !important;
+                    letter-spacing: 2px;
+                    font-size: 14px;
+                }
+                .CTAbuttonIcon img {
+                    max-width: 20px;
+                }
+                .SlideTextTitle {
+                    max-width: 63rem;
+                    margin-bottom: 24px;
+                }
+                .Hero-Slide-Description {
+                    max-width: 34rem;
+                }
+        
+                .HeroSectionSlides {
+                    position: relative;
+                    overflow: hidden;
+                    max-height: 43rem;
+                }
+                .HeroSectionSlide {
+                    opacity: 0;
+                    /* position: relative; */
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    padding: 0px 10vw;
+                    background: #000;
+                    
+                }
+                .HeroSectionSlide.active {
+                    opacity: 1;
+                    position: relative;
+                }
+                .HeroNewSection {
+                    margin-top: 86px;
+                }
+                
+            </style>
+            
+            <div class="HeroNewSection">
+                <div class="HeroSectionSlides">
+                    
+                    <div class="HeroSectionSlide">
+        
+                        <div class="SlideBackgroundImage">
+                            <img src="/static/images/HeroSlide-Images/build-beyond-boundaries.png" alt="">
+                            <div class="BlackOverlay"></div>
+                        </div>
+                        <div class="SlideTextContent">
+                            <div class="SlideTextTitle">
+                                <div class="SlideTextlable">
+                                    <div class="SlideLableLine">
+                                        
+                                    </div>
+                                    <p>Arqonz - The construction Eco System</p>
+                                </div>
+                                <h2>Build Beyond Boundaries</h2>
+                                <p class="Hero-Slide-Description">From concept to completion and beyond, ArQonZ offers comprehensive solutions to elevate your Construction & interior business.</p>
+                            </div>
+                            <div class="SlideCTAButton">
+                                <a href="#">
+                                    <div class="CTAbuttonIcon">
+                                        <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                                    </div>
+                                    <p>REGISTER</p>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+        
+                    <div class="HeroSectionSlide">
+        
+                        <div class="SlideBackgroundImage">
+                            <img src="/static/images/HeroSlide-Images/AQ-IQ-Chatbot-Slide.png" alt="">
+                            <div class="BlackOverlay"></div>
+                        </div>
+                        <div class="SlideTextContent">
+                            <div class="SlideTextTitle">
+                                <div class="SlideTextlable">
+                                    <div class="SlideLableLine">
+                                        
+                                    </div>
+                                    <p>CHATBOT</p>
+                                </div>
+                                <h2>The only construction Chatbot platform you need</h2>
+                                <p class="Hero-Slide-Description">The only architecture chatbot platform you need: Our platform streamlines communication for architects, offering intelligent assistance with design queries, project management, and client interactions.</p>
+                            </div>
+                            <div class="SlideCTAButton">
+                                <a href="#">
+                                    <div class="CTAbuttonIcon">
+                                        <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                                    </div>
+                                    <p>REGISTER</p>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+        
+                    <div class="HeroSectionSlide">
+        
+                        <div class="SlideBackgroundImage">
+                            <img src="/static/images/HeroSlide-Images/VR-AR.png" alt="">
+                            <div class="BlackOverlay"></div>
+                        </div>
+                        <div class="SlideTextContent">
+                            <div class="SlideTextTitle">
+                                <div class="SlideTextlable">
+                                    <div class="SlideLableLine">
+                                        
+                                    </div>
+                                    <p>VR/AR</p>
+                                </div>
+                                <h2>Transforming Construction Through VR/AR Innovation</h2>
+                                <p class="Hero-Slide-Description">Elevate your construn business with our VR/AR solutions, offering immersive visualization and real-time collaboration to boost project efficiency and client engagement.</p>
+                            </div>
+                            <div class="SlideCTAButton">
+                                <a href="#">
+                                    <div class="CTAbuttonIcon">
+                                        <img src="/static/icons/right-arrow-svg-com.svg" alt="">
+                                    </div>
+                                    <p>REGISTER</p>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+        
+                </div>
+            </div>
+        
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const slides = document.querySelectorAll('.HeroSectionSlide');
+                    let currentSlide = 0;
+            
+                    // Function to play animation
+                    function animateSlide(slide) {
+                        const slideTextContent = slide.querySelector('.SlideTextContent');
+                        const label = slideTextContent.querySelector('.SlideTextlable');
+                        const heading = slideTextContent.querySelector('h2');
+                        const otherContent = slideTextContent.querySelectorAll('p, .SlideCTAButton');
+            
+                        // Reset initial positions for animations
+                        gsap.set(label, { y: -30, opacity: 0 });
+                        gsap.set(heading, { y: -30, opacity: 0 });
+                        gsap.set(otherContent, { y: 30, opacity: 0 });
+            
+                        // Animate all elements at the same time
+                        gsap.to([label, heading], {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: 'power2.out',
+                        });
+                        gsap.to(otherContent, {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: 'power2.out',
+                        });
+                    }
+            
+                    // Function to change slides
+                    function changeSlide() {
+                        // Hide current slide
+                        slides[currentSlide].classList.remove('active');
+            
+                        // Move to next slide
+                        currentSlide = (currentSlide + 1) % slides.length;
+            
+                        // Show next slide
+                        slides[currentSlide].classList.add('active');
+            
+                        // Trigger animation on the new slide
+                        animateSlide(slides[currentSlide]);
+                    }
+            
+                    // Initialize first slide
+                    slides[currentSlide].classList.add('active');
+                    animateSlide(slides[currentSlide]);
+            
+                    // Auto-slide every 5 seconds
+                    setInterval(changeSlide, 5000);
+                });
+            </script>
+        </section>
+
+        <section class="Supplisection2">
+            <div class="imgsuppliS2">
+                <img src="/static/files/SupplieLanding/Supplisection2.png" alt="">
+            </div>
+        </section>
+
+        <div class="SLstripfeatures">
+            <div class="SLfeature">
+                <img src="/static/files/SupplieLanding/TruckIcon.png" alt="">
+                <p>Suppliers, it’s time to elevate your business! ArQonZ is your gateway to an extensive network of professionals in the construction and design industry.</p>
+            </div>
+
+            <div class="SLfeature">
+                <img src="/static/files/SupplieLanding/cloud_sync.png" alt="">
+                <p>Connect effortlessly with Architects, Builders, Interior Designers, and Contractors all in one place. </p>
+            </div>
+
+            <div class="SLfeature">
+                <img src="/static/files/SupplieLanding/location_away.png" alt="">
+                <p>Meet with them in person only when there’s a genuine need for your product. Take the step towards seamless networking and secure your place in the construction ecosystem with ArQonZ. </p>
+            </div>
+        </div>
+
+        <div class="DiscoveraWorldSection">
+            <div class="sectionHeader">
+                <h2>Discover a world of products</h2>
+            </div>
+            <div class="sectionDescription">
+                <p>Explore the construction products to build your dream project.</p>
+            </div>
+
+            <div class="DiscoProducts">
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/TMTBars.png" alt="TMT bars" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>TMT Bars</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/TMT-Steel-Bars" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                    
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/Lighting&Fans.png" alt="Lighting & fans" class="Lighting And Fans">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Lighting & Fans</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Lighting-&-Fans" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                    
+                    
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/Plumbing.png" alt="TMT bars" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Plumbing</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Plumbing" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                    
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/Bricks&Blocks.png" alt="Bricks and Blocks" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Bricks & Blocks</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Bricks-&-Blocks" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                    
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/WoodenBlocks.png" alt="Wooden Products" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Wooden Products</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Wooden-Products" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/Tiles.png" alt="Wooden Products" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Tiles</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Tiles" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/Electricals.png" alt="Electricals" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Electricals</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Electricals" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                </div>
+
+                <div class="DiscoProduct">
+                    <div class="discoprodWrapper">
+                        <div class="DiscoProdimg">
+                            <img src="/static/files/SupplieLanding/cement.png" alt="Cement" class="Discoproductimg">
+                        </div>
+                        
+                        <div class="DiscoprodTitle">
+                            <h3>Cement</h3>
+                        </div>
+                        <div class="DiscoProdDesc">
+                            <p>Strong Building Materials For construction Projects</p>
+                        </div>
+                        
+                        <a href="/categories/Cement" class="DiscoviewProd"><div class="DiscoviewLink">
+                            <p>View</p>
+                        </div></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="viewallProds">
+                <a href="/products" class="viewAllprodsbtn">View products</a>
+            </div>
+        </div>
+
+        
+        <div class="Whyshould">
+            <h2>Why Should You Join Arqonz</h2>
+            <div class="whyshouldboxes">
+                <div class="WhyShouldLeftBoxes">
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img src="/static/files/ArchitectLanding/assets/WhyShouldIcons/Expertise.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>Post Your Expertise</h3>
+                            <p>We embrace and celebrate creativity in all its forms, constantly pushing boundaries to deliver unique and captivating design solutions.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img style="top: 27px; width: 31px; left: 25px;" src="/static/files/ArchitectLanding/assets/WhyShouldIcons/hassles.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>No More Hassles</h3>
+                            <p>We operate with honesty, transparency, and integrity, building strong and trusted relationships with our clients based on open communication and ethical practices.</p>
+                        </div>
+                    </div>
+
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img style="top: 27px; width: 34px; left: 25px;" src="/static/files/ArchitectLanding/assets/WhyShouldIcons/bidmanagement.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>Organized Bid Management</h3>
+                            <p>We operate with honesty, transparency, and integrity, building strong and trusted relationships with our clients based on open communication and ethical practices.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="WhyShouldRightBoxes">
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img style="top: 27px; width: 34px; left: 25px;" src="/static/files/ArchitectLanding/assets/WhyShouldIcons/seamless-procurement.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>Seamless Procurement</h3>
+                            <p>We believe in the power of collaboration and work closely with our clients to understand their vision and goals, ensuring that our designs align with the objectives.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img style="top: 27px; width: 30px; left: 25px;" src="/static/files/ArchitectLanding/assets/WhyShouldIcons/focus-matters.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>Focus on What Matters</h3>
+                            <p>We stay at the forefront of design trends and technologies, constantly seeking new ways to innovate and create designs that are modern, fresh, and impactful.</p>
+                        </div>
+                    </div>
+
+                    <div class="WhyShouldBOX">
+                        <div class="WhyShouldIconSection">
+                            <div class="whyshouldCircle"></div>
+                            <img style="top: 27px; width: 41px; left: 25px;" src="/static/files/ArchitectLanding/assets/WhyShouldIcons/direct-connections.png" alt="">
+                        </div>
+
+                        <div class="WhyShouldContentSection">
+                            <h3>Direct Connections</h3>
+                            <p>We stay at the forefront of design trends and technologies, constantly seeking new ways to innovate and create designs that are modern, fresh, and impactful.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="HomepageSliderCoroselSection">
+            <div class="slider">
+                <div class="slide"><img src="/static/images/HomeSlider/NO-ONE.jpg" alt=""></div>
+                <div class="slide"><img src="/static/images/HomeSlider/Are-You-Looking-For.jpg" alt=""></div>
+                <div class="slide"><img src="/static/images/HomeSlider/Untitled-design.jpg" alt=""></div>
+            </div>
+        
+            <!-- Navigation Buttons -->
+            <div class="buttons">
+                <button data-navigate="prev">←</button>
+                <div class="indicators"></div>
+                <button data-navigate="next">→</button>
+            </div>
+        
+            <!-- Slide Indicators -->
+            
+        </div>
+    
+        
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Variables
+                const $slider = $(".slider");
+                const $slides = $(".slide");
+                const $indicators = $(".indicators");
+                const totalSlides = $slides.length;
+                let activeIndex = 0;
+
+                // Create indicators dynamically
+                for (let i = 0; i < totalSlides; i++) {
+                    $indicators.append(`<div class="dot" data-slide="${i}"></div>`);
+                }
+
+                const $dots = $(".dot");
+
+                // Show slide by index
+                function show(slideIndex, animation = true) {
+                    // Adjust for circular navigation
+                    if (slideIndex < 0) {
+                        slideIndex = totalSlides - 1;
+                    } else if (slideIndex >= totalSlides) {
+                        slideIndex = 0;
+                    }
+
+                    // Skip animation if moving to the same slide
+                    if (animation && slideIndex === activeIndex) return;
+
+                    const isNext = slideIndex > activeIndex || (activeIndex === totalSlides - 1 && slideIndex === 0);
+                    let previousSlideIndex = activeIndex;
+
+                    // Update active index
+                    activeIndex = slideIndex;
+
+                    const $prevSlide = $slides.eq(previousSlideIndex);
+                    const $currentSlide = $slides.eq(slideIndex);
+
+                    // GSAP Timeline
+                    let timeline = gsap.timeline();
+
+                    // Hide all slides
+                    timeline.to($slides, { scaleX: 0.8, opacity: 0, rotateY: 0, zIndex: 1 }, 0);
+
+                    if (isNext) {
+                        // If moving to the next slide
+                        timeline.addLabel("stage1", 0);
+                        timeline.to(
+                            $prevSlide,
+                            {
+                                opacity: 1,
+                                zIndex: 2,
+                                rotateY: "90deg",
+                                x: "-80%"
+                            },
+                            "stage1"
+                        );
+
+                        timeline.to($currentSlide, { zIndex: 3, opacity: 1, rotateY: 0 }, "stage1");
+                        timeline.addLabel("stage2");
+                        timeline.to(
+                            $prevSlide,
+                            {
+                                scaleX: 1.1,
+                                scaleY: 0.8,
+                                rotateY: 0,
+                                x: 0,
+                                opacity: 1
+                            },
+                            "stage2"
+                        );
+                        timeline.fromTo(
+                            $currentSlide,
+                            { scaleX: 0.8, scaleY: 0.8 },
+                            { scaleX: 1, scaleY: 1 },
+                            "stage2"
+                        );
+                    } else {
+                        // If moving to the previous slide
+                        timeline.addLabel("stage1", 0);
+                        timeline.to(
+                            $prevSlide,
+                            {
+                                opacity: 1,
+                                zIndex: 2,
+                                rotateY: "-90deg",
+                                x: "80%"
+                            },
+                            "stage1"
+                        );
+
+                        timeline.to($currentSlide, { zIndex: 3, opacity: 1, rotateY: 0 }, "stage1");
+                        timeline.addLabel("stage2");
+                        timeline.to(
+                            $prevSlide,
+                            {
+                                scaleX: 1.1,
+                                scaleY: 0.8,
+                                rotateY: 0,
+                                x: 0,
+                                opacity: 1
+                            },
+                            "stage2"
+                        );
+                        timeline.fromTo(
+                            $currentSlide,
+                            { scaleX: 0.8, scaleY: 0.8 },
+                            { scaleX: 1, scaleY: 1 },
+                            "stage2"
+                        );
+                    }
+
+                    // Update indicators
+                    $dots.removeClass("active");
+                    $dots.eq(slideIndex).addClass("active");
+                }
+
+                // Show the first slide and activate the first dot
+                show(activeIndex, false);
+
+                // Button navigation
+                $("[data-navigate]").click(function () {
+                    const isNext = $(this).data("navigate") === "next";
+                    show(activeIndex + (isNext ? 1 : -1));
+                });
+
+                // Dot navigation
+                $dots.click(function () {
+                    const slideIndex = $(this).data("slide");
+                    show(slideIndex);
+                });
+            });
+        </script>
+
+
+        <div class="AreyoulookingForSec">
+            <div class="AreYouLookingText">
+                <p>Are You Looking For <br> <span class="primarycolor">The Construction E-ecosystem</span></p>
+            </div>
+            <a href="/">JOIN ARQONZ</a>
+        </div>
+
+        <div class="WhyShouldConnectSection">
+            <div class="sectionHeader">
+                <h2>Why should you Join ArQonZ?</h2>
+            </div>
+            <div class="sectionDescription">
+                <p>Are you creative who does things in architecture , design and beyond ? Then ArQonZ is the community for you</p>
+            </div>
+
+            <div class="ConnectBoxWrapper">
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>01</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Connect and Collaborate</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p>Network with architects, designers, and thought leaders worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>02</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Stay Ahead</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p>Keep up with the latest industry trends and technological advancements.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>03</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Empower Your Business:</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p>Leverage new tools and techniques to optimize your processes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ConnectBoxWrapper">
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>04</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Be Part of Innovation:</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p> Contribute to pioneering projects that redefine construction and design.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>05</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Enhance Visibility:</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p>  Present your products to a targeted audience in the built environment.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ConnectBox">
+                    <div class="connectboxContent">
+                        <div class="SerialNo">
+                            <p>06</p>
+                        </div>
+                        <div class="Connectboxtitle">
+                            <h3>Share and Inspire:</h3>
+                        </div>
+                        <div class="Connectboxdesc">
+                            <p>Exchange experiences, ideas, and knowledge within a diverse, innovative community</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="StrategicSection">
+            <div class="StrategicImgCont">
+                <img src="/static/files/SupplieLanding/Stategic.png" alt="supplier strategy">
+            </div>
+        </div>
+
+        <div class="StrategicSection">
+            <div class="StrategicImgCont">
+                <img src="/static/files/SupplieLanding/Great-things.png" alt="supplier strategy">
+            </div>
+        </div>
+
+        <div class="StrategicSection">
+            <div class="StrategicImgCont">
+                <img src="/static/files/SupplieLanding/largerPlatform.png" alt="supplier strategy">
+            </div>
+        </div>
+
+        <section id="TestimonialsSection">
+            <div class="SectionHeader">
+                <h2>Testimonials</h2>
+                <p>A quick few words from my customers.</p>
+            </div>
+
+            <div class="TestimonialsWrapper">
+                <div class="Testimonial">
+                    <div class="testiheader">
+                        <div class="ProfileImage">
+                            <img src="static/files/ArchitectLanding/assets/profile.jpeg" alt="">
+                        </div>
+                        <div class="TestiNameDesign">
+                            <h3>Dr. K.Saravanan</h3>
+                            <p>Senior Vice President</p>
+                        </div>
+                    </div>
+
+                    <div class="Starrating">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                    </div>
+
+                    <div class="testiMain">
+                        <p>Its an interesting tool to save the time of my purchase head.</p>
+                    </div>
+                    <div class="Slider1">
+                        <div class="slider23">
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="Testimonial">
+                    <div class="testiheader">
+                        <div class="ProfileImage">
+                            <img src="static/files/ArchitectLanding/assets/profile.jpeg" alt="">
+                        </div>
+                        <div class="TestiNameDesign">
+                            <h3>Ms.Durga Satish Kumar</h3>
+                            <p>MD</p>
+                        </div>
+                    </div>
+
+                    <div class="Starrating">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                        <img src="static/files/ArchitectLanding/assets/StarRating.svg" alt="">
+                    </div>
+
+                    <div class="testiMain">
+                        <p>I am happy that I have onboarded with ArQonZ. It supports my organisation in its HR and Purchase Requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="StrategicSection" style="display: flex; justify-content: center; padding: 100px 0px;">
+            <div class="StrategicImgCont" style="max-width: 53rem;">
+                <img src="/static/files/SupplieLanding/ConnectYourCustomers.png" alt="supplier strategy">
+            </div>
+        </div>
+
+
+        <section id="mytoppicks">
+            <div class="SectionHeader">
+                <h2>My Top Picks</h2>
+                <p>With templates ranging from productivity, finance management and personal development, I do it here.</p>
+            </div>
+
+            <div class="TopPickFeatures">
+                <div class="TopPickRow1">
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/Profile-of-Architect.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>Profile of architect</h3>
+                            <p>Portfolio</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>Designed for students, it streamlines task 
+                                management, progress tracking, and 
+                                scheduling, all in one intuitive platform.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/EndorsementFrame.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>Endorsements</h3>
+                            <p>Productivity</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>Organize your thoughts, ideas and tasks in one 
+                                place.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/Projects-Showcase.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>Projects showcase</h3>
+                            <p>Projects</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>Effortless budgeting and expense tracking, 
+                                giving you financial clarity.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="TopPickRow1">
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/BOQ-uploading.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>BOQ Uploading</h3>
+                            <p>E-Negotiation</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>An all-in-one solution for Getting Things Done.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/Enquiries-top-picks.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>Enquiries</h3>
+                            <p>Leads</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>The ultimate tool for setting, tracking, and 
+                                achieving your goals.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="Toppickbox">
+                        <div class="TopPickBoxHeader">
+                            <img src="/static/files/ArchitectLanding/assets/AQ-IQ.png" alt="">
+                        </div>
+
+                        <div class="TopPicBoxtitle">
+                            <h3>AQ - IQ</h3>
+                            <p>AI</p>
+                        </div>
+
+                        <div class="TopPicBoxDescription">
+                            <p>Streamline your daily planning. Enhance your 
+                                productivity, mindfulness, and organization.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="subscribewithWrapper">
+            <div class="Unlockourbusinessrow2" >
+                <div class="UnlockourText"><span class="primarycolor">Subscribe</span> With Arqonz to Unlock the Full Potential of Your Business and Take it to the Next Level!</div>
+                <div class="Arqonzhereforyou">
+                    <img src="/static/files/ArchitectLanding/assets/here-for-you.png" alt="">
+                </div>
+            </div>
+        </div>
+
+        <div class="ThingsArqonzMembersSec">
+            <div class="sectionHeader">
+                <h2>Here are some of the things you can do as an
+                    ArQonZ member:</h2>
+            </div>
+            <div class="sectionDescription">
+                <p style="font-size: 14px;" >We are a diverse community of people from all walks of life. We are united by our passion for architecture and our commitment to making the world a better place.</p>
+            </div>
+
+            <div class="ArqonzThings">
+                <div class="ArqonzThingRow">
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI">
+                            <img src="/static/files/SupplieLanding/hub.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>Global Connections</h3>
+                            <p>Connect with other architects and thought leaders from around the world.</p>
+                        </div>
+                    </div>
+
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI" style="width: 3rem;">
+                            <img src="/static/files/SupplieLanding/trending_up.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>Trend Updates</h3>
+                            <p>Stay up-to-date on the latest trends in architecture and technology.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ArqonzThingRow">
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI" style="width:2.2rem;">
+                            <img  src="/static/files/SupplieLanding/handyman.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>New Tools & Techniques</h3>
+                            <p>Learn about new tools and techniques.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI" style="width:2.4rem;">
+                            <img src="/static/files/SupplieLanding/engineering.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>Cutting-Edge Projects</h3>
+                            <p>Get involved in cutting-edge projects.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ArqonzThingRow">
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI" style="width:2.2rem;">
+                            <img  src="/static/files/SupplieLanding/model_training.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>Streamlined Processes</h3>
+                            <p>Channelize your processes through the softwares in ArQonZ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="ArqonzThing">
+                        <div class="ArqonzThingI" style="width:2.4rem;">
+                            <img src="/static/files/SupplieLanding/engineering.png" alt="">
+                        </div>
+                        <div class="ArqonzthingRight">
+                            <h3>Idea Sharing</h3>
+                            <p>Share your own ideas and experiences.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ArqonzTechsupportRow">
+                <div class="TechDeskImg">
+                    <img src="/static/files/SupplieLanding/Premium-techSupport.png" alt="">
+                </div>
+                <div class="TechSupportDesc">
+                    <div class="TechDescHeader">
+                        <img src="/static/files/SupplieLanding/Arqonz-small-logo.png" alt="">
+                        <h2>Premium Tech Support</h2>
+                    </div>
+                    <p>ArQonZ is committed to excellence by offering premium tech support that enhances onboarding, product, and people connections. Our services align with the standards of renowned brands, fostering strong partnerships that prioritize sustainability and ethical practices. This ensures that our subscribers experience seamless, reliable, and high-quality support throughout their journey.</p>
+                    <div class="techRegisterLink">
+                        <a href="#">Register</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="ArqonzTechsupportRow TechAQIQRow">
+                <div class="TechSupportDesc">
+                    <div class="TechDescHeader">
+                        <img src="/static/files/SupplieLanding/Arqonz-small-logo.png" alt="">
+                        <h2>AQ - IQ</h2>
+                    </div>
+                    <p>Our commitment to excellence drives us to leverage top-tier AI technology. With advanced voice GPT at your service, you can ask questions and get instant, seamless clarifications. Experience the ease of having your doubts addressed efficiently, empowering you to make informed decisions and stay ahead.</p>
+                    <div class="techRegisterLink">
+                        <a href="#">Register</a>
+                    </div>
+                </div>
+                <div class="TechDeskImg">
+                    <img src="/static/files/SupplieLanding/supportAQIQ.png" alt="">
+                </div>
+            </div>
+
+            <div class="FrequentlyAskedQuestions">
+                <h2>Frequently Asked Questions</h2>
+                <div class="FAQWrapper">
+                    
+                    <div class="FAQLeftCOL">
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>What is ArQonZ for Suppliers?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>Arqonz is designed for suppliers, offering a comprehensive construction ecosystem that enhances project efficiency, collaboration, and access to essential infrastructure services.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>What industries does ArQonZ serve?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>ArQonZ serves the construction and infrastructure industry, connecting professionals like architects, builders, consultants, interior designers, engineers, and construction product suppliers to enhance collaboration and efficiency.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>How can I connect with professionals?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>Connect with architects, builders, consultants, interior designers, engineers, and construction product suppliers effortlessly on Arqonz, a comprehensive construction ecosystem tailored for construction and infrastructure professionals.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>Why should supplier join ArQonZ?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>Supplier should join ArQonZ to access a vast network of industry professionals, enhance their market reach, and benefit from seamless interactions with architects, builders, consultants, interior designers, and engineers.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>What tools enhance productivity?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>Arqonz enhances productivity with tools like centralized project management, real-time collaboration features, and comprehensive resource management for construction and infrastructure professionals</p>
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+
+                    <div class="FAQRightCOL">
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>How does ArQonZ promote innovation?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>ArQonZ promotes innovation by providing a collaborative platform that fosters the exchange of ideas, resources, and cutting-edge technologies among architects, builders, consultants, interior designers, engineers, and construction product suppliers.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>How does ArQonZ ensure ethical connections?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>ArQonZ ensures ethical connections by implementing strict verification processes, maintaining transparent practices, and fostering a trustworthy environment for construction and infrastructure professionals.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>What is AQ-IQ technology?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>AQ-IQ technology is an advanced feature of ArQonZ that leverages AI and data analytics to provide intelligent insights and optimize workflows for architects, builders, consultants, interior designers, engineers, and construction product suppliers</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>What support does ArQonZ offer?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>ArQonZ offers comprehensive support including technical assistance, project management tools, and personalized guidance to ensure success for architects, builders, consultants, interior designers, engineers, and construction product suppliers.</p>
+                            </div>
+                        </div>
+
+                        <div class="FAQele">
+                            <div class="FAQquestion">
+                                <p>How does ArQonZ ensure sustainability?</p>
+                                <div class="FAQOpenIco">
+                                    <img src="/static/files/ArchitectLanding/assets/plus-symbol.png" alt="">
+                                </div>
+                            </div>
+                            <div class="FAQanswer">
+                                <p>ArQonZ ensures sustainability by integrating eco-friendly practices, promoting sustainable materials, and fostering collaboration among professionals to reduce environmental impact in the construction industry.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+            <script>
+                // Import GSAP
+                document.addEventListener("DOMContentLoaded", () => {
+                    const openIcons = document.querySelectorAll(".FAQOpenIco");
+
+                    openIcons.forEach(icon => {
+                        icon.addEventListener("click", () => {
+                            const faqElement = icon.closest(".FAQele");
+                            const answer = faqElement.querySelector(".FAQanswer");
+                            
+                            // Close all other answers
+                            document.querySelectorAll(".FAQanswer.open").forEach(openAnswer => {
+                                if (openAnswer !== answer) {
+                                    gsap.to(openAnswer, { height: 0, opacity: 0, duration: 0.3, onComplete: () => openAnswer.classList.remove("open") });
+                                }
+                            });
+
+                            // Toggle current answer
+                            if (answer.classList.contains("open")) {
+                                gsap.to(answer, { height: 0, opacity: 0, duration: 0.3, onComplete: () => answer.classList.remove("open") });
+                                answer.style.display = "none";
+                            } else {
+                                answer.style.display = "block"; // Ensure the element is block for GSAP height calculation
+                                const contentHeight = answer.scrollHeight; // Get the actual height
+                                gsap.fromTo(answer, { height: 0, opacity: 0 }, { height: contentHeight, opacity: 1, duration: 0.5, onComplete: () => answer.classList.add("open") });
+                            }
+                        });
+                    });
+                });
+            </script>
+
+
+            <div class="registration-container" style="background-color: #222; color: white; padding: 40px; border-radius: 8px; max-width: 800px; margin: 0 auto; text-align: center; margin-bottom: 50px;">
+                <h1 style="font-size: 32px; margin-bottom: 10px;">If you can relate to ANY of the points below,</h1>
+                <h2 style="color: #e6a756; font-size: 36px; margin-top: 10px; margin-bottom: 40px;">You're Invited to Register</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-bottom: 40px;">
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Communication Issues
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Managing Teams
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Client Expectations
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Time Management
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Regulatory Compliance
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Budget Constraints
+                </div>
+                <div style="display: flex; align-items: center; font-size: 24px; grid-column: span 2;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; background-color: #4CAF50; color: white; border-radius: 50%; width: 24px; height: 24px; margin-right: 10px;">✓</span>
+                    Finding the Right Supplier
+                </div>
+                </div>
+                
+                <a href="/account/register" style="display: block; background-color: black; color: white; padding: 20px; text-decoration: none; font-size: 28px; border-radius: 6px; border: 2px solid #8b5cf6; margin: 0 auto; max-width: 700px;">Register Now for Rs.500/- Registration fee Annually</a>
+            </div>
+
+
+            <div class="footerSection">
+                <div class="FooterLogoWrapper">
+                    <img src="/static/files/ArchitectLanding/assets/ARQONZ-footer-black.png" alt="">
+                </div>
+                <div class="copyrightvs">
+                    <p>Copyright @ 2024</p>
+                </div>
+                <div class="footerterms">
+                    <p>This site is  a part of the ArQonZ™ . Additionally, This site is NOT endorsed by any social media in any way. ArQonZ global pvt ltd™ is a trademark of
+                        FACEBOOK™, Inc. As stipulated by law, we can not and do not make any guarantees about your ability to get results or earn any money with our ideas, information,
+                        tools, or strategies. I just want to help you by giving great content, direction, and strategies that worked well for us and that we believe can help you
+                        move forward. All of our terms, privacy policies, and disclaimers for this program and website can be accessed via the links. we feel transparency is important and 
+                        we hold ourselves (you & me) to a high standard of integrity. Thanks for stopping by. I hope this training and content brings you a lot of value & results.</p>
+                </div>
+    
+            </div>
+
+
+
+        </div>
+
+        
+    </div>
+</body>
+</html>

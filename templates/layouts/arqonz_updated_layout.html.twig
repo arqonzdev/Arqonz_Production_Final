@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/kishore.css">
+    
+    <link rel="stylesheet" href="/static/css/arqonz_custom.css">
+    
+    <link rel="stylesheet" href="/static/css/Arqonz-Latest-Global.css">
+    <link rel="stylesheet" href="/static/css/dashboardMain.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/static/css/Arqonz_website_style.css">
+    <link rel="stylesheet" href="/static/css/kishore.css">
+    <script src="/js/Arqonz-website-global.js"></script>
+    <link rel="icon" href="/static/images/Arqonz-logo-icon.png" type="image/x-icon">
+    {% if document is defined and document is not empty and document.getType() == 'page' and document.getTitle() is not empty %}
+        <title>{{ document.getTitle() }}</title> 
+        <meta property="og:title" content="{{ document.getTitle() }}" />
+    {% else %}
+        {% if metatitle is defined %}
+            <title>{{ metatitle }}</title>
+            <meta property="og:title" content="{{ metatitle }}" />
+        {% else %}
+            <title>Arqonz - Construction Ecosystem</title>
+        {% endif %}
+    {% endif %}
+    {% if document is not empty and document.getDescription() == 'page' and document.getDescription() is not empty %}
+        <meta property="og:description" content="{{ document.getDescription() }}" />
+        <meta name="description" content="{{ document.getDescription() }}">
+    {% else %}
+        {% if metadescription is defined %}
+            <meta property="og:description" content="{{ metadescription }}" />
+            <meta name="description" content="{{ metadescription }}">
+           
+        {% else %}
+            <meta property="og:description" content="Arqonz Default meta" />
+            <meta name="description" content="Arqonz Default meta">
+        {% endif %}
+    {% endif %}
+    <meta property="og:image" content="https://arqonz.com/static/images/Arqonz-NewLOGO.png" />
+    <!-- <title>Arqonz - Construction Ecosystem</title> -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MT2BCP5VJE"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MT2BCP5VJE');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-585XQ6FM');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- WhatsApp Float Button Styles -->
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            left: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .whatsapp-float:hover {
+            background-color: #20c157;
+            transform: scale(1.1);
+            box-shadow: 3px 3px 6px #999;
+        }
+        
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+        
+        /* Pulse animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+        
+        .whatsapp-float {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Mobile responsive */
+        @media screen and (max-width: 768px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                left: 20px;
+                font-size: 24px;
+            }
+            
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    </style>
+</head>
+<body class="main">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-585XQ6FM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    {% include 'layouts/Arqonz-latest-Topbar.html.twig' %}
+
+    <div class="MainContentArea">
+        {{ block('content') }}
+    </div>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://api.whatsapp.com/send?phone=919150002241&text=Hello%20Arqonz%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.703z"/>
+        </svg>
+    </a>
+
+    {#footer#}
+<footer class="">
+    <section id="footer">
+        <div id="footersections">
+            <div class="col2">
+                <div id="footer-logo">
+                    <img id="" src="/static/images/Arqonz-NewLOGO.png" alt="Find Professionals for Construction">
+                </div>
+                <div id="footercontact">
+                    <p>
+                        Whether you're an architect in Chennai, a builder in Coimbatore, a civil engineer in Madurai, or an interior designer in Mysuru, ArQonZ connects you with a robust network of suppliers, professionals, and AI-powered tools like <strong>BOQ Quotes</strong>, <strong>e-negotiations</strong>, and the <strong>AQIQ AI Construction Assistant</strong>.
+                    </p>
+                    <p>Chennai, India</p>
+                    <!-- <p>Call us: 0984453895</p> -->
+                </div>
+            </div>
+            <div class="Col3Wrapper">
+                <div class="col3">
+                    <h3>Explore</h3>
+                    <li><a href="/architects">Architects</a></li>
+                    <li><a href="/builders">Builders</a></li>
+                    <li><a href="/contractors">Contractors</a></li>
+                    <li><a href="/designers">Designers</a></li>
+                    <li><a href="/engineers">Engineers</a></li>
+                    <li><a href="/manufacturers">Manufacturers</a></li>
+                </div>
+                <div class="col3">
+                    <h3>About</h3>
+                    <li><a href="/about-us">About Us</a></li>
+                    <li><a href="https://quboyd.in/">Careers</a></li>
+                    <!-- <li><a href="#">Press</a></li> -->
+                    <li><a href="/contact-us">Contact Us</a></li>
+                    <li><a href="/terms-and-conditions">Terms of Use</a></li>
+                    <li><a href="/privacy-policy">Privacy policy</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                </div>
+            </div>
+            <div class="col3" id="Download-app">
+                <h3>Coming Soon</h3>
+                <div id="downloadapple">
+                    <img id="" src="{{ asset('/static/images/download-apple.png') }}" style="max-width:70%;" alt="Download Arqonz for Apple">
+                </div>
+                <div id="downlodandroid">
+                    <img id="" src="{{ asset('/static/images/Download-android.png') }}" style="max-width:70%;" alt="Download Arqonz for Android">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Google Map Section -->
+        <div id="footer-map-section" style="margin-top: 30px; padding: 20px 0;">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #333; font-size: 23px;">Visit Our Office</h3>
+            <div id="footer-map-container" style="width: 100%; height: 300px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.6981467420674!2d80.2403657757798!3d12.991148314447969!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52677a14c56b5d%3A0xe76959140b1acb9e!2sArqonz!5e0!3m2!1sen!2sin!4v1754204565861!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Arqonz Office Location - Chennai, India">
+                </iframe>
+            </div>
+        </div>
+        
+        <p class="copyrighttext">© Copyright © 2025 Arqonz | All Rights Reserved.</p>
+    </section>
+</footer>
+
+        {# FOOTER CODE ENDS HERE #}
+</body>
+</html>

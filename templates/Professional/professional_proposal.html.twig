@@ -1,0 +1,50 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+
+
+{% block content %}
+
+
+<!-- Display Image Gallery as Thumbnails -->
+    <div class="project-gallery">
+        {% if ProProject.getExcelData() %}
+            <div class="excel-data-table">
+                <a href="{{ path('download_excel', {'filename': ProProject.getExcelFile().getFilename()}) }}" class="btn btn-primary" style="background:#23262f">Download Excel File</a>
+                <h2>Excel Sheet Preview</h2> 
+                <div class="previewtable">
+                    <table>
+                        <thead>
+                            <tr>
+                                {% for header in ProProject.getExcelData()[0] %}
+                                    <th>{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ProProject.getExcelData()|slice(1) %}
+                                <tr>
+                                    {% for cell in row %}
+                                        <td>{{ cell }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+
+{# To Display #}
+
+{# <div class="enquirybox">
+    <div class="enquirycontent">
+        <h2 class="mainheading">Enquiry Details</h2>
+        <p><div>Name: {{ProEnquiry.getfullname()}}</div></p>
+        <p><div>Email: {{ProEnquiry.getEmail()}}</div></p>
+        <p><div>Phone: {{ProEnquiry.getPhone()}}</div></p>
+        <p><div>Message: {{ProEnquiry.getMessage()}}</div></p>
+    </div>
+</div> #}

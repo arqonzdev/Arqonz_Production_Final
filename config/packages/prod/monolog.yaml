@@ -1,0 +1,14 @@
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            level: info
+            max_files: 10
+        
+        # Add a specific handler for authentication issues
+        auth:
+            type: rotating_file
+            path: '%kernel.logs_dir%/auth.log'
+            level: debug
+            channels: ['security']

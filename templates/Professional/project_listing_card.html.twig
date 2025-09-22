@@ -1,0 +1,46 @@
+<div class="project-item">
+    {% set architectProfile = project.getProfessional() %}
+
+
+    {% if portfolioType in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+        <img src="{{ project.getProductImage().getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+    {% else %}
+        {% if architectProfile.getProfileImage() %}
+            {% if portfolioType in ['Architect', 'Builder', 'Contractor', 'Designer', 'Engineer'] %}
+                {% if project.ProjectGallery is not empty %}
+                    {% set images = project.ProjectGallery.getItems() %}
+                    {% if images|length > 0 %}
+                        <img src="{{ images[0].getThumbnail('grid') }}" alt="Project Thumbnail">
+                    {% else %}
+                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+                    {% endif %}
+                {% else %}
+                    <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+                {% endif %}
+
+            {% endif %}
+        {% else %}
+            <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+        {% endif %}
+    {% endif %}
+    
+    {% if portfolioType == 'Contractor' %}
+        <h3><a href="/en/contractor/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+    {% endif %}
+    {% if portfolioType == 'Designer' %}
+        <h3><a href="/en/designer/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+    {% endif %}
+    {% if portfolioType == 'Architect' %}
+        <h3><a href="/en/architect/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+    {% endif %}
+    {% if portfolioType == 'Builder' %}
+        <h3><a href="/en/builder/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+    {% endif %}
+    {% if portfolioType in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+        <h3><a href="/en/{{ portfolioType|lower }}/product/{{ project.getKey() }}">{{ project.getProductName() }}</a></h3>
+    {% endif %}
+    {# <p>{{ project.getProjectDescription() }}</p> #}
+    {% if portfolioType not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+        <p class="project-location">Location: {{ project.getLocation() }}</p>
+    {% endif %}
+</div>

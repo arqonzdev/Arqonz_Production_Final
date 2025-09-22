@@ -1,0 +1,7 @@
+{# _pro_profiles_listing.html.twig #}
+{% for ProProfile in ProProfiles %}
+    {% include '/Professional/ProProfile_listing_card.html.twig' with {'ProProfile': ProProfile, 'listingtype': customertype} %}
+{% endfor %}
+
+{# Add a marker element for infinite scroll #}
+<div id="infinite-scroll-container"></div>

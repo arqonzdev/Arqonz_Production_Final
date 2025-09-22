@@ -1,0 +1,244 @@
+
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block content %}
+<!-- <link rel="stylesheet" href="/static/css/arqonz_custom.css">
+<link rel="stylesheet" href="/static/css/arqonz_global.css"> -->
+    <div class="welcomeMessage">
+
+        <p style="text-align: center;">Add Agent Account<p>
+    </div>
+
+    <div class="container">
+
+
+        <style>
+            /* Add this class for the disabled button styling */
+            .disabled-button {
+                cursor: not-allowed;
+                background-color: #ccc;
+                border-color: #aaa;
+            }
+        
+            /* Tooltip styling for the phone field */
+            #registration_form_phone[title]:hover::after {
+                content: attr(title);
+                position: absolute;
+                background: #333;
+                color: #fff;
+                padding: 5px 10px;
+                border-radius: 4px;
+                top: 100%;
+                left: 0;
+                white-space: nowrap;
+                transform: translateY(5px);
+                font-size: 0.9rem;
+                z-index: 10;
+            }
+
+            input[title]:hover::after {
+                content: attr(title);
+                position: absolute;
+                background: #333;
+                color: #fff;
+                padding: 5px 10px;
+                border-radius: 4px;
+                top: 100%;
+                left: 0;
+                white-space: nowrap;
+                transform: translateY(5px);
+                font-size: 0.9rem;
+                z-index: 10;
+            }
+        </style>
+
+        <div class="mb-5 d-flex justify-content-center">
+
+            <div class="col-12 col-md-6" id="registration-form">
+
+            {% if errors %}
+                {% for error in errors %}
+                    <div class="alert alert-danger">
+                        {{ error | raw }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- <h1 class="display-3 mb-3 font-weight-normal">{{ 'general.register' | trans }}</h1> -->
+
+            {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.customertype) }}
+                {{ form_widget(form.customertype, { 'attr': { 'id': 'customertype', 'class': 'form-control' } }) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email, { 'attr': { 'id': 'email', 'class': 'form-control' } }) }}
+                <small class="text-danger d-none" id="email-error">Please enter a valid email address (e.g., xxx@xxx.xxx).</small>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.phone) }}
+                {{ form_widget(form.phone, { 'attr': { 'id': 'phone', 'class': 'form-control' } }) }}
+                <small class="text-danger d-none" id="phone-error">Phone number must be exactly 10 digits.</small>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.password) }}
+                {{ form_widget(form.password, { 'attr': { 'id': 'password', 'class': 'form-control' } }) }}
+                <small class="text-danger" id="password-error">Password must be between 6 and 20 characters long.</small>
+            </div>
+
+            {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcCiVcqAAAAAEQuc2ZVdP2RGBdAnpdfEENvJkzG"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LcCiVcqAAAAAEQuc2ZVdP2RGBdAnpdfEENvJkzG', {action: 'register'}).then(function(token) {
+                // Check if the element with ID 'registration_form_recaptchaToken' exists
+                var registrationElement = document.getElementById('registration_form_recaptchaToken');
+                var eventRegistrationElement = document.getElementById('event_registration_form_recaptchaToken');
+    
+                if (registrationElement) {
+                    // If the element is found, set the token value
+                    registrationElement.value = token;
+                } 
+                if (eventRegistrationElement) {
+                    // Otherwise, check for 'event_registration_form_recaptchaToken' and set the value
+                    eventRegistrationElement.value = token;
+                }
+            });
+        });
+    </script>
+
+    <script>
+    //ADD required Field
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('form[name]');
+        var allRequiredFields = form.querySelectorAll('[required]');
+
+        for (var i = 0; i < allRequiredFields.length; i++) {
+            var field = allRequiredFields[i];
+            var label = form.querySelector('label[for="' + field.id + '"]');
+
+            if (label) {
+                label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+            }
+        }
+
+        // Remove the required mark from labels associated with radio button options
+        var radioOptions = form.querySelectorAll('input[type="radio"]');
+        
+        for (var j = 0; j < radioOptions.length; j++) {
+            var radioOption = radioOptions[j];
+            var optionLabel = form.querySelector('label[for="' + radioOption.id + '"]');
+            
+            if (optionLabel) {
+                optionLabel.innerHTML = optionLabel.innerHTML.replace('<span class="required" style="color:red;">*</span>', '');
+            }
+        }
+    });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('form[name]');
+        var allLabels = form.querySelectorAll('.col-form-label');
+
+        for (var i = 0; i < allLabels.length; i++) {
+            var label = allLabels[i];
+            label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+        }
+
+        // Remove the required mark from labels associated with radio button options
+        var radioOptions = form.querySelectorAll('input[type="radio"]');
+        
+        for (var j = 0; j < radioOptions.length; j++) {
+            var radioOption = radioOptions[j];
+            var optionLabel = form.querySelector('label[for="' + radioOption.id + '"]');
+            
+            if (optionLabel) {
+                optionLabel.innerHTML = optionLabel.innerHTML.replace('<span class="required" style="color:red;">*</span>', '');
+            }
+        }
+    });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailField = document.getElementById('registration_form_email');
+            const phoneField = document.getElementById('registration_form_phone');
+            const passwordField = document.getElementById('registration_form_password');
+            const registerButton = document.getElementById('registration_form__submit');
+
+            const emailError = document.getElementById('email-error');
+            const phoneError = document.getElementById('phone-error');
+            const passwordError = document.getElementById('password-error');
+
+            function validateForm() {
+                let isValid = true;
+
+                // Email validation
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailField.value)) {
+                    emailError.classList.remove('d-none');
+                    isValid = false;
+                } else {
+                    emailError.classList.add('d-none');
+                }
+
+                // Phone validation
+                if (!/^\d{10}$/.test(phoneField.value)) {
+                    phoneError.classList.remove('d-none');
+                    isValid = false;
+                } else {
+                    phoneError.classList.add('d-none');
+                }
+
+                // Password validation (Min 6 characters, Max 20 characters)
+                const passwordLength = passwordField.value.length;
+                if (passwordLength < 6 || passwordLength > 20) {
+                    passwordError.classList.remove('d-none');
+                    isValid = false;
+                } else {
+                    passwordError.classList.add('d-none');
+                }
+
+                // Restrict password to 20 characters max
+                if (passwordLength > 20) {
+                    passwordField.value = passwordField.value.slice(0, 20); // Trim to 20 characters max
+                }
+
+                registerButton.disabled = !isValid;
+                registerButton.classList.toggle('disabled-button', !isValid);
+            }
+
+            // Phone input event listener to allow only digits and restrict to 10 digits
+            phoneField.addEventListener('input', (e) => {
+                // Remove any non-digit characters
+                e.target.value = e.target.value.replace(/\D/g, '');
+
+                // Ensure that the phone number is not more than 10 digits
+                if (e.target.value.length > 10) {
+                    e.target.value = e.target.value.slice(0, 10);
+                }
+
+                // Revalidate the form after updating the phone field
+                validateForm();
+            });
+
+            emailField.addEventListener('input', validateForm);
+            phoneField.addEventListener('input', validateForm);
+            passwordField.addEventListener('input', validateForm);
+        });
+    </script>
+
+
+
+{% endblock %}

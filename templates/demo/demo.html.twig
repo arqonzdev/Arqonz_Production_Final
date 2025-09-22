@@ -1,0 +1,92 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('http://localhost:8001/static/css/demo.css') %}
+
+{% block content %}
+
+    <div id="main-content" class="main-content mb-5">
+    
+        {# <div class="page-header">
+            <h1>{{ architectProfile.getCompanyName() }}</h1>
+        </div> #}
+
+        <div class="architect-profile">
+            <div class="profile-image">
+                {% if architectProfile.getProfileImage() %}
+                    <img src="{{ architectProfile.getProfileImage().getThumbnail("galleryCarousel") }}" alt="Profile Image" class="profile-image">
+                {% else %}
+                    <img src="{{ asset('path/to/default/profile/image.jpg') }}" alt="Default Profile Image" class="default-profile-image">
+                {% endif %}
+            </div>
+
+            <div class="profile-details">
+                <div class="over-image">
+                    <div class="left-row">
+                        <div class="company-name">
+                            <h2>Company Name: {{ architectProfile.getCompanyName() }}</h2>
+                        </div>
+                        <div class="companycity">
+                            <p>City: {{ architectProfile.getCity() }}</p>
+                        </div>
+                    </div>
+                    <div class="right-row">
+                        <div class="Stars">
+                            <p><span class="fa fa-star checked" style="color: orange;"></span>
+                            <span class="fa fa-star checked" style="color: orange;"></span>
+                            <span class="fa fa-star checked" style="color: orange;"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="established-year">
+                    <p>Year Established: {{ architectProfile.getYearEstablished() }}</p>
+                </div>
+                <div class="skills">
+                    <p>Skills: {{ architectProfile.getSkills() }}</p>
+                </div>
+                <div class="specialization">
+                {% if architectProfile.getspecialization() %}
+                    <p>Specialization: {{ architectProfile.getspecialization() }}</p>
+                {% endif %}
+                </div>
+                <div class="gstnumber">
+                {% if architectProfile.gstnumber() %}
+                    <p>GST Number: {{ architectProfile.getgstnumber() }}</p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="contact-details">
+            <h2>Contact Information</h2>
+            <div class="phone">
+                <p>Phone: {{ architectProfile.getCountryCode() }} {{ architectProfile.getPhoneNumber() }}</p>
+            </div>
+            <div class="email">
+                <p>Email: {{ architectProfile.getCustomer().getEmail() }}</p>
+            </div>
+            <div class="address">
+                <p>Address: {{ architectProfile.getStreetAddress() }}, {{ architectProfile.getCity() }}, {{ architectProfile.getState() }}, {{ architectProfile.getCountry() }} {{ architectProfile.getPinCode() }}</p>
+            </div>
+        </div>
+
+        <div class="description">
+            <h2>Description</h2>
+            <p>{{ architectProfile.getBio() }}</p>
+        </div>
+
+        <div class="portfolio-projects">
+            <h2>Portfolio Projects</h2>
+            {% for project in projects %}
+                <div class="project">
+                    <h3>{{ project.getProjectName() }}</h3>
+                    <p>{{ project.getProjectDescription() }}</p>
+                    <p>Location: {{ project.getLocation() }}</p>
+                    <!-- Add more project details as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_Prodashboard.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_Portfolio_Signup.css') %}
+{# {% form_theme form 'bootstrap_3_layout.html.twig' %} #}
+
+
+{% block content %}
+
+    <div id="page-header">
+        <div class="backgroundoverlay"></div>
+        <h3>Customers are looking for your services on Arqonz</h3>
+    </div>
+    <div id="pagecontent">
+        <h2>Build Your Construction Business with Arqonz</h2>
+        <p>Build your online presence with a professional profile on Arqonz. It's easy to sign up and it's free!
+Get your business noticed today by the homeowners around India.</p>
+        <div class="joinbutton"><a class="joinnow" href="/account/register">Create Your Professional Profile</a></div>
+        <hr>
+        <div class="featuresbox">
+            <div class="feature">
+                <h3>Reach New Clients</h3>
+                <p>Arqonz businesses with local homeowners who are serious about hiring the right home professionals for their projects. 74% of of our vistors plan to build, renovate or redecorate in the next two years.</p>
+            </div>
+            <div class="feature">
+                <h3>Showcase Your Business</h3>
+                <p>With Arqonz, professionals can showcase their work and provide insight into their values, working style and approach through portfolio photos, client reviews, and direct community interaction.</p>
+            </div>
+            <div class="feature">
+                <h3>Work Smarter</h3>
+                <p>Arqonz enables professionals to share ideas and collaborate with clients in the cloud. Arqonz helps pros discover the latest products, stay up to date on trends and efficiently manage their web presence.</p>
+            </div>
+            <div class="feature">
+                <h3>Connect With Professionals</h3>
+                <p>helps home building, renovation and design professionals build their brands, connect with homeowners, expand their professional networks, and move project management to the cloud.</p>
+            </div>
+        </div>
+        <div class="joinbutton"><a class="joinnow" href="/account/register">Join Us Today</a></div>
+
+    </div>
+    
+    
+
+{% endblock %}

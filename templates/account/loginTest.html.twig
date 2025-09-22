@@ -1,0 +1,104 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block content %}
+
+<div class="loading-overlay" id="loadingOverlay" style="">
+    <div class="loading-spinner"></div>
+</div>
+
+    <div class="text-center">
+
+        <div class="form-signin mb-5">
+
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            {{ form_start(form) }}
+                <h1 class="display-3 mb-3 font-weight-normal">{{ 'general.please-sign-in' | trans }}</h1>
+
+                <div class="input-group">
+                    {{ form_widget(form._username, { 'attr': {'placeholder': 'Email'}}) }}
+                    <button type="button" id="send-otp-btn">Send OTP</button>
+                </div>
+
+
+                {{ form_widget(form._otp, { 'attr': {'placeholder': 'Enter OTP', 'disabled': true}}) }}
+
+                <input type="hidden" name="_csrf_token"
+                       value="{{ csrf_token('authenticate') }}"
+                >
+
+                <div class="custom-control custom-checkbox mb-3">
+                    <input name="_remember_me" type="checkbox" class="custom-control-input" id="rememberMe">
+                    <label class="custom-control-label" for="rememberMe">Remember me</label>
+                </div>
+
+                {{ form_row(form._submit, {'attr': {'class': 'btn-success btn-lg btn-block mt-4'}}) }}
+
+            {{ form_end(form) }}
+            
+            <p><a href="/en/account/login">Login With Password</a></p>
+            <p>{{ 'account.forgot-password' | trans }} <a href="{{ path('account-password-send-recovery') }}">{{ 'account.password-recovery' | trans }}</a></p>
+            <p>{{ 'general.no-account' | trans }} <a href="{{ path('account-register') }}">{{ 'general.register-now' | trans }}</a></p>
+
+
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const otpField = document.getElementById('_otp');
+            const submitButton = document.getElementById('_submit');
+            const sendOtpButton = document.getElementById('send-otp-btn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            sendOtpButton.addEventListener('click', function () {
+                const username = document.querySelector('input[name="_username"]').value;
+
+                // Show the loading overlay
+                loadingOverlay.style.display = 'flex';
+
+                fetch('/send-login-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token("authenticate") }}'
+                    },
+                    body: JSON.stringify({ username })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('OTP sent to your phone.');
+                        otpField.disabled = false;
+                    } else {
+                        alert('Email Doesnt Exist.');
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred. Please try again.');
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    // Hide the loading overlay
+                    loadingOverlay.style.display = 'none';
+                });
+            });
+
+            otpField.addEventListener('input', function () {
+                let otpValue = otpField.value;
+                otpValue = otpValue.replace(/\D/g, ''); // Only digits
+                if (otpValue.length > 6) otpValue = otpValue.slice(0, 6);
+                otpField.value = otpValue;
+                submitButton.disabled = otpValue.length !== 6;
+            });
+        });
+    </script>
+
+
+{% endblock %}

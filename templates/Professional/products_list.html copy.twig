@@ -1,0 +1,206 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{# {% do pimcore_head_link().appendStylesheet('/static/css/arqonz_custom.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz-home.css') %} #}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+
+<div class="maincontent">
+    <div class="PageheadingSection">
+        <div class="ProdPageHeading">
+            <h2>Products</h2>
+        </div>
+        <div class="ProdPageSubHeading">
+            <p>Buy the materials to build home</p>
+        </div>
+
+        <div class="ProductCategoriesSection">
+            <div class="HomeProductCard ">
+                <div class="ProdImgCOntainer SelectedProductCard">
+                    <img src="/static/images/Cement.jpg" class="HomeProductfeaturedImage" alt="Cement">
+                </div>
+                <h3 class="HomeProductTitle">Cement</h3>
+                <p class="HomeProductDesc">Strong building material for construction projects.</p>
+            </div>
+
+            <div class="HomeProductCard UnSelectedProductCard">
+                <div class="ProdImgCOntainer">
+                    <img src="/static/images/Bricks.jpg" class="HomeProductfeaturedImage" alt="Bricks">
+                </div>
+                <h3 class="HomeProductTitle UnSelectedProductCard">Bricks</h3>
+                <p class="HomeProductDesc">Solid blocks for building walls and structures.</p>
+            </div>
+
+            <div class="HomeProductCard SelectedProductCard">
+                <div class="ProdImgCOntainer">
+                    <img src="/static/images/TMT.jpeg" class="HomeProductfeaturedImage" alt="TMT Bars">
+                </div>
+                <h3 class="HomeProductTitle">TMT Bars</h3>
+                <p class="HomeProductDesc">Reinforcement bars for strong concrete structures.</p>
+            </div>
+
+            <div class="HomeProductCard UnSelectedProductCard">
+                <div class="ProdImgCOntainer">
+                    <img src="/static/images/Tiles.jpg" class="HomeProductfeaturedImage" alt="Tiles">
+                </div>
+                <h3 class="HomeProductTitle">Tiles</h3>
+                <p class="HomeProductDesc">Durable, stylish, versatile flooring for all spaces.</p>
+            </div>
+
+            <div class="HomeProductCard UnSelectedProductCard">
+                <div class="ProdImgCOntainer">
+                    <img src="/static/images/Sand.png" class="HomeProductfeaturedImage" alt="Sand">
+                </div>
+                <h3 class="HomeProductTitle">Sand</h3>
+                <p class="HomeProductDesc">Fine, granular material used for construction.</p>
+            </div>
+        </div>  
+    </div>
+
+    <div class="ProductsMainSection">
+        <div class="ProductsFilterbar">
+            <div class="FilterHeading">
+                <h2>Filter Product</h2>
+            </div>
+            <div class="FilterContent">
+                
+
+                <label for="priceRange">Price Range: </label>
+                <div class="range-slider">
+                    <div class="range-highlight"></div>
+                    <input type="range" id="minPrice" min="1" max="10000" value="1000" oninput="updateSlider()">
+                    <input type="range" id="maxPrice" min="1" max="10000" value="9000" oninput="updateSlider()">
+                </div>
+                <div class="price-inputs">
+                    <div class="minInput">
+                        <label>MIN</label>
+                        <input type="number" id="minPriceInput" min="1" max="10000" value="1000" oninput="updateMinPrice(this.value)">
+                    </div>
+
+                    <div class="maxInput">
+                        <label>MAX</label>
+                        <input type="number" id="maxPriceInput" min="1" max="10000" value="9000" oninput="updateMaxPrice(this.value)">
+                    </div>
+                </div>
+
+                <div class="applyFilterBtn">
+                    <button>Apply</button>
+                </div>
+            </div>
+
+        </div>
+
+        
+
+        <div class="ProductsPageListSection">
+            <div class="SortbyBar">
+                <div class="SortByleft">
+                    <div class="SortByDropdown">
+                        <label for="sortOptions">Sort by:</label>
+                        <select id="sortOptions" name="sortOptions">
+                            <option value="default">Default</option>
+                            <option value="priceLowHigh">Price (Low to High)</option>
+                            <option value="priceHighLow">Price (High to Low)</option>
+                            <option value="newest">Newest Arrivals</option>
+                            <option value="popularity">Popularity</option>
+                            <option value="customerRating">Customer Rating</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="SortByRight">
+                    <div class="ProductSearchContainer">
+                        <img src="/static/images/icons/search-normal.svg" alt="Products Search">
+                        <input type="text" class="ProductsSearchBox" placeholder="Search Company">
+                    </div>
+                </div>
+            </div>
+
+            <div class="PageProductsList">
+                {% for product in products %}
+                    <div class="PageProductCard">
+                        <div class="ProductFeaImg">
+                            <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                        </div>
+                        <div class="ProductPropertiesSection">
+                            <div class="ProdName">
+                                <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            </div>
+
+                            <div class="ProdPrice">
+                                <p class="ProductcardPrice"><span class="ProdPriceRs">₹ {{ product.Product_Price }}</span><span class="PriceUnits">per Kg</span></p>
+                            </div>
+
+                            <div class="ProdReviews">
+                                <p class="ProdCardReviews">24 Reviews</p>
+                            </div>
+
+                            <div class="ProdEnquire">
+                                <p class="ProdCardEnquire">Enquire</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pagination profilepagination">
+                {% include 'includes/projectpagination.html.twig' with {'paginationVariables': paginationVariables} %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSlider() {
+            const minPrice = parseInt(document.getElementById('minPrice').value);
+            const maxPrice = parseInt(document.getElementById('maxPrice').value);
+            const minPriceInput = document.getElementById('minPriceInput');
+            const maxPriceInput = document.getElementById('maxPriceInput');
+
+            if (minPrice > maxPrice - 100) {
+                document.getElementById('minPrice').value = maxPrice - 100;
+            }
+
+            minPriceInput.value = minPrice;
+            maxPriceInput.value = maxPrice;
+
+            updateRangeHighlight(minPrice, maxPrice);
+        }
+
+        function updateMinPrice(value) {
+            const maxPrice = parseInt(document.getElementById('maxPrice').value);
+            if (parseInt(value) > maxPrice - 100) {
+                value = maxPrice - 100;
+            }
+            document.getElementById('minPrice').value = value;
+            updateSlider();
+        }
+
+        function updateMaxPrice(value) {
+            const minPrice = parseInt(document.getElementById('minPrice').value);
+            if (parseInt(value) < minPrice + 100) {
+                value = minPrice + 100;
+            }
+            document.getElementById('maxPrice').value = value;
+            updateSlider();
+        }
+
+        function updateRangeHighlight(minPrice, maxPrice) {
+            const rangeHighlight = document.querySelector('.range-highlight');
+            const rangeSlider = document.querySelector('.range-slider');
+            const rangeWidth = rangeSlider.clientWidth;
+            const minPercent = ((minPrice - 1) / (10000 - 1)) * rangeWidth;
+            const maxPercent = ((maxPrice - 1) / (10000 - 1)) * rangeWidth;
+
+            rangeHighlight.style.left = `${minPercent}px`;
+            rangeHighlight.style.width = `${maxPercent - minPercent}px`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSlider();
+        });
+    </script>
+</div>
+
+{% endblock %}

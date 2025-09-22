@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - src
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    excludePaths:
+            - src/Migrations/*
+
+includes:
+    - phpstan-baseline.neon

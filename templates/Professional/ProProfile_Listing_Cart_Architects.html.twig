@@ -1,0 +1,81 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+
+<div class="ArchitectListingcontentSection">
+    {% if customertype == 'Contractor'%}
+        <h1>Contractors for you</h1>
+    {% endif %}
+    {% if customertype == 'Designer'%}
+        <h1>Designers for you</h1>
+    {% endif %}
+    {% if customertype == 'Architect'%}
+        <h1>Architects for you</h1>
+    {% endif %}
+    {% if customertype == 'Builder'%}
+        <h1>Builders for you</h1>
+    {% endif %}
+    {% if customertype == 'Manufacturer'%}
+        <h1>Manufacturers for you</h1>
+    {% endif %}
+    {% if customertype == 'Engineer'%}
+        <h1>Engineers for you</h1>
+    {% endif %}
+    {% if customertype == 'Retailer'%}
+        <h1>Retailers for you</h1>
+    {% endif %}
+    {% if customertype == 'Distributor'%}
+        <h1>Distributors for you</h1>
+    {% endif %}
+    {% if customertype == 'Dealer'%}
+        <h1>Dealer for you</h1>
+    {% endif %}
+
+    {% if filterform != '0' %}
+        <div class="FilterForm">
+            <div class="CityField">
+                {{ form_start(form) }}
+                {{ form_row(form.FilterCity, {'attr': {'class': 'js-select-cities', 'id':'cityfilterinput', 'value': 'FilterCity'}}) }}
+            </div>
+            <div class="SubmitButton">
+                {{ form_row(form._submit, {'attr': {'class': 'btn btn-lg btn-block btn-success'}}) }}
+                
+            </div>
+        </div>
+
+        {{ form(form) }}
+       
+    {% endif %}
+</div>
+<div class="ArchitectListingSection">
+    <div class="architect-list">
+        
+        {% for ProProfile in ProProfiles %}
+            {% include '/Professional/ProProfile_Listing_Cart_Architects_Card.html.twig' with {'ProProfile': ProProfile, 'listingtype': customertype} %}
+        {% endfor %}
+
+    </div>
+    <div class="pagination profilepagination">
+        {% if customertype != 'Engineer'%}
+        {% include 'includes/projectpagination.html.twig' with {'paginationVariables': paginationVariables} %}
+        {% else %}
+        {% include 'includes/engi-projectpagination.html.twig' with {'paginationVariables': paginationVariables} %}
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+{# <script type="text/javascript">
+$(document).ready(function() {
+  $(".js-select-cities").select2();
+});
+</script> #}
+{% endblock %}

@@ -1,0 +1,627 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-nonactive"><a href="/account/Vehicles">Vehicles</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Add Vehicle</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div id="main-content" class="main-content mb-5">
+
+        <div class="page-header">
+            <h1>Add Vehicles</h1>
+        </div>
+
+        <p>
+            {{ pimcore_wysiwyg('intro') }}
+        </p>
+        
+        <div class="AddProjectForm">
+          {{ form_start(form) }}
+          <div class="Projectdetails">
+
+            <div class="form-group form-field ProjectGallery">
+                {{ form_row(form.VehicleGallery, {'attr': {'class': 'custom-file-input'}}) }}
+                <div class="choosefilebtn">
+                  <button type="button" id="custom-file-button" class="btn btn-primary">Choose Files</button>
+                  <span id="file-selected">No File Chosen</span>
+                </div>
+            </div>
+              {# <button id="add-gallery-button">Add Images</button>
+              <button id="clear-gallery-button">Clear</button>
+              <div id="gallery-preview-container"></div> #}
+            <div class="FormRow1">
+              <div class="form-field ProjectTitle">
+                {{ form_row(form.VehicleType) }}
+              </div>
+              <div class="form-field ProjectLocation">
+                {{ form_row(form.VehicleBrand) }}
+              </div>
+            </div>
+            <div class="FormRow1">
+                <div class="form-field ProjectTitle">
+                  {{ form_row(form.VehicleModel) }}
+                </div>
+                <div class="form-field ProjectLocation">
+                  {{ form_row(form.VehicleNumber) }}
+                </div>
+            </div>
+
+            <div class="FormRow2">
+              <div class="form-field ProjectValue">
+                {{ form_row(form.YearManufactured) }}
+              </div>
+              <div class="form-field ProjectSpecs">
+                {{ form_row(form.EngineType) }}
+              </div>
+            </div>
+
+            <div class="FormRow2">
+                <div class="form-field ProjectValue">
+                  {{ form_row(form.Capacity) }}
+                </div>
+                <div class="form-field ProjectSpecs">
+                  {{ form_row(form.InsuranceStatus) }}
+                </div>
+            </div>
+
+            <div class="FormRow2">
+                <div class="form-field ProjectValue">
+                  {{ form_row(form.AvailabilityStatus) }}
+                </div>
+                <div class="form-field ProjectSpecs">
+                  {{ form_row(form.OperatorProvided) }}
+                </div>
+            </div>
+
+            <div class="form-field ProjectDescription">
+                {{ form_row(form.PriceForHour) }}
+            </div>
+
+            <div class="cities-served">
+                {{ form_row(form.CitiesServed, {'attr': {'class': 'js-select-cities', 'value': 'CitiesServed', 'id': 'cities-select'}}) }}
+            </div>   
+            <div class="form-field ProjectDescription">
+                {{ form_row(form.UsageRestrictions) }}
+            </div>   
+
+
+            
+            <div class="form-field ProjectSubmitBtn">
+              {{ form_row(form._submit) }}
+            </div>
+          </div>
+          {{ form_end(form) }}
+
+        </div>
+
+        {# <div class="form-group">
+            {{ form_row(form.ProjectGallery)}}
+        </div>
+       <button id="add-button">Add Images</button>
+       <button id="clear-button">Clear</button>
+       <div id="image-preview-container"></div>
+
+       {{ form(form) }} #}
+
+    </div>
+
+<script>
+  document.getElementById('custom-file-button').addEventListener('click', function() {
+      document.querySelector('.custom-file-input').click();
+  });
+
+  document.querySelector('.custom-file-input').addEventListener('change', function() {
+      var input = this;
+      var infoArea = document.getElementById('file-selected');
+      
+      if (input.files.length === 1) {
+          var fileName = input.files[0].name;
+          infoArea.textContent = 'Selected file: ' + fileName;
+      } else if (input.files.length > 1) {
+          infoArea.textContent = input.files.length + ' files selected';
+      } else {
+          infoArea.textContent = 'No file selected';
+      }
+  });
+</script>
+
+{% if customertype == 'Contractor' %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.querySelector('.image-input');
+  const container = document.getElementById('image-preview-container');
+  const addButton = document.getElementById('add-button');
+  const clearButton = document.getElementById('clear-button');
+  const form = document.querySelector('form[name="contractor_add_project_form"]');
+
+  let selectedFiles = []; // Array to store selected file information
+
+  function addImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.classList.add('preview-image');
+
+      // Create a unique identifier for the image preview
+      const previewId = `preview-${selectedFiles.length}`;
+
+      // Add a hidden input field to store the file information
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `contractor_add_project_form[ProjectGallery][]`;
+      hiddenInput.value = file.name;
+      hiddenInput.id = previewId;
+
+      // Add a button to remove the image
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'x';
+      removeBtn.addEventListener('click', function () {
+        // Remove the image preview and hidden input
+        container.removeChild(img);
+        container.removeChild(removeBtn);
+        container.removeChild(document.getElementById(previewId));
+
+        // Remove the corresponding file information from the selectedFiles array
+        selectedFiles = selectedFiles.filter(fileInfo => fileInfo.name !== file.name);
+
+        if (selectedFiles.length === 0) {
+          hideAddButton();
+          hideClearButton();
+        }
+      });
+
+      // Append image, hidden input, and remove button to the container
+      container.appendChild(img);
+      container.appendChild(hiddenInput);
+      container.appendChild(removeBtn);
+
+      // Store the file information in the selectedFiles array
+      selectedFiles.push({
+        name: file.name,
+        file: file
+      });
+
+      // Show the "Add" button
+      showAddButton();
+      showClearButton();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function showAddButton() {
+    addButton.style.display = 'inline-block';
+  }
+
+  function hideAddButton() {
+    addButton.style.display = 'none';
+  }
+
+  function showClearButton() {
+    clearButton.style.display = 'inline-block';
+  }
+
+  function hideClearButton() {
+    clearButton.style.display = 'none';
+  }
+
+  input.addEventListener('change', function (e) {
+    for (const file of e.target.files) {
+      addImagePreview(file);
+    }
+  });
+
+  addButton.addEventListener('click', function () {
+    input.click(); // Trigger the file input click event
+  });
+
+  clearButton.addEventListener('click', function () {
+    container.innerHTML = ''; // Clear all previews
+    selectedFiles = []; // Clear the selectedFiles array
+    input.value = ''; // Clear the corresponding file input
+    hideAddButton();
+    hideClearButton();
+  });
+
+  // Form submission
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Append all selected files to the formData
+    for (const fileInfo of selectedFiles) {
+      formData.append('contractor_add_project_form[ProjectGallery][]', fileInfo.file);
+    }
+
+    // Perform AJAX submission or use the form's default action
+    // Example using fetch API:
+    fetch(form.action, {
+      method: form.method,
+      body: formData
+    })
+    .then(response => {
+    // Check if the response was successful (status code 2xx)
+    if (response.ok) {
+        // Clear the form and show a success message
+        container.innerHTML = '';
+        selectedFiles = [];
+        input.value = '';
+        hideAddButton();
+        hideClearButton();
+        alert('Project Submitted'); // Display a confirmation message
+
+        // Redirect to the specified link after the alert is shown
+        window.location.href = '/account/index';
+    } else {
+        // Handle the error case if needed
+        console.error('Error submitting the form');
+    }
+    })
+    .catch(error => {
+      console.error('Error submitting the form:', error);
+    });
+  });
+
+  // Initial setup: hide the "Add" and "Clear" buttons
+  hideAddButton();
+  hideClearButton();
+});
+</script>
+{% endif %}
+
+
+
+{% if customertype == 'Designer' %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.querySelector('.image-input');
+  const container = document.getElementById('image-preview-container');
+  const addButton = document.getElementById('add-button');
+  const clearButton = document.getElementById('clear-button');
+  const form = document.querySelector('form[name="designer_add_project_form"]');
+
+  let selectedFiles = []; // Array to store selected file information
+
+  function addImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.classList.add('preview-image');
+
+      // Create a unique identifier for the image preview
+      const previewId = `preview-${selectedFiles.length}`;
+
+      // Add a hidden input field to store the file information
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `designer_add_project_form[ProjectGallery][]`;
+      hiddenInput.value = file.name;
+      hiddenInput.id = previewId;
+
+      // Add a button to remove the image
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'x';
+      removeBtn.addEventListener('click', function () {
+        // Remove the image preview and hidden input
+        container.removeChild(img);
+        container.removeChild(removeBtn);
+        container.removeChild(document.getElementById(previewId));
+
+        // Remove the corresponding file information from the selectedFiles array
+        selectedFiles = selectedFiles.filter(fileInfo => fileInfo.name !== file.name);
+
+        if (selectedFiles.length === 0) {
+          hideAddButton();
+          hideClearButton();
+        }
+      });
+
+      // Append image, hidden input, and remove button to the container
+      container.appendChild(img);
+      container.appendChild(hiddenInput);
+      container.appendChild(removeBtn);
+
+      // Store the file information in the selectedFiles array
+      selectedFiles.push({
+        name: file.name,
+        file: file
+      });
+
+      // Show the "Add" button
+      showAddButton();
+      showClearButton();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function showAddButton() {
+    addButton.style.display = 'inline-block';
+  }
+
+  function hideAddButton() {
+    addButton.style.display = 'none';
+  }
+
+  function showClearButton() {
+    clearButton.style.display = 'inline-block';
+  }
+
+  function hideClearButton() {
+    clearButton.style.display = 'none';
+  }
+
+  input.addEventListener('change', function (e) {
+    for (const file of e.target.files) {
+      addImagePreview(file);
+    }
+  });
+
+  addButton.addEventListener('click', function () {
+    input.click(); // Trigger the file input click event
+  });
+
+  clearButton.addEventListener('click', function () {
+    container.innerHTML = ''; // Clear all previews
+    selectedFiles = []; // Clear the selectedFiles array
+    input.value = ''; // Clear the corresponding file input
+    hideAddButton();
+    hideClearButton();
+  });
+
+  // Form submission
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    
+    // Append all selected files to the formData
+    for (const fileInfo of selectedFiles) {
+      formData.append('designer_add_project_form[ProjectGallery][]', fileInfo.file);
+    }
+
+    // Perform AJAX submission or use the form's default action
+    // Example using fetch API:
+    fetch(form.action, {
+      method: form.method,
+      body: formData
+    })
+    .then(response => {
+    // Check if the response was successful (status code 2xx)
+    if (response.ok) {
+        // Clear the form and show a success message
+        container.innerHTML = '';
+        selectedFiles = [];
+        input.value = '';
+        hideAddButton();
+        hideClearButton();
+        alert('Project Submitted'); // Display a confirmation message
+
+        // Redirect to the specified link after the alert is shown
+        window.location.href = '/en/account/index';
+    } else {
+        // Handle the error case if needed
+        console.error('Error submitting the form');
+    }
+    })
+    .catch(error => {
+      console.error('Error submitting the form:', error);
+    });
+  });
+
+  // Initial setup: hide the "Add" and "Clear" buttons
+  hideAddButton();
+  hideClearButton();
+});
+</script>
+
+<script>
+//ADD required Field
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form[name]');
+    var requiredFields = form.querySelectorAll('[required]');
+
+    for (var i = 0; i < requiredFields.length; i++) {
+      var field = requiredFields[i];
+      var label = form.querySelector('label[for="' + field.id + '"]');
+
+      if (label) {
+        label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+      }
+    }
+  });
+</script>
+{% endif %}
+
+{% if customertype == 'Architect' %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.querySelector('.image-input');
+  const container = document.getElementById('image-preview-container');
+  const addButton = document.getElementById('add-button');
+  const clearButton = document.getElementById('clear-button');
+  const form = document.querySelector('form[name="architect_add_project_form"]');
+
+  let selectedFiles = []; // Array to store selected file information
+
+  function addImagePreview(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.classList.add('preview-image');
+
+      // Create a unique identifier for the image preview
+      const previewId = `preview-${selectedFiles.length}`;
+
+      // Add a hidden input field to store the file information
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = `architect[ProjectGallery][]`;
+      hiddenInput.value = file.name;
+      hiddenInput.id = previewId;
+
+      // Add a button to remove the image
+      const removeBtn = document.createElement('button');
+      removeBtn.innerText = 'x';
+      removeBtn.addEventListener('click', function () {
+        // Remove the image preview and hidden input
+        container.removeChild(img);
+        container.removeChild(removeBtn);
+        container.removeChild(document.getElementById(previewId));
+
+        // Remove the corresponding file information from the selectedFiles array
+        selectedFiles = selectedFiles.filter(fileInfo => fileInfo.name !== file.name);
+
+        if (selectedFiles.length === 0) {
+          hideAddButton();
+          hideClearButton();
+        }
+      });
+
+      // Append image, hidden input, and remove button to the container
+      container.appendChild(img);
+      container.appendChild(hiddenInput);
+      container.appendChild(removeBtn);
+
+      // Store the file information in the selectedFiles array
+      selectedFiles.push({
+        name: file.name,
+        file: file
+      });
+
+      // Show the "Add" button
+      showAddButton();
+      showClearButton();
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  function showAddButton() {
+    addButton.style.display = 'inline-block';
+  }
+
+  function hideAddButton() {
+    addButton.style.display = 'none';
+  }
+
+  function showClearButton() {
+    clearButton.style.display = 'inline-block';
+  }
+
+  function hideClearButton() {
+    clearButton.style.display = 'none';
+  }
+
+  input.addEventListener('change', function (e) {
+    for (const file of e.target.files) {
+      addImagePreview(file);
+    }
+  });
+
+  addButton.addEventListener('click', function () {
+    input.click(); // Trigger the file input click event
+  });
+
+  clearButton.addEventListener('click', function () {
+    container.innerHTML = ''; // Clear all previews
+    selectedFiles = []; // Clear the selectedFiles array
+    input.value = ''; // Clear the corresponding file input
+    hideAddButton();
+    hideClearButton();
+  });
+
+  // Form submission
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Append all selected files to the formData
+    for (const fileInfo of selectedFiles) {
+      formData.append('architect_add_project_form[ProjectGallery][]', fileInfo.file);
+    }
+
+    // Perform AJAX submission or use the form's default action
+    // Example using fetch API:
+    fetch(form.action, {
+      method: form.method,
+      body: formData
+    })
+    .then(response => {
+    // Check if the response was successful (status code 2xx)
+    if (response.ok) {
+        // Clear the form and show a success message
+        container.innerHTML = '';
+        selectedFiles = [];
+        input.value = '';
+        hideAddButton();
+        hideClearButton();
+        alert('Project Submitted'); // Display a confirmation message
+
+        // Redirect to the specified link after the alert is shown
+        window.location.href = '/en/account/index';
+    } else {
+        // Handle the error case if needed
+        console.error('Error submitting the form');
+    }
+    })
+    .catch(error => {
+      console.error('Error submitting the form:', error);
+    });
+  });
+
+  // Initial setup: hide the "Add" and "Clear" buttons
+  hideAddButton();
+  hideClearButton();
+});
+</script>
+
+<script>
+//ADD required Field
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form[name]');
+    var requiredFields = form.querySelectorAll('[required]');
+
+    for (var i = 0; i < requiredFields.length; i++) {
+      var field = requiredFields[i];
+      var label = form.querySelector('label[for="' + field.id + '"]');
+
+      if (label) {
+        label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+      }
+    }
+  });
+</script>
+{% endif %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      $(".js-select-cities").select2();
+      $(".js-select-skills").select2();
+    });
+</script>
+
+{% endblock %}

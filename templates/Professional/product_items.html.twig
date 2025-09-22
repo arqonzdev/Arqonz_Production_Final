@@ -1,0 +1,42 @@
+{% for product in products %}
+    <div class="PageProductCard">
+        <div class="ProductFeaImg">
+            {% if product.isProProduct %}
+                {% if product.Image_Path %}
+                    <img src="{{ product.Image_Path }}" alt="{{ product.Product_Name }}">
+                {% else %}
+                    <img src="/Static/default.png" alt="{{ product.Product_Name }}">
+                {% endif %}
+            {% else %}
+                <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="{{ product.Product_Name }}">
+            {% endif %}
+        </div>
+        <div class="ProductPropertiesSection">
+            <a href="{{ product.viewLink }}" class="ProductCardName">
+                <div class="ProdName">
+                    <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                </div>
+            </a>
+
+            <div class="ProdPrice">
+                <p class="ProductcardPrice">
+                    <span class="ProdPriceRs">
+                        <span class="RupeeSymbol">₹</span> 
+                        <span class="ProductPriceAmt">{{ product.Product_Price }}</span>
+                        <span class="PriceUnits">/ {{ product.Product_Unit }}</span>
+                    </span>
+                </p>
+            </div>
+
+            <div class="ProdReviews">
+                <p class="ProdCardReviews">24 Reviews</p>
+            </div>
+
+            <a href="{{ product.viewLink }}" class="ProductCardName">
+                <div class="ProdEnquire">
+                    <p class="ProdCardEnquire">View</p>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endfor %}

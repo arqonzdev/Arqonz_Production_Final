@@ -1,0 +1,23 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<div class="EmailVerificationMain">
+    {% if status == 'success' %}
+        <div class="verificationmessage">
+            <img src="/static/icons/icons8-success.svg" class="" alt="Verificationsuccess">
+            <p>E-Mail verified Successfully! Your account is now fully activated, and you can enjoy all the features of our platform.</p>
+            <a id="calculate-btn" href="/account/index">Visit Dashboard</a>
+
+        </div>
+    {% endif %}
+    {% if status == 'fail' %}
+        <div class="verificationmessage">
+            <img src="/static/icons/icons8-cross.svg" class="" alt="VerificationFailed">
+            <p>E-Mail verification Failed! Verification token didn't match.</p>
+            <a id="calculate-btn" href="/account/index">Visit Dashboard</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

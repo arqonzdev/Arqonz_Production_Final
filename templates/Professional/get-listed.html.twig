@@ -1,0 +1,246 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+{% block content %}
+<!-- Add this in the head section of your HTML -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<style>
+    .form-error-message {
+        color: #a94442;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+    .field-with-error {
+        border-color: #a94442;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+    .form-errors-summary {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .field-required {
+        color: red;
+        margin-left: 3px;
+    }
+</style>
+
+<div class="Pageheading"><h1>Let Us Know You</h1>
+<p>Tell us about your profession.</p>
+</div>
+<div class="container" style="max-width: 500px;">
+
+        <div id="main-content" class="main-content mb-5">
+
+            <div class="page-header">
+                <h1>{{ pimcore_input('headline') }}</h1>
+            </div>
+
+            <p>
+                {{ pimcore_wysiwyg('intro') }}
+            </p>
+            
+            {# Display flash messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label == 'error' ? 'danger' : label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            
+            {# Display form validation errors summary if the form was submitted but invalid #}
+            {% if form.vars.submitted and not form.vars.valid %}
+                <div class="form-errors-summary">
+                    <p><strong>Please fix the following errors:</strong></p>
+                    <ul>
+                        {% for child in form.children %}
+                            {% if not child.vars.valid %}
+                                <li>{{ child.vars.label|default(child.vars.name|humanize) }} - {{ child.vars.errors|join(', ') }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_label(form.customertype) }}
+                    {{ form_widget(form.customertype, { 'attr': { 'id': 'customertype', 'class': 'form-control' } }) }}
+                </div>
+            
+            {{ form_end(form) }}
+        </div>
+    
+    </div>
+
+<script>
+//ADD required Field
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form[name]');
+    if (!form) return;
+    
+    var requiredFields = form.querySelectorAll('[required], [type="file"]');
+
+    for (var i = 0; i < requiredFields.length; i++) {
+        var field = requiredFields[i];
+        var label = form.querySelector('label[for="' + field.id + '"]');
+
+        if (label) {
+            // Only add the required indicator if it doesn't already exist
+            if (!label.querySelector('.required')) {
+                label.innerHTML += ' <span class="required field-required">*</span>';
+            }
+
+            // Check if the field has a hint
+            var hint = field.getAttribute('data-hint');
+            if (hint) {
+                label.innerHTML += ' <span class="hint" style="cursor: pointer;"><i class="fa-solid fa-circle-info"></i></span>';
+                label.innerHTML += ' <div class="hint-text">' + hint + '</div>';
+            }
+        }
+    }
+
+    // Add event listeners to show/hide the hint text
+    var hintIcons = document.querySelectorAll('.hint');
+    hintIcons.forEach(function (hintIcon) {
+        hintIcon.addEventListener('mouseover', function () {
+            var hintText = this.nextElementSibling;
+            hintText.style.display = 'block';
+        });
+
+        hintIcon.addEventListener('mouseout', function () {
+            var hintText = this.nextElementSibling;
+            hintText.style.display = 'none';
+        });
+    });
+    
+    // Add client-side validation on form submission
+    form.addEventListener('submit', function(event) {
+        var hasError = false;
+        var firstErrorField = null;
+        
+        // Reset previous error states
+        var errorFields = form.querySelectorAll('.field-with-error');
+        errorFields.forEach(function(field) {
+            field.classList.remove('field-with-error');
+        });
+        
+        // Check all required fields
+        requiredFields.forEach(function(field) {
+            // Skip hidden fields
+            if (field.offsetParent === null) return;
+            
+            var isValid = true;
+            if (field.type === 'file') {
+                // File input validation logic if needed
+            } else if (field.tagName === 'SELECT') {
+                isValid = field.value !== '';
+            } else {
+                isValid = field.value.trim() !== '';
+            }
+            
+            if (!isValid) {
+                hasError = true;
+                field.classList.add('field-with-error');
+                
+                // Store the first error field to focus on later
+                if (!firstErrorField) {
+                    firstErrorField = field;
+                }
+                
+                // Create or update error message
+                var errorContainer = field.nextElementSibling;
+                if (!errorContainer || !errorContainer.classList.contains('form-error-message')) {
+                    errorContainer = document.createElement('span');
+                    errorContainer.className = 'form-error-message';
+                    field.parentNode.insertBefore(errorContainer, field.nextSibling);
+                }
+                
+                var fieldName = field.getAttribute('placeholder') || 
+                               field.getAttribute('name') || 
+                               field.id;
+                               
+                // Try to get a more user-friendly name from the label
+                var labelFor = document.querySelector('label[for="' + field.id + '"]');
+                if (labelFor) {
+                    // Extract just the text without the asterisk
+                    var labelText = labelFor.textContent.replace(/\s*\*\s*$/, '').trim();
+                    if (labelText) {
+                        fieldName = labelText;
+                    }
+                }
+                
+                errorContainer.textContent = fieldName + ' is required.';
+            }
+        });
+        
+        if (hasError) {
+            event.preventDefault();
+            
+            // Create summary of errors at the top
+            var errorSummary = document.querySelector('.form-errors-summary');
+            if (!errorSummary) {
+                errorSummary = document.createElement('div');
+                errorSummary.className = 'form-errors-summary';
+                var heading = document.createElement('p');
+                heading.innerHTML = '<strong>Please fix the following errors:</strong>';
+                errorSummary.appendChild(heading);
+                var errorList = document.createElement('ul');
+                errorSummary.appendChild(errorList);
+                form.parentNode.insertBefore(errorSummary, form);
+            } else {
+                var errorList = errorSummary.querySelector('ul');
+                errorList.innerHTML = '';  // Clear existing errors
+            }
+            
+            // Populate error list
+            document.querySelectorAll('.form-error-message').forEach(function(errorMsg) {
+                var li = document.createElement('li');
+                li.textContent = errorMsg.textContent;
+                errorList.appendChild(li);
+            });
+            
+            // Focus on first error field
+            if (firstErrorField) {
+                firstErrorField.focus();
+                
+                // Scroll to the error summary
+                errorSummary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".js-select-cities").select2();
+  $(".js-select-skills").select2();
+  
+  // Fix Select2 validation styling
+  $(".js-select-cities, .js-select-country, .js-select-city, .js-select-state").on("select2:close", function(e) {
+    if ($(this).hasClass('field-with-error') && $(this).val() && $(this).val().length > 0) {
+      $(this).removeClass('field-with-error');
+      var errorMsg = $(this).next('.form-error-message');
+      if (errorMsg.length) {
+        errorMsg.remove();
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

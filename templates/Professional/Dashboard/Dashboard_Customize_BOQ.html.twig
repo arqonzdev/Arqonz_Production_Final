@@ -1,0 +1,896 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+<div class="dashboard-projects">
+    <span>
+        <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-nonactive"><a href="/account/Requirements">Requirements</a><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Customize</span>
+    </span>
+</div>
+<div class="line-8"></div>
+
+<div class="dashboardheading-section">
+    <div class="sectionheading">
+        <h2>Customize Requirements</h2>
+        <p class="sectionsubheading">Add and manage your BOM</p> 
+    </div>
+</div>
+
+
+<div class="BOQ-products">
+    <div class="dashboardheading-section">
+        <div class="sectionheading">
+            <h2>{{ ProRequirement.getTitle() }}</h2>
+            {# <p class="sectionsubheading">Manage Your Products.</p>  #}
+        </div>
+        <div class="DashboardStatsSection">
+            <div class="totalnumber">
+                {% if ProRequirementProducts |length < 10 %}
+                    <p>0{{ ProRequirementProducts |length }}</p>
+                {% else %}
+                    <p>{{ ProRequirementProducts |length }}</p>
+                {% endif %}    
+            </div>
+            <div class="totalnumberLable">
+                {% if ProRequirementProducts |length < 2 %}
+                    <p>Product</br>Found</p>
+                {% else %}
+                    <p>Products</br>Found</p>
+                {% endif %}    
+                
+            </div>
+        </div>
+    </div>
+    {# <h2>{{ ProRequirement.getTitle() }}</h2>
+    <p><b>{{ ProRequirementProducts|length }} Products</b> found</p> #}
+
+    <div class="sortRowoptions">
+        <div class="productsFound">
+            
+        </div>
+        <div class="SortByCols">
+            <div class="SortCol Sorttxt">
+                <p><b>SORT BY</b></p>
+            </div>
+            <div class="SortCol Size">
+                <p>Specification</p>
+            </div>
+            <!-- <div class="SortCol unit">
+                <p>Size</p>
+            </div> -->
+            <div class="SortCol unit">
+                <p>UNIT</p>
+            </div>
+            
+            <div class="SortCol Qty">
+                <p>Qty</p>
+            </div>
+            <!-- <div class="SortCol price">
+                <p>Price</p>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="CusProdListCont">
+        {% for product in ProRequirementProducts %}
+            <div class="CustProdWrapper">
+                <div class="CustProdCard">
+                    <div class="BOQProdCol1">
+                        <div class="BOQprodimage">
+                            <img style="width:178px;" src="{{ product.getFeaturedImagePath() }}" alt="BOQ_ProductImage">
+                        </div>
+                    </div>
+                    <div class="BOQProdRightCOL">
+                        <div class="BOQProdCol BOQProductMeta">
+                            <div class="prodnameBrand">
+                                <p class="currBrandName currentBrand">{{ product.getBrand() }}</p>
+                                <p class="BoqProdName">{{ product.getProductName() }}</p>
+                            </div>
+                            <div class="optionsicons">
+                                <img src="/static/icons/tagicon1.svg" alt="">
+                                <div class="livetracking">
+                                    <img src="/static/icons/livetrackingIcon.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="BOQProdCol">
+                            <p class="BOQProdMaterial" style="font-size: 18px; font-weight: 500;" >{{ product.getMaterial() }}</p>
+                        </div>
+                        <!-- <div class="BOQProdCol">
+                            <p class="BOQProdSize currentSpec" style="font-size: 18px; font-weight: 500;">{{ product.getQuantity() }}</p>
+                        </div> -->
+                        
+                        <div class="BOQProdCol">
+                            <p class="BOQProdUnit" style="font-size: 18px; font-weight: 500;">{{ product.getUnit() }}</p>
+                        </div>
+                        <div class="BOQProdCol">
+                            <!-- <p class="ReduceQuantity">-</p> -->
+                            
+                            <input type="text" class="BOQProdQuantity" style="font-size: 18px; font-weight: 500; text-align: center; width: 68px; border: 0px;;" value="{{ product.getQuantity() }}" >
+                            <!-- <p class="IncreaseQuantity">+</p> -->
+                        </div>
+                        <!-- <div class="BOQProdCol">
+                            <p class="BOQProdUnitPrice" style="display:none">{{ product.getProductPrice() }}</p>
+                            <p class="BOQProdStock" style="font-size: 18px; font-weight: 500;"></p> {# Replace with actual price if available #}
+                        </div> -->
+                        <div class="BOQCustomize_Options BOQCustomizeopts">
+                        {% set bids = product.getSupplierBid() %}
+                        {% if product.getQuoteStatus() != 'Started' %}
+                            {# <p class="CustomizeOption BOQCustomizeOption" data-option="brands">Available brands</p>
+                            <p class="CustomizeOption BOQCustomizeOption" data-option="specifications">Specifications</p> #}
+                            <p class="QuoteNowBtn" onclick="showQuotePopup(this, '{{ product.getFullPath() }}')">Customize</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="customizationDetails" data-type="brands" style="display: none;">
+                    <!-- Content will be dynamically filled by JavaScript -->
+                </div>
+                <div class="customizationDetails" data-type="specifications" style="display: none;">
+                    <!-- Content will be dynamically filled by JavaScript -->
+                </div>
+                <div class="customizationDetails" data-type="size" style="display: none;">
+                    <!-- Content will be dynamically filled by JavaScript -->
+                </div>
+                
+                
+
+                {% if bids is not empty %}
+                    <div class="RecievedBids" data-type="Bids">
+                        <!-- <div class="countdown-container">
+                            {# CAMPAIGN ENDS IN {{ product.getEndDate().format("Y-m-d H:i:s") }} #}
+
+                            <div class="ExpiresinText">
+                                <p>Ends In : </p>
+                            </div>
+                            <div id="countdown-timer-{{ loop.index }}" class="countdown-timer" data-end-date="{{ product.getEndDate().format("Y-m-d H:i:s") }}">
+                                <div class="time-section">
+                                    <span class="time-number days">00</span>
+                                    <span class="time-label">d</span>
+                                </div>
+                                <div class="time-section">
+                                    <span class="time-number hours">00</span>
+                                    <span class="time-label">h</span>
+                                </div>
+                                <div class="time-section">
+                                    <span class="time-number minutes">00</span>
+                                    <span class="time-label">m</span>
+                                </div>
+                                <div class="time-section">
+                                    <span class="time-number seconds">00</span>
+                                    <span class="time-label">s</span>
+                                </div>
+                            </div>
+                            
+                        </div> -->
+
+                        
+
+                        
+                        {% if bids is not empty %}
+                            <table class="RecievedBidTable">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th> 
+                                        <th>Specification</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th style="background-color:#FFB764;">Q1</th>
+                                        <th style="background: #00A79D;">Q2</th>
+                                        <th style="background: #00A79D;">Q3</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {# {% set bid_amounts = bids|map(bid => bid.getBidAmount()) %}
+                                    {% set lowest = 999999999999999 %}
+                                    {% set second_lowest = 999999999999999 %}
+                                    {% set third_lowest = 999999999999999 %}
+
+                                    {% for amount in bid_amounts %}
+                                        {% if amount < lowest %}
+                                            {% set third_lowest = second_lowest %}
+                                            {% set second_lowest = lowest %}
+                                            {% set lowest = amount %}
+                                        {% elseif amount > lowest and amount < second_lowest  %} #}
+                                        {# {% elseif amount < second_lowest %} #}
+                                            {# {% set third_lowest = second_lowest %}
+                                            {% set second_lowest = amount %}
+                                        {% elseif amount > second_lowest and amount < third_lowest  %}
+                                            {% set third_lowest = amount %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% set lowest_bid = bids|filter(bid => bid.getBidAmount() == lowest)|first %}
+                                    
+                                    {% set second_lowest_bid = bids|filter(bid => bid.getBidAmount() == second_lowest)|first %}
+                                    
+                                    {% set third_lowest_bid = bids|filter(bid => bid.getBidAmount() == third_lowest)|first %} #}
+                                    
+
+                                    <tr>
+                                        <td>{{ product.getProductName() }}</td>
+                                        <td>{{ product.getMaterial() }}</td>
+                                        <td>{{ product.getQuantity() }}</td>
+                                        <td>{{ product.getUnit() }}</td>
+                                        <td class="L1Bid bidamt" data-key="{{ product.getL1() }}">₹ {{ product.getL1Amt() }}</td>
+                                        <td class="L2Bid bidamt" data-key="{{ product.getL2() }}">₹ {{ product.getL2Amt() }}</td>
+                                        <td class="L3Bid bidamt" data-key="{{ product.getL3() }}">₹ {{ product.getL3Amt() }}</td>
+                                        {# <td class="L1Bid bidamt" data-key="{{ lowest_bid ? lowest_bid.getKey() : '' }}">{{ lowest }}</td>
+                                        <td class="L2Bid bidamt" data-key="{{ second_lowest != lowest and second_lowest_bid ? second_lowest_bid.getKey() : '' }}">{{ second_lowest != 999999999999999 ? second_lowest : '-' }}</td>
+                                        <td class="L3Bid bidamt" data-key="{{ third_lowest != second_lowest and third_lowest != lowest and third_lowest_bid ? third_lowest_bid.getKey() : '' }}">{{ third_lowest != 999999999999999  ? third_lowest : '-' }}</td> #}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to update the BOQProdStock value based on quantity and unit price for a specific product card
+            function updateStockValue(card) {
+                const unitPriceElement = card.querySelector('.BOQProdUnitPrice');
+                const quantityElement = card.querySelector('.BOQProdQuantity');
+                const stockElement = card.querySelector('.BOQProdStock');
+
+                const unitPrice = parseFloat(unitPriceElement.textContent.trim()) || 0;
+                const quantity = parseInt(quantityElement.value.trim()) || 0;
+
+                if (unitPrice > 0 && quantity >= 0) {
+                    const totalPrice = unitPrice * quantity;
+                    stockElement.textContent = `₹${totalPrice}`;
+                } else {
+                    stockElement.textContent = '0';
+                }
+            }
+
+            // Function to add event listeners for Increase and Reduce buttons for a specific product card
+            function addCardEventListeners(card) {
+                card.querySelector('.IncreaseQuantity').addEventListener('click', function () {
+                    const quantityElement = card.querySelector('.BOQProdQuantity');
+                    let quantity = parseInt(quantityElement.value.trim()) || 0;
+                    quantity += 1;
+                    quantityElement.value = quantity;
+                    updateStockValue(card);
+                });
+
+                card.querySelector('.ReduceQuantity').addEventListener('click', function () {
+                    const quantityElement = card.querySelector('.BOQProdQuantity');
+                    let quantity = parseInt(quantityElement.value.trim()) || 0;
+                    if (quantity > 1) {
+                        quantity -= 1;
+                        quantityElement.value = quantity;
+                    } else {
+                        quantityElement.value = 1;
+                    }
+                    updateStockValue(card);
+                });
+
+                // Initial calculation for the card
+                updateStockValue(card);
+            }
+
+            // Find all product cards and set up event listeners
+            document.querySelectorAll('.CustProdWrapper').forEach(card => {
+                addCardEventListeners(card);
+            });
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function startCountdown(endTime, elementId) {
+                function updateCountdown() {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+                    
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    const timerElement = document.getElementById(elementId);
+                    if (timerElement) {
+                        timerElement.querySelector('.days').innerText = String(days).padStart(2, '0');
+                        timerElement.querySelector('.hours').innerText = String(hours).padStart(2, '0');
+                        timerElement.querySelector('.minutes').innerText = String(minutes).padStart(2, '0');
+                        timerElement.querySelector('.seconds').innerText = String(seconds).padStart(2, '0');
+
+                        // Stop the countdown if the time has expired
+                        if (distance < 0) {
+                            clearInterval(timerInterval);
+                            timerElement.innerHTML = "EXPIRED";
+                        }
+                    }
+                }
+
+                // Update the countdown immediately and set the interval for each timer independently
+                updateCountdown();
+                const timerInterval = setInterval(updateCountdown, 1000);
+            }
+
+            // Select each countdown timer and initialize them individually
+            const countdownTimers = document.querySelectorAll('.countdown-timer');
+            countdownTimers.forEach(function(timerElement) {
+                const elementId = timerElement.id;
+                const endDateString = timerElement.getAttribute('data-end-date');
+                const endDate = new Date(endDateString.replace(' ', 'T') + 'Z').getTime();
+                startCountdown(endDate, elementId);
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const options = document.querySelectorAll('.CustomizeOption');
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    const optionType = this.getAttribute('data-option');
+                    const customizeProductWrapper = this.closest('.CustProdWrapper');
+                    const productName = customizeProductWrapper.querySelector('.BoqProdName').textContent.trim();
+                    const currentBrand = customizeProductWrapper.querySelector('.currBrandName').textContent.trim();
+
+                    const detailSection = customizeProductWrapper.querySelector(`.customizationDetails[data-type="${optionType}"]`);
+                    if (detailSection) {
+                        if (detailSection.style.display === 'block') {
+                            detailSection.style.display = 'none';
+                        } else {
+                            const detailSections = customizeProductWrapper.querySelectorAll('.customizationDetails');
+                            detailSections.forEach(section => {
+                                section.style.display = 'none';
+                            });
+
+                            if (optionType === 'brands' || optionType === 'specifications' || optionType === 'size') {
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('POST', '{{ path('fetch_brands_api') }}', true);
+                                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                xhr.onload = function () {
+                                    if (xhr.status === 200) {
+                                        const options = JSON.parse(xhr.responseText);
+
+                                        let optionsList = '<ul>';
+                                        if (optionType === 'specifications') {
+                                            options.forEach(option => {
+                                                optionsList += `<li data-specification-number="${option.Specification_Number}">${option.Specifying_Factor}</li>`;
+                                            });
+                                        } else {
+                                            options.forEach(option => {
+                                                optionsList += `<li>${option}</li>`;
+                                            });
+                                        }
+                                        optionsList += '</ul>';
+                                        detailSection.innerHTML = optionsList + '<div class="nested-spec-options"></div>';
+                                        detailSection.style.display = 'block';
+
+                                        if (optionType === 'specifications') {
+                                            const specItems = detailSection.querySelectorAll('li');
+                                            specItems.forEach(item => {
+                                                item.addEventListener('click', function () {
+                                                    const specNumber = this.getAttribute('data-specification-number');
+                                                    const nestedSection = detailSection.querySelector('.nested-spec-options');
+                                                    nestedSection.innerHTML = ''; // Clear previous options
+
+                                                    const xhrSpec = new XMLHttpRequest();
+                                                    xhrSpec.open('POST', '{{ path('fetch_brands_api') }}', true);
+                                                    xhrSpec.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                                    xhrSpec.onload = function () {
+                                                        if (xhrSpec.status === 200) {
+                                                            const specOptions = JSON.parse(xhrSpec.responseText);
+                                                            let specOptionsList = '<ul>';
+                                                            specOptions.forEach(specOption => {
+                                                                specOptionsList += `<li>${specOption}</li>`;
+                                                            });
+                                                            specOptionsList += '</ul>';
+                                                            nestedSection.innerHTML = specOptionsList;
+                                                        }
+                                                    };
+                                                    const requestData = `product_type=${encodeURIComponent(productName)}&option_type=specification_values&specification_number=${encodeURIComponent(specNumber)}`;
+                                                    xhrSpec.send(requestData);
+                                                });
+                                            });
+                                        }
+                                    }
+                                };
+
+                                let requestData = `product_type=${encodeURIComponent(productName)}`;
+                                if (optionType === 'size') {
+                                    requestData += `&option_type=${encodeURIComponent(optionType)}&brand=${encodeURIComponent(currentBrand)}`;
+                                } else {
+                                    requestData += `&option_type=${encodeURIComponent(optionType)}`;
+                                }
+                                xhr.send(requestData);
+                            } else {
+                                detailSection.style.display = 'block';
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const bidElements = document.querySelectorAll('.bidamt');
+
+            bidElements.forEach(bid => {
+                // Add 'non-clickable' class if content is equal to "-"
+                if (bid.textContent.trim() === "-") {
+                    bid.classList.add('non-clickable');
+                }
+
+                bid.addEventListener('click', function() {
+                    // Only allow selection if the bid amount is not "-"
+                    if (this.textContent.trim() !== "-") {
+                        // Remove 'selected-bid' class from all bid elements
+                        bidElements.forEach(bid => bid.classList.remove('selected-bid'));
+
+                        // Add 'selected-bid' class to the clicked bid element
+                        this.classList.add('selected-bid');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Quote Now Popup Form -->
+    <div id="quotePopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeQuotePopup()">&times;</span>
+            <h2 id="productName" class="currProductName">Product Name</h2>
+            <form id="quoteForm">
+                <div>
+                    <label for="brandName">Brand Name:</label>
+                    <input type="text" id="brandName" name="brandName" value="" placeholder="Current Brand">
+                </div>
+                <!-- <div>
+                    <label for="specification">Specification:</label>
+                    <input type="text" id="specification" name="specification" value="" placeholder="Current Specification">
+                </div> -->
+                <div>
+                    <label for="Material">Material:</label>
+                    <input type="text" id="Material" name="Material" value="" placeholder="Material">
+                </div>
+                <div>
+                    <label for="quantity">Quantity:</label>
+                    <input type="text" id="quantity" name="quantity" value="" placeholder="Quantity">
+                </div>
+                <!-- <div>
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" value="" placeholder="{{ ProRequirement.City()}}">
+                </div> -->
+                <!-- <div>
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="datetime-local" id="expiryDate" name="expiryDate" value="{{ ProRequirement.getExpireDate()|date('Y-m-d\\TH:i', 'Asia/Kolkata') }}">
+                </div> -->
+                <input type="hidden" id="productUnit" name="productUnit" value="">
+                <input type="hidden" id="ProRequirementProductPath" name="ProRequirementProductPath" value="">
+                <input type="hidden" id="ProductMaterial" name="ProductMaterial" value="">
+                <button type="submit">Update</button>
+            </form>
+            <div id="quoteSuccess" style="display: none;">
+                <p>Saved Successfully &#10003;</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showQuotePopup(button, productPath) {
+            var productCard = button.closest('.CustProdCard');
+            var productName = productCard.querySelector('.BoqProdName').textContent;
+            var productUnit = productCard.querySelector('.BOQProdUnit').textContent;
+            var currentBrand = productCard.querySelector('.currentBrand').textContent;
+            var currentQuantity = productCard.querySelector('.BOQProdQuantity').value;
+            // var currentSpec = productCard.querySelector('.currentSpec').textContent;
+            var currentMaterial = productCard.querySelector('.BOQProdMaterial').textContent;
+            
+            
+
+            document.getElementById('productName').textContent = productName;
+            document.getElementById('brandName').placeholder = currentBrand;
+            // document.getElementById('specification').placeholder = currentSpec;
+            document.getElementById('quantity').placeholder = currentQuantity;
+            document.getElementById('productUnit').value = productUnit;
+            document.getElementById('ProRequirementProductPath').value = productPath;
+            document.getElementById('Material').placeholder = currentMaterial;
+            
+
+            document.getElementById('quotePopup').style.display = 'block';
+        }
+
+        function closeQuotePopup() {
+            document.getElementById('quotePopup').style.display = 'none';
+            document.getElementById('quoteSuccess').style.display = 'none';
+            document.getElementById('quoteForm').style.display = 'flex';
+            document.getElementById('quoteForm').reset();
+        }
+
+        document.getElementById('quoteForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+
+            // Populate fields with placeholder values if they are empty
+            if (formData.get('brandName') === '') {
+                formData.set('brandName', document.getElementById('brandName').placeholder);
+            }
+            if (formData.get('specification') === '') {
+                formData.set('specification', document.getElementById('specification').placeholder);
+            }
+            if (formData.get('Material') === '') {
+                formData.set('Material', document.getElementById('Material').placeholder);
+            }
+
+            formData.set('productName', document.getElementById('productName').textContent);
+            
+            // formData.set('location', document.getElementById('location').placeholder);
+            
+
+            if (formData.get('quantity') === '') {
+                formData.set('quantity', document.getElementById('quantity').placeholder);
+            }
+
+            
+            // Repeat for other fields if needed
+
+            fetch('/supplier-pinned-notification', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('quoteForm').style.display = 'none';
+                    document.getElementById('quoteSuccess').style.display = 'block';
+                    setTimeout(() => {
+                        closeQuotePopup();
+                        location.reload(); // Refresh the page after closing the popup
+                    }, 2000);
+                } else {
+                    // Handle the error (optional)
+                    console.error('Error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+
+
+    <!-- Updated Unlock Contact Popup with Bid Details -->
+    <div class="popup popup-unlock-contact">
+        <div class="popup-content" style="max-width: 700px;">
+            <span class="close">&times;</span>
+            <div class="Row1">
+                <h2 style="text-transform: capitalize;">Credits</h2>
+
+                <div class="profile">
+                    <img src="/static/images/icons/DefaultDP.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- Bid Details Section -->
+            <div class="bid-details-section" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 24px; font-weight: 600;">Terms Of Bid</h3>
+                <div class="bid-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Bid Amount:</label>
+                        <span class="bid-amount-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Delivery Duration:</label>
+                        <span class="bid-delivery-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Warranty Period:</label>
+                        <span class="bid-warranty-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Payment Terms:</label>
+                        <span class="bid-payment-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="Row2">
+                <img src="/static/images/pound_sterling_coin.png" alt="">
+
+                {% if customer.getCreditPoints() < 10 %}
+                    <p>0{{ customer.getCreditPoints() }}</p>
+                {% else %}
+                    <p>{{ customer.getCreditPoints() }}</p>
+                {% endif %}    
+                
+            </div>
+            <div class="Row3">
+                <p>Credit balance Remaining</p>
+            </div>
+            <div class="Row4">
+                <div class="row4wrapper">
+                    <img src="/static/images/pound_sterling_coin.png" alt="">
+                    <p>Unlock this contact for 1 coin</p>
+                </div>
+            </div>
+
+            <div class="Row5">
+                <button class="unlock-contact-btn">Unlock Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Buy Credits Popup with Bid Details -->
+    <div class="popup popup-buy-credits">
+        <div class="popup-content" style="max-width: 700px;">
+            <span class="close">&times;</span>
+            <div class="Row1">
+                <h2 style="text-transform: capitalize;">Credits</h2>
+
+                <div class="profile">
+                    <img src="/static/images/icons/DefaultDP.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- Bid Details Section -->
+            <div class="bid-details-section" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
+                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px; font-weight: 600;">BID Details</h3>
+                <div class="bid-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Bid Amount:</label>
+                        <span class="bid-amount-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Delivery Duration:</label>
+                        <span class="bid-delivery-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Warranty Period:</label>
+                        <span class="bid-warranty-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                    <div class="bid-detail-item">
+                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Payment Terms:</label>
+                        <span class="bid-payment-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="Row2">
+                <img src="/static/images/pound_sterling_coin.png" alt="">
+
+                {% if customer.getCreditPoints() < 10 %}
+                    <p>0{{ customer.getCreditPoints() }}</p>
+                {% else %}
+                    <p>{{ customer.getCreditPoints() }}</p>
+                {% endif %}    
+                
+            </div>
+            <div class="Row3">
+                <p>Credit balance Remaining</p>
+            </div>
+            <div class="Row4">
+                <div class="row4wrapper">
+                    <img src="/static/images/pound_sterling_coin.png" alt="">
+                    <p>Unlock this contact for 1 coin</p>
+                </div>
+                <p style="text-align: center;">Please buy credits and come back here to unlock the supplier contact.</p>
+            </div>
+
+            <div class="Row5">
+                <button onclick="window.open('/account/pricing', '_blank')" class="buy-credits-button">Buy Credits</button>
+            </div>          
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM fully loaded and parsed');
+            const bids = document.querySelectorAll('.bidamt');
+            console.log('Bid elements found:', bids);
+        
+            let customerCreditPoints = {{ customer.getCreditPoints() | json_encode | raw }};
+            let currentBidKey = null; // Track the current bid key being interacted with
+            const contactPopup = document.querySelector('.popup-unlock-contact');
+            const buyCreditsPopup = document.querySelector('.popup-buy-credits');
+            const creditPointsDisplay = contactPopup.querySelector('.Row2 p');
+        
+            function formatCreditPoints(points) {
+                return points < 10 ? '0' + points : points;
+            }
+        
+            function updateBidDetails(bidData) {
+                // Update bid details in both popups
+                const popups = [contactPopup, buyCreditsPopup];
+                
+                popups.forEach(popup => {
+                    const bidAmountElement = popup.querySelector('.bid-amount-value');
+                    const bidDeliveryElement = popup.querySelector('.bid-delivery-value');
+                    const bidWarrantyElement = popup.querySelector('.bid-warranty-value');
+                    const bidPaymentElement = popup.querySelector('.bid-payment-value');
+        
+                    if (bidAmountElement) bidAmountElement.textContent = bidData.bidAmount || '-';
+                    if (bidDeliveryElement) bidDeliveryElement.textContent = bidData.deliveryDuration || '-';
+                    if (bidWarrantyElement) bidWarrantyElement.textContent = bidData.warrantyPeriod || '-';
+                    if (bidPaymentElement) bidPaymentElement.textContent = bidData.paymentTerms || '-';
+                });
+            }
+    
+            function fetchBidDetails(bidKey) {
+                return fetch('/get-bid-details', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ bidKey: bidKey })
+                }).then(response => response.json());
+            }
+    
+            function checkUnlockStatus(bidKey) {
+                return fetch('/check-unlock-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ bidKey: bidKey })
+                }).then(response => response.json());
+            }
+    
+            function showContactInfo(data) {
+                contactPopup.querySelector('.Row4').innerHTML = `
+                    <div class="supplier-contact-reveal">
+                        <div class="Cont-Unlocked"><p>Contact Unlocked</p></div>
+                        <div class="supplier-Name">${data.CompanyName} (<a href="${data.ProfileUrl}" target="_blank">View Profile</a>)</div>
+                        <div class="supplier-phone">
+                            <a target="_blank" href="https://wa.me/+91${data.phoneNumber}"><img src="/static/images/Whatsapp.png" alt=""></a>
+                            <p>Supplier Contact: ${data.phoneNumber}</p>
+                        </div>
+                    </div>`;
+                contactPopup.querySelector('.Row5').style.display = 'none';
+                contactPopup.querySelector('.Row2').style.display = 'none';
+                contactPopup.querySelector('.Row3').style.display = 'none';
+                contactPopup.style.display = 'block';
+            }
+        
+            bids.forEach(bid => {
+                bid.addEventListener('click', function () {
+                    const bidValue = this.textContent.trim();
+                    console.log('Bid clicked:', bidValue);
+        
+                    if (bidValue !== '-') {
+                        currentBidKey = this.getAttribute('data-key');
+                        console.log('Bid key:', currentBidKey);
+        
+                        // Reset the popup content
+                        contactPopup.querySelector('.Row4').innerHTML = '<div class="row4wrapper"><img src="/static/images/pound_sterling_coin.png" alt=""><p>Unlock this contact for 1 coin</p></div>';
+                        contactPopup.querySelector('.Row5').style.display = 'flex';
+                        contactPopup.style.display = 'none';
+                        buyCreditsPopup.style.display = 'none';
+                        contactPopup.querySelector('.Row2').style.display = 'flex';
+                        contactPopup.querySelector('.Row3').style.display = 'flex';
+        
+                        // Fetch fresh bid details and check unlock status in sequence
+                        fetchBidDetails(currentBidKey)
+                            .then(bidData => {
+                                if (bidData.success) {
+                                    updateBidDetails({
+                                        bidAmount: bidData.bidAmount || '-',
+                                        deliveryDuration: bidData.deliveryDuration || '-',
+                                        warrantyPeriod: bidData.warrantyPeriod || '-',
+                                        paymentTerms: bidData.paymentTerms || '-'
+                                    });
+                                    return checkUnlockStatus(currentBidKey);
+                                }
+                                throw new Error('Failed to fetch bid details');
+                            })
+                            .then(unlockData => {
+                                if (unlockData && unlockData.success) {
+                                    showContactInfo(unlockData);
+                                } else {
+                                    if (customerCreditPoints > 0) {
+                                        contactPopup.style.display = 'block';
+                                    } else {
+                                        buyCreditsPopup.style.display = 'block';
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                });
+            });
+        
+            // Close popup functionality
+            document.querySelectorAll('.close, .close-popup').forEach(closeButton => {
+                closeButton.addEventListener('click', function () {
+                    const popup = this.closest('.popup');
+                    popup.style.display = 'none';
+                    
+                    // Reset the popup content when closing
+                    if (popup.classList.contains('popup-unlock-contact')) {
+                        popup.querySelector('.Row4').innerHTML = '<div class="row4wrapper"><img src="/static/images/pound_sterling_coin.png" alt=""><p>Unlock this contact for 1 coin</p></div>';
+                        popup.querySelector('.Row5').style.display = 'flex';
+                        popup.querySelector('.Row2').style.display = 'flex';
+                        popup.querySelector('.Row3').style.display = 'flex';
+                    }
+                });
+            });
+        
+            // Handle the unlock contact button click
+            document.querySelector('.unlock-contact-btn').addEventListener('click', function () {
+                if (currentBidKey && customerCreditPoints > 0) {
+                    fetch('/unlock-supplier-contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ bidKey: currentBidKey })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Deduct 1 from the displayed customer credits
+                            customerCreditPoints -= 1;
+        
+                            creditPointsDisplay.textContent = formatCreditPoints(customerCreditPoints);
+        
+                            // Display the contact information
+                            contactPopup.querySelector('.Row4').innerHTML = `<div class="supplier-contact-reveal"><div class="Cont-Unlocked"><p>Contact Unlocked</p></div><div class="supplier-Name">${data.CompanyName} (<a href="${data.ProfileUrl}" target="_blank">View Profile</a>)</div><div class="supplier-phone"><a target="_blank" href="https://wa.me/+91${data.phoneNumber}"><img src="/static/images/Whatsapp.png" alt=""></a> <p>Supplier Contact: ${data.phoneNumber}</p></div></div>`;
+                            contactPopup.querySelector('.Row5').style.display = 'none';
+                            contactPopup.querySelector('.Row2').style.display = 'none';
+                            contactPopup.querySelector('.Row3').style.display = 'none';
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error unlocking contact:', error));
+                } else {
+                    alert('Insufficient credits to unlock contact.');
+                }
+            });
+        });
+    </script>
+
+    {# <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM fully loaded and parsed');
+            const bids = document.querySelectorAll('.bidamt');
+            console.log('Bid elements found:', bids);
+
+            const customerCreditPoints = {{ customer.getCreditPoints() | json_encode | raw }};
+            console.log('Customer Credit Points:', customerCreditPoints);
+
+            bids.forEach(bid => {
+                bid.addEventListener('click', function () {
+                    const bidValue = this.textContent.trim();
+                    console.log('Bid clicked:', bidValue);
+
+                    if (bidValue !== '-') {
+                        if (customerCreditPoints > 0) {
+                            document.querySelector('.popup-unlock-contact').style.display = 'block';
+                        } else {
+                            document.querySelector('.popup-buy-credits').style.display = 'block';
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.close, .close-popup').forEach(closeButton => {
+                closeButton.addEventListener('click', function () {
+                    this.closest('.popup').style.display = 'none';
+                });
+            });
+        });
+    </script> #}
+
+</div>
+
+{% endblock %}

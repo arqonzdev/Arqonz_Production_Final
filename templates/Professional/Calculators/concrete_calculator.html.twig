@@ -1,0 +1,246 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Concrete Calculator</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Concrete Calculator</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>STEP 1: Let us know the Wall Dimensions. Please enter the Wall Length, Wall Width, and Wall Height in feet. Ensure to deduct the area of any doors or windows to arrive at the actual volume of concrete needed.</li>
+                    <li>STEP 2: Select the Concrete Mix Ratio from the dropdown. These ratios represent the parts of Cement: Sand: Stone Aggregate. You can choose from standard options.</li>
+                    <li>STEP 3: Click the Calculate button.</li>
+                    <li>STEP 4: Cement (in Kg), Sand (in cubic feet), Stone aggregate (in cubic feet)</li>
+                    <li>Note: The quantities are automatically adjusted to include standard allowances for wastage.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Concrete Calculator</h2>
+    
+            <!-- Wall Length -->
+            <div class="FormField">
+                <label for="wall-length">Wall Length (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-length" placeholder="0" />
+                </div>
+            </div>
+
+            <!-- Wall Width -->
+            <div class="FormField">
+                <label for="wall-height">Wall Width (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-width" placeholder="0" />
+                </div>
+            </div>
+    
+            <!-- Wall Height -->
+            <div class="FormField">
+                <label for="wall-height">Wall Height (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-height" placeholder="0" />
+                </div>
+            </div>
+
+             <!-- Concrete Mix -->
+             <div class="FormField">
+                <label>Concrete Mix</label>
+                <select id="brick-country">
+                    <option value="1">1:1.5:3</option>
+                    <option value="2">1:2:4</option>
+                    <option value="3">1:3:6</option>
+                    <option value="4">1:4:8</option>
+                    <option value="5">1:5:10</option>
+                </select>
+            </div>
+
+    
+            <!-- Calculate and Reset Buttons -->
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const calculateBtn = document.getElementById("calculate-btn");
+                const resetBtn = document.getElementById("reset-btn");
+                const resultDiv = document.getElementById("result");
+                const resultSection = document.getElementById("resultssection");
+
+                calculateBtn.addEventListener("click", () => {
+                    // Get input values
+                    const wallLength = parseFloat(document.getElementById("wall-length").value) || 0;
+                    const wallWidth = parseFloat(document.getElementById("wall-width").value) || 0;
+                    const wallHeight = parseFloat(document.getElementById("wall-height").value) || 0;
+                    const concreteMix = document.getElementById("brick-country").value;
+
+                    // Validate input
+                    if (wallLength <= 0 || wallWidth <= 0 || wallHeight <= 0) {
+                        resultDiv.innerHTML = `<p style="color: red;">Please enter valid dimensions for the wall.</p>`;
+                        resultSection.style.display = "block";
+                        return;
+                    }
+
+                    // Constants
+                    const concreteMixRatios = {
+                        "1": { cement: 1, sand: 1.5, stone: 3 }, // 1:1.5:3
+                        "2": { cement: 1, sand: 2, stone: 4 },   // 1:2:4
+                        "3": { cement: 1, sand: 3, stone: 6 },   // 1:3:6
+                        "4": { cement: 1, sand: 4, stone: 8 },   // 1:4:8
+                        "5": { cement: 1, sand: 5, stone: 10 },  // 1:5:10
+                    };
+
+                    const mixRatio = concreteMixRatios[concreteMix];
+                    if (!mixRatio) {
+                        resultDiv.innerHTML = `<p style="color: red;">Invalid concrete mix selected.</p>`;
+                        resultSection.style.display = "block";
+                        return;
+                    }
+
+                    const cementDensity = 1440; // kg/m³
+                    const sandDensity = 1400; // kg/m³
+                    const stoneDensity = 1600; // kg/m³
+                    const cubicMeterToCubicFeet = 35.3147;
+
+                    // Calculate volume of wall
+                    const wallVolume = wallLength * wallWidth * wallHeight; // ft³
+                    const wallVolumeInCubicMeters = wallVolume / cubicMeterToCubicFeet; // Convert ft³ to m³
+
+                    // Calculate total mix volume
+                    const totalParts = mixRatio.cement + mixRatio.sand + mixRatio.stone;
+                    const cementVolume = (wallVolumeInCubicMeters * mixRatio.cement) / totalParts;
+                    const sandVolume = (wallVolumeInCubicMeters * mixRatio.sand) / totalParts;
+                    const stoneVolume = (wallVolumeInCubicMeters * mixRatio.stone) / totalParts;
+
+                    // Convert volumes
+                    const cementWeight = cementVolume * cementDensity; // kg
+                    const sandVolumeInCubicFeet = sandVolume * cubicMeterToCubicFeet; // ft³
+                    const stoneVolumeInCubicFeet = stoneVolume * cubicMeterToCubicFeet; // ft³
+
+                    // Display result
+                    resultDiv.innerHTML = `
+                        <p><strong>Results:</strong></p>
+                        <p>Cement Required: <span>${cementWeight.toFixed(2)} kg</span></p>
+                        <p>Sand Required: <span>${sandVolumeInCubicFeet.toFixed(2)} ft³</span></p>
+                        <p>Stone Required: <span>${stoneVolumeInCubicFeet.toFixed(2)} ft³</span></p>
+                    `;
+                    resultSection.style.display = "block"; // Ensure result section is visible
+                });
+
+                resetBtn.addEventListener("click", () => {
+                    // Reset form fields
+                    document.getElementById("wall-length").value = "";
+                    document.getElementById("wall-width").value = "";
+                    document.getElementById("wall-height").value = "";
+                    document.getElementById("brick-country").value = "1";
+
+                    // Clear result
+                    resultDiv.innerHTML = "";
+                    resultSection.style.display = "none"; // Hide result section
+                });
+            });
+        </script>
+    
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const wallLength = document.getElementById("wall-length");
+            const wallWidth = document.getElementById("wall-width");
+            const wallHeight = document.getElementById("wall-height");
+            const concreteMix = document.getElementById("brick-country");
+
+            function checkFields() {
+                if (
+                    wallLength.value !== "" &&
+                    wallWidth.value !== "" &&
+                    wallHeight.value !== "" &&
+                    concreteMix.value !== ""
+                ) {
+                    calculateBtn.style.color = "#000"; // Set color to black
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            wallLength.addEventListener("input", checkFields);
+            wallWidth.addEventListener("input", checkFields);
+            wallHeight.addEventListener("input", checkFields);
+            concreteMix.addEventListener("change", checkFields);
+        });
+    </script>
+
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<!-- <div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div> -->
+
+{% endblock %}

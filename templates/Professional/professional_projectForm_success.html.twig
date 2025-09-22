@@ -1,0 +1,53 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{# @var news \Pimcore\Model\DataObject\ArchitectProject #}
+{# @var news1 \Pimcore\Model\DataObject\ArchitectProfile #}
+
+
+{% block content %}
+    <div id="main-content" class="main-content mb-5">
+
+        <div class="page-header">
+            <h1 class="display-2 text-center">Thank you for Adding the project.</h1>
+        </div>
+
+        <p class="text-center text-muted small mb-5">{{ 'general.thank-you-car-submit.txt' | trans | raw }}</p>
+
+        <div class="mb-5 d-flex justify-content-center">
+            <div class="card col-md-8">
+                <div class="card-body">
+
+                    <h6>Project Details</h6>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ 'Project Title' | trans }}
+                            </strong>
+                            {{ ArchitectProject.ProjectName }}
+                        </dd>
+                    </dl>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ 'Project Description' | trans }}
+                            </strong>
+                            {{ ArchitectProject.ProjectDescription }}
+                        </dd>
+                    </dl>
+
+                    <dl class="item-property">
+                        <dd>
+                            <strong>
+                                {{ 'Profile Name' | trans }}
+                            </strong>
+                            {{ ArchitectProfile.customer.firstname }}
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

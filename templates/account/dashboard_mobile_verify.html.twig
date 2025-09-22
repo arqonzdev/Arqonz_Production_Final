@@ -1,0 +1,304 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+
+    <div class="OverlayFixed">
+        <div class="activateContainer">
+            <h2>Verify Your Phone Number</h2>
+            <p>Enter the OTP Sent to your Phone Number on Whatsapp to move forward.</p>
+                {{ form(form) }}
+                
+            <div class="OTPPageButtons">
+                <a href="" class="ResendOTPButton">Re-Send</a>
+                <a href="" class="SubmitOTPButton">Submit</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const resendOTPButton = document.querySelector(".ResendOTPButton");
+            const submitOTPButton = document.querySelector(".SubmitOTPButton");
+            const otpInput = document.getElementById("phoneverify_form_OTP");
+
+            // Handle OTP resend
+            resendOTPButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                fetch("/dashboard-resend-otp", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("OTP has been sent to your WhatsApp number.");
+                    } else {
+                        alert("Failed to resend OTP. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error resending OTP:", error);
+                    alert("An error occurred while resending OTP.");
+                });
+            });
+
+            // Handle OTP submission
+            submitOTPButton.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                const enteredOTP = otpInput.value.trim();
+                if (!enteredOTP) {
+                    alert("Please enter the OTP.");
+                    return;
+                }
+
+                fetch("/dashboard-otp-verification", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ EnteredOTP: enteredOTP }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("OTP verified successfully. Redirecting...");
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        alert(data.message || "OTP verification failed. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error verifying OTP:", error);
+                    alert("An error occurred during OTP verification.");
+                });
+            });
+        });
+    </script>
+    <div class="welcomeMessage">
+        <p>Welcome {{ customer.getcustomertype() }}<p>
+    </div>
+
+    <div class="dashboardQuickStats">
+        <a href="/account/Profile">
+            <div class="DashboardQuickStatContainer DashboardQuickStatProfile">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Profile</h3>
+                        <h2>{{ customer.getProfileCompletion() }}%</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon">
+                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#8280FF"/>
+                                <path opacity="0.587821" fill-rule="evenodd" clip-rule="evenodd" d="M20.6666 23.3333C20.6666 26.2789 23.0544 28.6667 26 28.6667C28.9455 28.6667 31.3333 26.2789 31.3333 23.3333C31.3333 20.3878 28.9455 18 26 18C23.0544 18 20.6666 20.3878 20.6666 23.3333ZM34 28.6667C34 30.8758 35.7908 32.6667 38 32.6667C40.2091 32.6667 42 30.8758 42 28.6667C42 26.4575 40.2091 24.6667 38 24.6667C35.7908 24.6667 34 26.4575 34 28.6667Z" fill="#8280FF"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M25.9778 31.3333C19.6826 31.3333 14.5177 34.5686 14.0009 40.9322C13.9727 41.2788 14.6356 41.9999 14.97 41.9999H36.9956C37.9972 41.9999 38.0128 41.1939 37.9972 40.9333C37.6065 34.3908 32.3616 31.3333 25.9778 31.3333ZM45.2746 41.9999L40.1333 41.9999C40.1333 38.9987 39.1417 36.229 37.4683 34.0007C42.0103 34.0504 45.7189 36.3468 45.998 41.1999C46.0092 41.3954 45.998 41.9999 45.2746 41.9999Z" fill="#8280FF"/>
+                            </svg>
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">Profile Pending</p>
+
+            </div>
+        </a>
+
+        {% if customer.getcustomertype() != 'Manufacturer' %}
+            <a href="/account/Requirements">
+                <div class="DashboardQuickStatContainer DashboardQuickStatProducts">
+                    <div class="QuickStatWrapper">
+                        <div class="quickstatCol1">
+                            <h3>Requirements</h3>
+                            <h2>0</h2>
+                            
+                        </div>
+                        <div class="quickstatCol2">
+                            <div class="QuickStatIcon">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#FEC53D"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15 24.3164L27.9005 31.7645C28.0394 31.8447 28.1851 31.9026 28.3333 31.9394V46.3846L15.9201 39.0385C15.3498 38.701 15 38.0875 15 37.4248V24.3164ZM45 24.1184V37.4248C45 38.0875 44.6502 38.701 44.0799 39.0385L31.6667 46.3846V31.8129C31.6969 31.7978 31.7269 31.7816 31.7566 31.7645L45 24.1184Z" fill="#FEC53D"/>
+                                    <path opacity="0.499209" fill-rule="evenodd" clip-rule="evenodd" d="M15.4053 20.7014C15.5628 20.5024 15.7617 20.3343 15.9936 20.2108L29.1186 13.2201C29.6696 12.9266 30.3305 12.9266 30.8815 13.2201L44.0065 20.2108C44.1852 20.306 44.3444 20.4277 44.4801 20.5697L30.0899 28.8778C29.9953 28.9325 29.9081 28.995 29.8286 29.064C29.7491 28.995 29.6618 28.9325 29.5672 28.8778L15.4053 20.7014Z" fill="#FEC53D"/>
+                                </svg>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#1BA89D;">New Requirements: 0</p>
+                </div>
+            </a>
+        {% endif %}
+
+        {% if customer.getcustomertype() == 'Manufacturer' %}
+            <a href="/account/Products">
+                <div class="DashboardQuickStatContainer DashboardQuickStatProducts">
+                    <div class="QuickStatWrapper">
+                        <div class="quickstatCol1">
+                            <h3>Products</h3>
+                            <h2>0</h2>
+                            
+                        </div>
+                        <div class="quickstatCol2">
+                            <div class="QuickStatIcon">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.21" fill-rule="evenodd" clip-rule="evenodd" d="M0 30V37C0 49.7025 10.2975 60 23 60H30H37C49.7025 60 60 49.7025 60 37V30V23C60 10.2975 49.7025 0 37 0H30H23C10.2975 0 0 10.2975 0 23V30Z" fill="#FEC53D"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15 24.3164L27.9005 31.7645C28.0394 31.8447 28.1851 31.9026 28.3333 31.9394V46.3846L15.9201 39.0385C15.3498 38.701 15 38.0875 15 37.4248V24.3164ZM45 24.1184V37.4248C45 38.0875 44.6502 38.701 44.0799 39.0385L31.6667 46.3846V31.8129C31.6969 31.7978 31.7269 31.7816 31.7566 31.7645L45 24.1184Z" fill="#FEC53D"/>
+                                    <path opacity="0.499209" fill-rule="evenodd" clip-rule="evenodd" d="M15.4053 20.7014C15.5628 20.5024 15.7617 20.3343 15.9936 20.2108L29.1186 13.2201C29.6696 12.9266 30.3305 12.9266 30.8815 13.2201L44.0065 20.2108C44.1852 20.306 44.3444 20.4277 44.4801 20.5697L30.0899 28.8778C29.9953 28.9325 29.9081 28.995 29.8286 29.064C29.7491 28.995 29.6618 28.9325 29.5672 28.8778L15.4053 20.7014Z" fill="#FEC53D"/>
+                                </svg>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#1BA89D;">New Products: 0</p>
+                </div>
+            </a>
+        {% endif %}
+
+        
+        
+
+        <a href="/account/Enquiries">
+            <div class="DashboardQuickStatContainer DashboardQuickStatEnquiries">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Enquiries</h3>
+                        <h2>0</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon" >
+                            <img src="/static/icons/enquiriesIcon.svg" alt="">
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">New Enquiries: 0</p>
+            </div>
+        </a>
+
+        <a href="/account/Endorsements">
+            <div class="DashboardQuickStatContainer DashboardQuickStatEndorsement">
+                <div class="QuickStatWrapper">
+                    <div class="quickstatCol1">
+                        <h3>Endorsements</h3>
+                        <h2>0</h2>
+                        
+                    </div>
+                    <div class="quickstatCol2">
+                        <div class="QuickStatIcon">
+                            <img src="/static/icons/EndorsementIcon.svg" alt="">
+                        
+                        </div>
+                    </div>
+                </div>
+                <p style="color:#1BA89D;">Average Rating: N/A</p>
+                {# <p style="color:#1BA89D;">Average Rating: 4.5/5</p> #}
+            </div>
+        </a>
+
+    </div>
+
+    {% if customer.getcustomertype() != 'Manufacturer' %}
+        <div class="dashboardProjectsAreaContainer" id="ProjectsArea">
+            <h3>Projects</h3>
+
+            <div class="DashboardProjects">
+                {# {% for ProProject in ProProjects %}
+                    {% set firstImage = ProProject.ProjectGallery|first %}
+                    {% if firstImage %}
+                        <a href="/{{ customer.getcustomertype()|lower }}/project/{{ ProProject.getkey() }}"><img src="{{ firstImage.getThumbnail('ProjectGalleryThumbnail') }}" alt="Gallery Thumbnail"></a>
+                    {% endif %}
+                {% endfor %} #}
+                <div class="addprojectbutton">
+                    <a href="/{{ customer.getcustomertype()|lower }}/portfolio/add-project">
+                        <img src="/static/icons/addprojectsbtn.svg" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if customer.getcustomertype() == 'Manufacturer' %}
+        <div class="dashboardRequirementsAreaContainer" id="dashboardRequirements">
+            <h3>Important Notifications</h3>
+
+            <div class="DashboardRequirements">
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Brand</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Response</th>
+                            <th>Current Bid</th>
+                            <th>Expire In</th>
+                            
+                        </tr>
+                    </thead>
+                   
+                    <tbody>
+                        <tr><td>No Notifications Found</td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    {% endif %}
+
+    {% if customer.getcustomertype() != 'Manufacturer' %}
+        <div class="dashboardRequirementsAreaContainer" id="dashboardRequirements">
+            <div class="RequirementheadingSection">
+                <h3>Requirements</h3>
+                <a href="/account/Add-Requirements" class="addRequireButton">Add</a>
+            </div>
+
+            
+
+            <div class="DashboardRequirements">
+                <table class="requirements-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Published Date</th>
+                            <th>City</th>
+                            <th>Instant Quote</th>
+                            <th>Customize</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>0 Requirements Added</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <div class="dashboardEnquiriesAreaContainer" id="dashboardEnquiries">
+        <h3>Enquiries</h3>
+
+        <div class="DashboardEnquiries">
+            <table class="Enquiries-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>No Enquiries Recieved</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

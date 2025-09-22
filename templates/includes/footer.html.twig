@@ -1,0 +1,58 @@
+{% if editmode %}
+    {% do pimcore_head_link().appendStylesheet(asset('static/css/editmode.css')) %}
+    {{ pimcore_head_link() }}
+{% endif %}
+{#footer#}
+<footer class="">
+<section id="footer">
+    <div id="footersections">
+        <div class="col1">
+            <div id="footer-logo">
+                <img id="" src="{{ asset('/static/images/logo-footer.png') }}" alt="Find Professionals for Construction">
+            </div>
+            <div id="footercontact">
+                <p>Mumbai, India</p>
+                <p>Call us: 0984453895</p>
+            </div>
+        </div>
+        <div class="col1">
+            <h3>Explore</h3>
+            <li><a href="#">Architects</a></li>
+            
+            <li><a href="#">Builders</a></li>
+            
+            <li><a href="#">Contractors</a></li>
+            
+            <li><a href="#">Designers</a></li>
+            
+            <li><a href="#">Engineers</a></li>
+            
+            <li><a href="#">Manufacturers</a></li>
+        
+        </div>
+        <div class="col1">
+            <h3>About</h3>
+            <li><a href="#">Careers</a></li>
+            
+            <li><a href="#">Press</a></li>
+            
+            <li><a href="#">Contact Us</a></li>
+            
+            <li><a href="#">Terms of Use</a></li>
+            
+            <li><a href="#">Privacy policy</a></li>
+        </div>
+        <div class="col1">
+            <h3>Coming Soon</h3>
+            <div id="downloadapple">
+                <img id="" src="{{ asset('/static/images/download-apple.png') }}" style="max-width:70%;" alt="Download Arqonz for Apple">
+            </div>
+            <div id="downlodandroid">
+                <img id="" src="{{ asset('/static/images/download-android.png') }}" style="max-width:70%;"  alt="Download Arqonz for Android">
+            </div>
+        </div>
+    </div>
+    <p class="copyrighttext">© 2025 Arqonz. Crafted with love.</p>
+</section>
+    
+</footer>

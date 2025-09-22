@@ -1,0 +1,200 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Buy Credits</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width:100%;justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="profile-details">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Buy Credits</h2>
+                        <p class="sectionsubheading">Buy Credits To unlock.</p> 
+                        {% if showAnnualFee %}
+                            <div class="annual-fee-notice" style="background-color: #f8f9fa; padding: 15px; margin-top: 20px; border-radius: 5px; border-left: 4px solid #007bff;">
+                                <h4 style="margin-top: 0; color: #333;">Annual Subscription Fee</h4>
+                                <p style="margin-bottom: 5px;">A one-time annual subscription fee of {{ currencySymbol }}{{ pricingData.AnnualFee.basePrice|round }} + 18% {{ taxLabel }} ({{ currencySymbol }}{{ pricingData.AnnualFee.totalPrice|round }} total) will be added to your purchase.</p>
+                                <p style="font-size: 0.9em; color: #6c757d;">This fee is charged once per year and provides access to all platform features.</p>
+                            </div>
+                        {% elseif annualFeeExpiry %}
+                            <div class="annual-fee-validity" style="background-color: #e6f4ea; padding: 15px; margin: 15px 0px; border-radius: 5px; border-left: 4px solid #28a745;">
+                                <h4 style="margin-top: 0; color: #155724;">Your Annual Fee is Active</h4>
+                                <p style="margin-bottom: 0; color: #155724;">Annual Fee Expires on - <b>{{ annualFeeExpiry|date("d F Y") }}</b></p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="details">
+
+                    <div class="SubscriptionPackages">
+
+                       
+
+                        <div class="Sub-Package">
+                            <h2 class="packageTitle">Silver</h2>
+                            <p class="PackageGST-Disclaimer">18% {{ taxLabel }} included in price</p>
+                            <div class="priceCont">
+                                <p>{{ currencySymbol }} {{ pricingData.Silver.totalPrice|round }} <span style="font-size: 0.8em; color: #6c757d;"></span> {% if showAnnualFee %}<span style="font-size: 0.8em; color: #6c757d;"> + {{ currencySymbol }}{{ pricingData.AnnualFee.totalPrice|round }} annual fee (incl. {{ taxLabel }})</span>{% endif %}</p>
+                            </div>
+                            <div class="SubscriptionBuyNowbtn">
+                                <a href="#" data-plan="Silver" data-amount="150000" data-annual-fee="{{ showAnnualFee ? 'true' : 'false' }}" class="packageBuyNowBtn">Buy Now</a>
+                            </div>
+                            <!-- <p class="PackageTryFreeContainer"><a href="#" class="packageTryFree">Try Free for one month</a><span class="sourceLink"><a href="#Sourcelink2">2</a></span></p> -->
+                            <p class="trialTermsHead">Features</p>
+                            <div class="trialterms">
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>18 credits</p>
+                                </div>
+                                
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>valid for 1 year</p>
+                                </div>
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>An invitation to monthly programmes organised by Professional organisations</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="Sub-Package">
+                            <h2 class="packageTitle">Gold</h2>
+                            <p class="PackageGST-Disclaimer">18% {{ taxLabel }} included in price</p>
+                            <div class="priceCont">
+                                <p>{{ currencySymbol }} {{ pricingData.Gold.totalPrice|round }} <span style="font-size: 0.8em; color: #6c757d;"></span> {% if showAnnualFee %}<span style="font-size: 0.8em; color: #6c757d;"> + {{ currencySymbol }}{{ pricingData.AnnualFee.totalPrice|round }} annual fee (incl. {{ taxLabel }})</span>{% endif %}</p>
+                            </div>
+                            <div class="SubscriptionBuyNowbtn">
+                                <a href="#" class="packageBuyNowBtn" data-plan="Gold" data-amount="300000" data-annual-fee="{{ showAnnualFee ? 'true' : 'false' }}">Buy Now</a>
+                            </div>
+                            <!-- <p class="PackageTryFreeContainer"><a href="#" class="packageTryFree">Try Free for one month</a><span class="sourceLink"><a href="#Sourcelink2">2</a></span></p> -->
+                            <p class="trialTermsHead">Features</p>
+                            <div class="trialterms">
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>36 Credits</p>
+                                </div>
+                                
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>Valid for 1 year </p>
+                                </div>
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>An invitation to monthly programmes organised by Professional organisations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Sub-Package">
+                            <h2 class="packageTitle">Platinum</h2>
+                            <p class="PackageGST-Disclaimer">18% {{ taxLabel }} included in price</p>
+                            <div class="priceCont">
+                                <p>{{ currencySymbol }} {{ pricingData.Platinum.totalPrice|round }} <span style="font-size: 0.8em; color: #6c757d;"></span> {% if showAnnualFee %}<span style="font-size: 0.8em; color: #6c757d;"> + {{ currencySymbol }}{{ pricingData.AnnualFee.totalPrice|round }} annual fee (incl. {{ taxLabel }})</span>{% endif %}</p>
+                            </div>
+                            <div class="SubscriptionBuyNowbtn">
+                                <a href="#" class="packageBuyNowBtn" data-plan="Platinum" data-amount="600000" data-annual-fee="{{ showAnnualFee ? 'true' : 'false' }}">Buy Now</a>
+                            </div>
+                            <!-- <p class="PackageTryFreeContainer"><a href="#" class="packageTryFree">Try Free for one month</a><span class="sourceLink"><a href="#Sourcelink2">2</a></span></p> -->
+                            <p class="trialTermsHead">Features</p>
+                            <div class="trialterms">
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>72 Credits</p>
+                                </div>
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>Valid For 1 Year</p>
+                                </div>
+                                
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>An invitation to monthly programmes organised by Professional organisations</p>
+                                </div>
+                                
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>100 promotion emails (ABCDEF)</p>
+                                </div>
+                                <div class="Termfeature">
+                                    <img src="/static/images/icons/FeatureTick.svg" alt="feature Tick">
+                                    <p>100 WhatsApp promotional msg (ABCDEF)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="TermLinks">
+                        <!-- <div id="Sourcelink1">
+                            <p><span>[1]</span> Once your paid subscription begins, cancellation policies vary based on your status as a new customer and your product and domain selections on Microsoft. Learn more. Cancel your Microsoft 365 subscription any time by going to the Microsoft 365 admin center. When a subscription is canceled, all associated data will be deleted. Learn more about data retention, deletion, and destruction in Microsoft 365.</p>
+                        </div>
+                        <div id="Sourcelink2">
+                            <p><span>[2]</span> After your one-month free trial ends, your subscription will automatically convert into a 12-month paid subscription and you will be charged the applicable subscription fee. Cancel anytime during your free trial to stop future charges. Credit card required to sign-up. Learn more.</p>
+                        </div> -->
+                    </div>
+
+                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.querySelectorAll('.packageBuyNowBtn').forEach(function(button) {
+                                button.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    var plan = this.getAttribute('data-plan');
+                                    var includeAnnualFee = this.getAttribute('data-annual-fee');
+
+                                    // Send AJAX request to create order
+                                    fetch('{{ path('create_order') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: 'plan=' + plan + '&includeAnnualFee=' + includeAnnualFee
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.error) {
+                                            alert(data.error);
+                                            return;
+                                        }
+
+                                        var options = {
+                                            "key": data.razorpayKey,
+                                            "amount": data.amount, 
+                                            "currency": data.currency || "INR",
+                                            "name": data.name,
+                                            "description": data.description,
+                                            "order_id": data.orderId,
+                                            "handler": function(response) {
+                                                window.location.href = "{{ path('Verifysubscription') }}?payment_id=" + response.razorpay_payment_id + "&order_id=" + response.razorpay_order_id + "&razorpay_signature=" + response.razorpay_signature + "&plan=" + plan + "&includeAnnualFee=" + includeAnnualFee;
+                                            },
+                                            "prefill": {
+                                                "name": data.customerName,
+                                                "email": data.customerEmail,
+                                                "contact": data.customerPhone || "9000090000" // Fallback if phone is empty
+                                            },
+                                            "theme": {
+                                                "color": "#3399cc"
+                                            }
+                                        };
+                                        var rzp1 = new Razorpay(options);
+                                        rzp1.open();
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                                });
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    
+    
+{% endblock %}

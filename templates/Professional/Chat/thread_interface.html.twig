@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/AQIQchat.css">
+    <link rel="icon" href="/static/images/Arqonz-logo-icon.png" type="image/x-icon">
+    <title>AQ IQ - Chat</title>
+</head>
+<body>
+    <div class="AQIQMain">
+        <div class="ribbon-wrapper">
+            <div class="ribbon"><p>BETA</p></div>
+        </div>
+        
+        <div class="AQIQsidebar">
+            <div class="LogoArea">
+                <div class="AQIcon">
+                    <img id="AQsidebarClose" src="/static/icons/sidebar-icon.svg" alt="">
+                    <img id="AQstartChat" src="/static/icons/AQ-newchat.svg" alt="AQ IQ new Chat">
+                </div>
+            </div>
+            <div class="AQHistory">
+                <div class="historyheader">
+                    <img src="/static/icons/chat-histroy.svg" alt="">
+                    <p>History</p>
+                </div>
+    
+                <div class="historycontent">
+                    {% for AqThread in AqThreads %}
+                        <a class="chatHistoryElement" {% if AqThread.ThreadId == threadId %} style="background: #f7f7f7" {% endif %} href="/arqonz-chat/{{ AqThread.ThreadId }}">{{ AqThread.ThreadTitle }}</a>
+                    {% endfor %}
+                </div>
+                
+    
+            </div>
+        </div>
+        <div class="AQIQMainWindow">
+            <div class="ChatHeader">
+                <div class="chatTitle">
+                    <!-- <h2>Chat</h2> -->
+                    <img id="AQsidebarOpen" src="/static/icons/sidebar-icon.svg" alt="">
+
+                    <a href="/arqonz-chat">
+                        <img src="/static/images/AQ-IQ.png" alt="">
+                    </a>
+                </div>
+                <div class="ChatTools">
+                    <img src="/static/icons/chat-bell.svg" alt="">
+                    <img  class="chatprofilepic" src="/static/icons/ChatProfile.svg" alt="">
+                </div>
+            </div>
+
+            <script>
+                // Initially hide the AQsidebarOpen button
+                document.getElementById('AQsidebarOpen').style.display = 'none';
+            
+                // Function to hide sidebar with smooth transition
+                function hideSidebar() {
+                    const sidebar = document.querySelector('.AQIQsidebar');
+                    const sidebarOpenBtn = document.getElementById('AQsidebarOpen');
+                    const sidebarCloseBtn = document.getElementById('AQsidebarClose');
+            
+                    sidebar.style.transition = 'transform 0.3s ease';
+                    sidebar.style.transform = 'translateX(-100%)'; // Slide it to the left
+                    setTimeout(() => {
+                        sidebar.style.display = 'none'; // Hide after the animation
+                        sidebarOpenBtn.style.display = 'block'; // Show the open button
+                    }, 300); // Match the timeout with the transition duration
+                }
+            
+                // Function to show sidebar with smooth transition
+                function showSidebar() {
+                    const sidebar = document.querySelector('.AQIQsidebar');
+                    const sidebarOpenBtn = document.getElementById('AQsidebarOpen');
+            
+                    sidebar.style.display = 'block';
+                    sidebar.style.transform = 'translateX(-100%)'; // Start hidden (left)
+                    setTimeout(() => {
+                        sidebar.style.transition = 'transform 0.3s ease';
+                        sidebar.style.transform = 'translateX(0)'; // Slide it in from the left
+                        sidebarOpenBtn.style.display = 'none'; // Hide the open button
+                    }, 10); // Allow it to start the animation
+                }
+            
+                // Event listener for sidebar close button
+                document.getElementById('AQsidebarClose').addEventListener('click', hideSidebar);
+            
+                // Event listener for sidebar open button
+                document.getElementById('AQsidebarOpen').addEventListener('click', showSidebar);
+            
+                // Event listener for AQstartChat button to open a new chat and hide the sidebar
+                document.getElementById('AQstartChat').addEventListener('click', function () {
+                    // Trigger the start conversation functionality
+                    fetch('/create-thread', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to the new conversation page
+                            window.location.href = '/arqonz-chat/' + data.threadId;
+                        }
+                    })
+                    .catch(error => console.error('Error creating thread:', error));
+            
+                    // Hide the sidebar when starting a new chat
+                });
+            </script>
+    
+            <div id="chat-container">
+                <div id="conversation">
+                    <div class="message chat-window">
+                        {% for message in conversationHistory %}
+                            <div class="message">
+                                <strong>User:</strong> <div>{{ message.user|raw }}</div><br>
+                                <strong>AQ-IQ:</strong> <div>{{ message.bot|raw }}</div><br>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+                <div id="chat-form"> 
+                    <div id="loading-spinner" class="loading-spinner" style="display:none;"></div>
+                    <form id="chat-form-main">
+                        
+                        <input type="text" id="message-input" name="message" placeholder="Type your message here..." required>
+                        <button id="send-message-btn" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+    
+            <script>
+                // Function to scroll to the bottom of the chat window
+                function scrollToBottom() {
+                    const chatWindow = document.querySelector('.chat-window');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+    
+                // Scroll to the bottom when the page loads
+                document.addEventListener('DOMContentLoaded', function () {
+                    scrollToBottom();
+                });
+    
+                document.getElementById('chat-form-main').addEventListener('submit', function (event) {
+                    event.preventDefault();
+    
+                    const formData = new FormData(this);
+                    const threadId = '{{ threadId }}';
+                    const message = document.getElementById('message-input').value;
+    
+                    // Disable the submit button and show loading spinner
+                    const sendButton = document.getElementById('send-message-btn');
+                    const spinner = document.getElementById('loading-spinner');
+                    
+                    sendButton.disabled = true;
+                    spinner.style.display = 'inline-block';
+    
+                    formData.append('threadId', threadId);
+    
+                    fetch('/arqonz-ai-send', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Append the message to the chat window
+                            const chatWindow = document.querySelector('.chat-window');
+                            const userMessage = `<div class="message"><strong>User:</strong> ${message}<br><strong>AQ-IQ:</strong> ${data.botResponse}<br></div>`;
+                            chatWindow.innerHTML += userMessage;
+    
+                            scrollToBottom();
+    
+                            document.getElementById('message-input').value = '';
+                        }
+                    })
+                    .catch(error => console.error('Error sending message:', error))
+                    .finally(() => {
+                        // Hide the loading spinner and enable the button
+                        spinner.style.display = 'none';
+                        sendButton.disabled = false;
+                    });
+                });
+            </script>
+    
+            <div class="ChatFooter">
+                <p>© 2023 AQ-IQ. All Rights Reserved.</p>
+            </div>
+    
+        </div>
+    </div>
+</body>
+</html>
+
+
+

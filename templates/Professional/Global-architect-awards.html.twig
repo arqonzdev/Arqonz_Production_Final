@@ -1,0 +1,428 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_architectprofile.css') %}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+    <style>
+        .globform-row {
+            display:flex;
+        }
+        main {
+            background-color: #fcfcfd !important;
+        }
+        select {
+            width: 100%;
+            height: 42px;
+            padding-left: 10px;
+        }
+        .GlobalArchitectForm button {
+            width: 100%;
+            background-color: #01A79E !important;
+            padding: 6px !important;
+            margin: 31px 0px !important;
+        }
+        .GlobalArchitectForm {
+            margin: 62px 0px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .GlobalArchitectForm input {
+            border-top: 0px !important;
+            border-left: 0px !important;
+            border-right: 0px !important;
+            background: transparent !important;
+        }
+        .GlobalArchitectForm textarea {
+            border-top: 0px !important;
+            border-left: 0px !important;
+            border-right: 0px !important;
+            background: transparent !important;
+        }
+        @media (max-width: 711px) { 
+            .globform-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <div id="main-content" class="main-content mb-5">
+        <div class="GlobalArchitectForm">
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_start(form) }}
+                    {{ form_row(form.OrganizationName) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.OfficeAddress) }}
+                </div>
+            </div>
+            
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.stateProvince) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.Country) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.zipCode) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.email) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.whatsappNumber) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.projectType) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.registrationYear) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.projectsDone) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.applicantName) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.designation) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.age) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.experience) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.contactNumber) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.achievements) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.nominatingProject) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.projectLocation) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.ProjectCountry) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.projectCategory) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.projectStatus) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.projectArea) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.website) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.keyFeatures) }}
+                </div>
+            </div>
+        
+            <div class="globform-row">
+                <div class="col-md-6">
+                    {{ form_row(form.walkthroughLink) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.submit) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        <p>We Request you to send us the HD Project Photographs and Company Profile on "globalarchitectbuilderawards@gmail.com" & or you can send the details on WhatsApp Number: +918580976341 "gabaawards@gmail.com" and keep CC 
+            “info@globalarchitectbuilderawards.com” "gabaawards@gmail.com" and keep CC “info@globalarchitectbuilderawards.com”</p>
+        
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector(".GlobalArchitectForm");
+            const submitButton = document.querySelector("#global_awards_form_submit");
+            const fields = {
+                whatsappNumber: document.getElementById("global_awards_form_whatsappNumber"),
+                email: document.getElementById("global_awards_form_email"),
+                registrationYear: document.getElementById("global_awards_form_registrationYear"),
+                contactNumber: document.getElementById("global_awards_form_contactNumber"),
+                age: document.getElementById("global_awards_form_age"),
+                projectsDone: document.getElementById("global_awards_form_projectsDone"),
+                website: document.getElementById("global_awards_form_website"),
+                walkthroughLink: document.getElementById("global_awards_form_walkthroughLink"),
+                OrganizationName: document.getElementById("global_awards_form_OrganizationName"),
+                applicantName: document.getElementById("global_awards_form_applicantName")
+            };
+    
+            const errorMessages = {
+                whatsappNumber: "Only numbers are allowed.",
+                email: "Please enter a valid email (e.g., example@example.com).",
+                registrationYear: "Only numbers of exactly 4 digits are allowed.",
+                contactNumber: "Only numbers are allowed.",
+                age: "Only numbers are allowed.",
+                projectsDone: "Only numbers are allowed.",
+                website: "Please enter a valid website URL.",
+                walkthroughLink: "Please enter a valid URL.",
+                OrganizationName: "Only alphabets and spaces are allowed.",
+                applicantName: "Only alphabets and spaces are allowed."
+            };
+    
+            // Regular expressions for validation
+            const validators = {
+                whatsappNumber: value => /^\d+$/.test(value),
+                email: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                registrationYear: value => /^\d{4}$/.test(value),
+                contactNumber: value => /^\d+$/.test(value),
+                age: value => /^\d+$/.test(value),
+                projectsDone: value => /^\d+$/.test(value),
+                website: value => value === "" || /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/.test(value), // Allow empty website
+                walkthroughLink: value => value === "" || /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/.test(value), // Allow empty walkthrough link
+                OrganizationName: value => /^[A-Za-z\s]+$/.test(value), // Only alphabets and spaces
+                applicantName: value => /^[A-Za-z\s]+$/.test(value) // Only alphabets and spaces
+            };
+    
+            const setError = (field, message) => {
+                const errorElement = field.nextElementSibling;
+                if (!errorElement || !errorElement.classList.contains("error-message")) {
+                    const errorSpan = document.createElement("span");
+                    errorSpan.classList.add("error-message");
+                    errorSpan.style.color = "red";
+                    errorSpan.style.fontSize = "0.9em";
+                    errorSpan.textContent = message;
+                    field.insertAdjacentElement("afterend", errorSpan);
+                } else {
+                    errorElement.textContent = message;
+                }
+            };
+    
+            const clearError = field => {
+                const errorElement = field.nextElementSibling;
+                if (errorElement && errorElement.classList.contains("error-message")) {
+                    errorElement.remove();
+                }
+            };
+    
+            const validateField = field => {
+                const fieldName = field.id.replace("global_awards_form_", "");
+                const value = field.value.trim();
+                if (validators[fieldName](value)) {
+                    clearError(field);
+                    return true;
+                } else {
+                    setError(field, errorMessages[fieldName]);
+                    return false;
+                }
+            };
+    
+            const validateAllFields = () => {
+                return Object.values(fields).every(field => validateField(field));
+            };
+    
+            // Enforce alphabet-only fields (allow spaces) on specific fields
+            const enforceAlphaOnly = field => {
+                field.addEventListener("input", () => {
+                    const fieldName = field.id.replace("global_awards_form_", "");
+                    if (["OrganizationName", "applicantName"].includes(fieldName)) {
+                        field.value = field.value.replace(/[^A-Za-z\s]/g, ''); // Replace non-alphabetic and non-space characters
+                    }
+                    validateField(field);
+                    submitButton.disabled = !validateAllFields();
+                });
+            };
+    
+            // Enforce number-only fields
+            const enforceNumberOnly = field => {
+                field.addEventListener("input", () => {
+                    const fieldName = field.id.replace("global_awards_form_", "");
+                    if (["whatsappNumber", "registrationYear", "contactNumber", "age", "projectsDone"].includes(fieldName)) {
+                        field.value = field.value.replace(/[^0-9]/g, ''); // Replace non-numeric characters
+                    }
+                    validateField(field);
+                    submitButton.disabled = !validateAllFields();
+                });
+            };
+    
+            // Add event listeners for all fields
+            Object.values(fields).forEach(field => {
+                if (["OrganizationName", "applicantName"].includes(field.id.replace("global_awards_form_", ""))) {
+                    enforceAlphaOnly(field); // Enforce alphabet-only on Organization and Applicant Name fields
+                } else {
+                    enforceNumberOnly(field); // Enforce number-only on other fields
+                }
+    
+                field.addEventListener("input", () => {
+                    validateField(field);
+                    submitButton.disabled = !validateAllFields();
+                });
+            });
+    
+            // Initial validation check
+            submitButton.disabled = !validateAllFields();
+    
+            // Prevent form submission if invalid
+            form.addEventListener("submit", event => {
+                if (!validateAllFields()) {
+                    event.preventDefault();
+                    Object.values(fields).forEach(field => validateField(field));
+                }
+            });
+        });
+    </script>
+
+
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector(".GlobalArchitectForm");
+            const submitButton = document.querySelector("#global_awards_form_submit");
+            const fields = {
+                whatsappNumber: document.getElementById("global_awards_form_whatsappNumber"),
+                email: document.getElementById("global_awards_form_email"),
+                registrationYear: document.getElementById("global_awards_form_registrationYear"),
+                contactNumber: document.getElementById("global_awards_form_contactNumber"),
+                age: document.getElementById("global_awards_form_age"),
+                projectsDone: document.getElementById("global_awards_form_projectsDone"),
+                website: document.getElementById("global_awards_form_website"),
+                walkthroughLink: document.getElementById("global_awards_form_walkthroughLink"),
+                organizationName: document.getElementById("global_awards_form_OrganizationName"), // Error message for organization name
+                applicantName: document.getElementById("global_awards_form_applicantName"), // Error message for applicant name
+            };
+    
+            const errorMessages = {
+                whatsappNumber: "Only numbers are allowed.",
+                email: "Please enter a valid email (e.g., example@example.com).",
+                registrationYear: "Only numbers of exactly 4 digits are allowed.",
+                contactNumber: "Only numbers are allowed.",
+                age: "Only numbers are allowed.",
+                projectsDone: "Only numbers are allowed.",
+                website: "Please enter a valid website URL.",
+                walkthroughLink: "Please enter a valid URL.",
+                organizationName: "Only text characters are allowed (no numbers or special characters).", // Error message for organization name
+                applicantName: "Only text characters are allowed (no numbers or special characters)." // Error message for applicant name
+
+            };
+    
+            // Regular expressions for validation
+            const validators = {
+                whatsappNumber: value => /^\d+$/.test(value),
+                email: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                registrationYear: value => /^\d{4}$/.test(value),
+                contactNumber: value => /^\d+$/.test(value),
+                age: value => /^\d+$/.test(value),
+                projectsDone: value => /^\d+$/.test(value),
+                website: value => !value || /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/.test(value), // Optional field
+                walkthroughLink: value => !value || /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-]*)*$/.test(value), // Optional field
+                organizationName: value => /^[A-Za-z\s]+$/.test(value), // Allow only text characters (letters and spaces)
+                applicantName: value => /^[A-Za-z\s]+$/.test(value)
+            };
+    
+            const setError = (field, message) => {
+                const errorElement = field.nextElementSibling;
+                if (!errorElement || !errorElement.classList.contains("error-message")) {
+                    const errorSpan = document.createElement("span");
+                    errorSpan.classList.add("error-message");
+                    errorSpan.style.color = "red";
+                    errorSpan.style.fontSize = "0.9em";
+                    errorSpan.textContent = message;
+                    field.insertAdjacentElement("afterend", errorSpan);
+                } else {
+                    errorElement.textContent = message;
+                }
+            };
+    
+            const clearError = field => {
+                const errorElement = field.nextElementSibling;
+                if (errorElement && errorElement.classList.contains("error-message")) {
+                    errorElement.remove();
+                }
+            };
+    
+            const validateField = field => {
+                const fieldName = field.id.replace("global_awards_form_", "");
+                const value = field.value.trim();
+                if (validators[fieldName](value)) {
+                    clearError(field);
+                    return true;
+                } else {
+                    setError(field, errorMessages[fieldName]);
+                    return false;
+                }
+            };
+    
+            const validateAllFields = () => {
+                return Object.values(fields).every(field => validateField(field));
+            };
+    
+            // Enforce number-only fields
+            const enforceNumberOnly = field => {
+                field.addEventListener("input", () => {
+                    const fieldName = field.id.replace("global_awards_form_", "");
+                    if (["whatsappNumber", "registrationYear", "contactNumber", "age", "projectsDone"].includes(fieldName)) {
+                        field.value = field.value.replace(/[^0-9]/g, ''); // Replace non-numeric characters
+                    }
+                    validateField(field);
+                    submitButton.disabled = !validateAllFields();
+                });
+            };
+    
+            // Add event listeners
+            Object.values(fields).forEach(field => {
+                enforceNumberOnly(field); // Enforce number-only on number fields
+                field.addEventListener("input", () => {
+                    validateField(field);
+                    submitButton.disabled = !validateAllFields();
+                });
+            });
+    
+            // Initial validation check
+            submitButton.disabled = !validateAllFields();
+    
+            // Prevent form submission if invalid
+            form.addEventListener("submit", event => {
+                if (!validateAllFields()) {
+                    event.preventDefault();
+                    Object.values(fields).forEach(field => validateField(field));
+                }
+            });
+        });
+    </script> -->
+
+{% endblock %}

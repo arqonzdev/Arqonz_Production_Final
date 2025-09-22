@@ -1,0 +1,159 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+{% block content %}
+<!-- Add this in the head section of your HTML -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+<div class="Pageheading"><h1>Create Your {{ customertype }} Profile</h1>
+<p>Fill the form Below to create your {{ customertype }} Portfolio.</p>
+</div>
+<div class="container" style="max-width: 500px;">
+    {% if customertype in ['Contractor', 'Designer', 'Architect', 'Builder', 'Manufacturer', 'Distributor', 'Engineer', 'Retailer', 'Dealer', 'Professional', 'Supplier'] and app.user.PortfolioActivate != 'true' %}
+        <div id="main-content" class="main-content mb-5">
+
+            <div class="page-header">
+                <h1>{{ pimcore_input('headline') }}</h1>
+            </div>
+
+            <p>
+                {{ pimcore_wysiwyg('intro') }}
+            </p>
+            {{ form_start(form) }}
+            <div>
+                        {{ form_row(form.CompanyName) }}
+            </div>
+            {% if customertype in ['Contractor'] %}
+            <div>
+                {{ form_row(form.ContractorType) }}
+            </div>
+            {% endif %}
+            <div>
+                        {{ form_row(form.Profession) }}
+            </div>
+            <div>
+                        {{ form_row(form.Description) }}
+            </div>
+            
+            
+            {# <div class="specialization">
+                        {{ form_row(form.specialization) }}
+                    </div> #}
+            <div class="gstnumber">
+                        {{ form_row(form.gstnumber) }}
+                    </div>
+            <div class="cities-served">
+                {{ form_row(form.CitiesServed, {'attr': {'class': 'js-select-cities', 'value': 'CitiesServed', 'id': 'cities-select'}}) }}
+            </div>             
+            <div class="imageupload">
+                        {{ form_row(form.ProfileImage) }}
+                    </div>
+            <div class="row">
+                    <div class="col-md-2">
+                        {{ form_row(form.CountryCode) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.PhoneNumber) }}
+                    </div>
+                </div>
+            <div>
+                        {{ form_row(form.StreetAddress) }}
+                    </div>
+            <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.City, {'attr': {'class': 'js-select-city', 'id': 'city-select'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.State, {'attr': {'class': 'js-select-state', 'id': 'state-select'}}) }}
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.Country, {'attr': {'class': 'js-select-country'}}) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.PinCode) }}
+                    </div>
+                </div>
+            
+
+            {{ form_end(form) }}
+        </div>
+    {% else %}
+        <div id="main-content" class="main-content mb-5">
+
+            <div class="page-header">
+                <h1>{{ pimcore_input('headline') }}</h1>
+            </div>
+            <div class="Pageheading">
+            <h2>Login to become {{ customertype }}</h2>
+            </div>
+            <center>
+                <div class="signupbutton">
+                <a href="http://localhost:8001/en/account/login" class="btn btn-lg btn-block btn-success btn" target="_blank">Login Now</a>
+                </div>
+                </center>
+            </div>
+    {% endif %}
+    </div>
+
+<script>
+//ADD required Field
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form[name]');
+    var requiredFields = form.querySelectorAll('[required], [type="file"]');
+
+    for (var i = 0; i < requiredFields.length; i++) {
+        var field = requiredFields[i];
+        var label = form.querySelector('label[for="' + field.id + '"]');
+
+        if (label) {
+            label.innerHTML += ' <span class="required" style="color:red;">*</span>';
+
+            // Check if the field has a hint
+            var hint = field.getAttribute('data-hint');
+            if (hint) {
+                label.innerHTML += ' <span class="hint" style="cursor: pointer;"><i class="fa-solid fa-circle-info"></i></span>';
+                label.innerHTML += ' <div class="hint-text">' + hint + '</div>';
+            }
+        }
+    }
+
+    // Add event listeners to show/hide the hint text
+    var hintIcons = document.querySelectorAll('.hint');
+    hintIcons.forEach(function (hintIcon) {
+        hintIcon.addEventListener('mouseover', function () {
+            var hintText = this.nextElementSibling;
+            hintText.style.display = 'block';
+        });
+
+        hintIcon.addEventListener('mouseout', function () {
+            var hintText = this.nextElementSibling;
+            hintText.style.display = 'none';
+        });
+    });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".js-select-cities").select2();
+  $(".js-select-skills").select2();
+});
+</script>
+
+
+
+
+{% endblock %}
+
+

@@ -1,0 +1,247 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Tile Calculator</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Tile Calculator</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>STEP 1: Let us know whether you are looking for floor tiles or wall tiles.</li>
+                    <li>STEP 2: Let us know the total area of the space. Please ensure to deduct
+                        the area of any doors or windows to arrive at the final area. Please enter
+                        the area in either Sq. Feet or Sq. Metre only.</li>
+                    <li>STEP 3: Select the size of the tile you want from the dropdown option and
+                        click Calculate.</li>
+                    <li>STEP 4: You will get the total number of tiles required or total number of
+                        boxes of tiles required.</li>
+                    <li>Note : Total tiles required are adjusted by 10% considering for wastage
+                        and design matching. It is assumed 4 tiles per box as a standard to
+                        calculate boxes.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Tile Calculator</h2>
+            <div class="FormField">
+                <label for="surface-type">Calculate Tiles for:</label>
+                <select id="surface-type">
+                    <option value="floor">Floor</option>
+                    <option value="wall">Wall</option>
+                </select>
+            </div>
+        
+            <div class="FormField">
+                <label for="surface-area">Enter Total Surface Area:</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="surface-area" placeholder="0" />
+
+                    <select id="area-unit">
+                        <option value="sqft">Sq.Ft</option>
+                        <option value="sqm">Sq.m</option>
+                    </select>
+                </div>
+            </div>
+        
+            <p id="area-output">Calculating for the total area of 0 Sq.Ft</p>
+        
+            <div class="FormField">
+                <label for="tile-size">Select Tile Size:</label>
+                <select id="tile-size">
+                    <option hidden value="">Select Size</option>
+                    <option value="7.75">1200x600 MM (7.75 sq.ft)</option>
+                    <option value="1.94">600x300 MM (1.94 sq.ft)</option>
+                    <option value="3.87">600x600 MM (3.87 sq.ft)</option>
+                    <option value="1.45">450x300 MM (1.45 sq.ft)</option>
+                    <option value="13.78">1600x800 MM (13.78 sq.ft)</option>
+                    <option value="0.97">300x300 MM (0.97 sq.ft)</option>
+                    <option value="23.23">1800x1200 MM (23.23 sq.ft)</option>
+                    <option value="20.67">2400x800 MM (20.67 sq.ft)</option>
+                    <option value="1.72">400x400 MM (1.72 sq.ft)</option>
+                    <option value="6.89">800x800 MM (6.89 sq.ft)</option>
+                    <option value="31.15">2400x1200 MM (31.15 sq.ft)</option>
+                    <option value="3.94">605x605 MM (3.94 sq.ft)</option>
+                    <option value="2.52">1214x193 MM (2.52 sq.ft)</option>
+                    <option value="15.5">1200x1200 MM (15.5 sq.ft)</option>
+                    <option value="2.58">1200x200 MM (2.58 sq.ft)</option>
+                    <option value="2.15">1000x200 MM (2.15 sq.ft)</option>
+                    <option value="2.52">1200x195 MM (2.52 sq.ft)</option>
+                    <option value="46.69">3100x1400 MM (46.69 sq.ft)</option>
+                    <option value="0.64">600x99 MM (0.64 sq.ft)</option>
+                    <option value="1.84">1214x141 MM (1.84 sq.ft)</option>
+                    <option value="1.12">800x130 MM (1.12 sq.ft)</option>
+                    <option value="2.53">1200x196 MM (2.53 sq.ft)</option>
+                    <option value="0.97">600x150 MM (0.97 sq.ft)</option>
+                    <option value="1.45">914x147 MM (1.45 sq.ft)</option>
+                    <option value="0.65">300x200 MM (0.65 sq.ft)</option>
+                    <option value="2.96">1219x225 MM (2.96 sq.ft)</option>
+                    <option value="10.76">1000x1000 MM (10.76 sq.ft)</option>
+                    <option value="0.94">600x145 MM (0.94 sq.ft)</option>
+                    <option value="1.68">395x395 MM (1.68 sq.ft)</option>
+                    <option value="0.32">300x100 MM (0.32 sq.ft)</option>
+                    <option value="7.75">600x1200 MM (7.75 sq.ft)</option>
+                </select>
+            </div>
+            
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+            
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+
+            <div class="Posts">
+                
+            </div>
+            
+        </div>
+
+        <script>
+            document.getElementById('calculate-btn').addEventListener('click', function() {
+                const area = parseFloat(document.getElementById('surface-area').value);
+                const unit = document.getElementById('area-unit').value;
+                const tileSize = parseFloat(document.getElementById('tile-size').value); // This is the area of one tile in square feet
+
+                // Constants
+                const tilesPerBox = 4; // Assuming 4 tiles per box
+                const wastagePercentage = 0.1; // 10% wastage
+
+                if (isNaN(area) || !tileSize) {
+                    alert('Please enter a valid surface area and select a tile size.');
+                    return;
+                }
+
+                // Convert area to square feet if it's in square meters
+                let areaInSqFt = area;
+                if (unit === 'sqm') {
+                    areaInSqFt = area * 10.7639; // 1 sqm = 10.7639 sqft
+                }
+
+                // Calculate the number of tiles required without wastage
+                let totalTilesRequired = areaInSqFt / tileSize;
+
+                // Add 10% wastage
+                totalTilesRequired = Math.ceil(totalTilesRequired * (1 + wastagePercentage));
+
+                // Calculate the number of boxes required
+                const totalBoxesRequired = Math.ceil(totalTilesRequired / tilesPerBox);
+
+                // Update the results
+                document.getElementById('result').innerHTML = 
+                    `<p>Tile pieces required: <span>${totalTilesRequired} pcs *</span></p>` +
+                    `<p>Total boxes required: <span>${totalBoxesRequired} boxes #</span></p>` +
+                    `<div><p>*Adjusting for 10% wastage.</p>
+                        <p>#Assuming 4 Pcs per box.</p></div>`;
+                
+                document.getElementById('area-output').innerText = 
+                    `Calculating for the total area of ${area} ${unit === 'sqft' ? 'Sq.Ft' : 'Sq.M'}`;
+
+                // Show the results section by setting display to block
+                document.getElementById('resultssection').style.display = 'block';
+            });
+
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                document.getElementById('surface-area').value = '';
+                document.getElementById('tile-size').value = '';
+                document.getElementById('result').innerText = '';
+                document.getElementById('area-output').innerText = 'Calculating for the total area of 0 Sq.Ft';
+
+                // Hide the results section by setting display to none
+                document.getElementById('resultssection').style.display = 'none';
+            });
+        </script>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const surfaceType = document.getElementById("surface-type");
+            const surfaceArea = document.getElementById("surface-area");
+            const tileSize = document.getElementById("tile-size");
+
+            function checkFields() {
+                if (
+                    surfaceType.value !== "" &&
+                    surfaceArea.value !== "" &&
+                    tileSize.value !== ""
+                ) {
+                    calculateBtn.style.color = "#000";
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            surfaceType.addEventListener("change", checkFields);
+            surfaceArea.addEventListener("input", checkFields);
+            tileSize.addEventListener("change", checkFields);
+        });
+    </script>
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

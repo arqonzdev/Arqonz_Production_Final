@@ -1,0 +1,169 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_architectprofile.css') %}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+    <div id="main-content" class="main-content mb-5">
+    
+        {# <div class="page-header">
+            <h1>{{ architectProfile.getCompanyName() }}</h1>
+        </div> #}
+
+        <div class="architect-profile">
+
+            <div class="profile-image">
+                
+                {% if architectProfile.getProfileImage() %}
+                    <img src="{{ architectProfile.getProfileImage().getThumbnail("galleryCarousel") }}" alt="Profile Image" class="profile-image">
+                {% else %}
+                    <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail("galleryCarousel") }}" alt="Default Profile Image" class="default-profile-image">
+                {% endif %}
+            
+                
+            </div>
+
+            <div class="profile-details">
+                <div class="over-image">
+                    <div class="left-row">
+                        <div class="company-name">
+                            <h1><a href="/{{listingtype}}/portfolio/{{ architectProfile.getKey() }}" style="text-decoration:none;color:#fff;">{{ architectProfile.getCompanyName() }}</a></h1>
+                            
+                            <div class="architectcity">
+                            <p>{{ architectProfile.getCity() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-row">
+                        <div class="Stars">
+                            {% set rating = architectProfile.getProRating() %}
+                            {% set fullStars = rating | round(0, 'floor') %}
+                            {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                            <p>
+                            {% for i in range(1, 5) %}
+                                {% if i <= fullStars %}
+                                    <span class="fa fa fa-star checked" style="color: orange;"></span>
+                                {% elseif hasHalfStar %}
+                                    {% set hasHalfStar = false %}
+                                    <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                                {% else %}
+                                    <span class="fa fa-regular fa-star"></span>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-content">
+                <div class="p-left-row">
+                    {% if listingtype not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <div class="profile-details">
+                            <h2>{{ ProProject.ProjectName() }}</h2>
+                        </div>
+                        
+                    {% endif %}
+                    {% if listingtype in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <div class="profile-details">
+                            <h2>{{ ProProject.ProductName() }}</h2>
+                        </div>
+                    {% endif %}
+                    
+
+                    {% if listingtype not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <div class="portfolio-attributes" style="justify-content:center;gap:15px;">
+                            <div class="attributebox">
+                                <p><i class="fas fa-money-check" aria-hidden="true" style="font-size:17px;"></i> Value</p>
+                                {% set projectValue = ProProject.getMinPrice() %}
+                                {% if  projectValue == 'Less than 1 Lakh' %}
+                                <b>Less than ₹1 Lakh</b>
+                                {% elseif projectValue == '1 Lakh to 10 Lakhs' %}
+                                <b>₹1 Lakh to ₹10 Lakhs</b>
+                                {% else %}
+                                <b>N/A</b>
+                                {% endif %}
+                            </div>
+                            <div class="attributebox">
+                                <p><i class="fas fa-briefcase" aria-hidden="true" style="font-size:17px;"></i> Location</p>
+                                <b>{{ ProProject.Location() }}</b>
+                            </div>
+                            
+                        </div>
+                    {% endif %}
+
+                    {% if listingtype not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <div class="Architect-description">
+                            <h3>Project Description</h3>
+                            <p>{{ ProProject.getProjectDescription() }}</p>
+                            <p><b>Project Specifications</b>: {{ ProProject.getConfiguration() }}</p>
+                            <p><b>Collaboration And Credits</b>: {{ ProProject.getCollaborations() }}</p>
+                        </div>
+                    {% endif %}
+                    {% if listingtype in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <div class="Architect-description">
+                            <h3>Product Description</h3>
+                            <img src="{{ ProProject.getProductImage().getThumbnail("ProjectGalleryThumbnail") }}" alt="Profile Image" class="profile-image">
+                            <p>{{ ProProject.getProductDescription() }}</p>
+                            <p><b>Product Specifications</b>: {{ ProProject.getSpecifications() }}</p>
+                        </div>
+                    {% endif %}
+                    
+                    {% if listingtype not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                        <!-- Display Image Gallery as Thumbnails -->
+                        <div class="project-gallery">
+                            <h3>Project Gallery</h3>
+                            <div class="gallerycontainer">
+                                {% if ProProject.ProjectGallery is not empty %}
+                                    {% for image in ProProject.ProjectGallery %}
+                                        <div class="thumbnail-container">
+                                            <a href="{{ image.getThumbnail('galleryLightbox')|raw }}" data-lightbox="project-gallery" class="thumbnail">
+                                                <img src="{{ image.getThumbnail('ProjectGalleryThumbnail') }}" alt="Gallery Thumbnail">
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Display Floor Maps as Thumbnails -->
+                        {% if ProProject.FloorMaps is not empty %}
+                        <div class="project-gallery">
+                            <h3>Floor Maps</h3>
+                            <div class="gallerycontainer">
+                                
+                                    {% for image in ProProject.FloorMaps %}
+                                        <div class="thumbnail-container">
+                                            <a href="{{ image.getThumbnail('galleryLightbox')|raw }}" data-lightbox="project-gallery" class="thumbnail">
+                                                <img src="{{ image.getThumbnail('ProjectGalleryThumbnail') }}" alt="Gallery Thumbnail">
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+
+                    
+                    
+
+                </div>
+                
+                <div class="p-right-row">
+                    <div class="enquiry-form">
+                        <div class="enquiry-title">
+                        <h2>Enquire with {{ architectProfile.getCompanyName() }}</h2>
+                        </div>
+                        {{ form(form) }}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        
+    </div>
+{% endblock %}

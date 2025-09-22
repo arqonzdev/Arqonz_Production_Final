@@ -1,0 +1,8 @@
+<div class="requirement-item">
+    <img src="{{ pimcore_asset_by_path('/Static/Spreadsheet.png').getThumbnail("requirementsThumb") }}" alt="Profile Image" class="profile-image">
+    {% if requirement %}
+        <h3><a href="/requirements/{{ requirement.getKey() }}">{{ requirement.getTitle() }}</a></h3>
+    {% endif %}
+    {# <p>{{ project.getProjectDescription() }}</p> #}
+    <p class="project-location" style="margin:0;">Description: {{ requirement.getDescription() }}</p>
+</div>

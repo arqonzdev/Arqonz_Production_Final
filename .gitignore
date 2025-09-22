@@ -1,0 +1,86 @@
+# remove the following ignores for your project
+/config/pimcore/constants.php
+
+# symfony default
+/.web-server-pid
+/build/
+/phpunit.xml
+/public/bundles/
+
+# Only include essential folders: src/, templates/, config/, vendor/
+# Exclude everything else
+
+# Exclude everything by default
+/*
+
+# Include only these essential directories and files
+!/src/
+!/templates/
+!/config/
+!/vendor/
+!/composer.json
+!/composer.lock
+!/bin/
+!/public/
+!/public/index.php
+!/public/.htaccess
+!/.gitignore
+!/README.md
+!/DEPLOYMENT.md
+
+# Exclude large directories within included folders
+/public/var/
+/public/static/
+/public/blog/
+/public/porter/
+/var/cache/
+/var/log/
+/var/sessions/
+/var/installer/
+/var/backup/
+/var/versions/
+/var/tmp/
+/dump/
+*.log
+
+# Local config files
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/local/*
+!config/local/.gitkeep
+/docker-compose.override.yml
+
+/var/*
+!/var/.gitkeep
+!/var/classes/
+/var/classes/DataObject
+
+!/var/config
+/var/config/system.yml
+/var/config/debug-mode.php
+/var/config/maintenance.php
+
+# project specific recommendations
+/var/config/tag-manager.php
+
+#/public/var/
+/public/sitemap*.xml
+
+# PHP-CS-Fixer
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+
+# composer
+# /vendor/ - commented out to include vendor in repository
+
+# PhpStorm / IDEA
+.idea
+# NetBeans
+nbproject
+
+# Core / bundle development
+/dev/
+
+# temp
+.temp

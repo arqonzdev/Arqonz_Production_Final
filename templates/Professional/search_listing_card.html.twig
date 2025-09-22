@@ -1,0 +1,226 @@
+{% if ProProfile.getCompanyName is defined %}
+{# This is a ProProfile object from Pimcore #}
+<div class="architect-item">
+    <div class="custom-icon-box">
+        <div class="ImageandTitle">
+            <div class="Featureimage"> 
+                {% if ProProfile.ProfileImage %} 
+                    {{ ProProfile.ProfileImage.thumbnail('Architects').html | raw }}
+                {% else %}
+                    {{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').thumbnail('Architects').html|raw }}
+                {% endif %}  
+            </div>
+            <div class="TitleDescriptionContact">
+                <div class="TitleAndDescription">
+                    <div class="ProfileTitle">
+                        {% if listingtype == 'Contractor' %}
+                        <h3>
+                        <a href="/contractor/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Designer' %}
+                        <h3>
+                        <a href="/designer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Architect' %}
+                        <h3>
+                        <a href="/architect/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Engineer' %}
+                        <h3>
+                        <a href="/engineer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Builder' %}
+                        <h3>
+                        <a href="/builder/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Manufacturer' %}
+                        <h3>
+                        <a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Dealer' %}
+                        <h3>
+                        <a href="/dealer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Distributor' %}
+                        <h3>
+                        <a href="/distributor/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                        {% if listingtype == 'Retailer' %}
+                        <h3>
+                        <a href="/retailer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                        </h3>
+                        {% endif %}
+                    </div>
+                    {% if listingtype == 'Contractor' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/contractor/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Designer' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/designer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Architect' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/architect/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Builder' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/builder/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Engineer' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/engineer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Manufacturer' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Distributor' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/distributor/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Dealer' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/dealer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    {% if listingtype == 'Retailer' %}
+                        <div class="ProfileDescription"><p>{{ ProProfile.getDescription()|slice(0, 220) }} {% if ProProfile.getDescription()|length > 220 %}... <a href="/retailer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+        <div class="YearStarsReadmore">
+            <div class="yearprojects">
+                <div class="EstYear"><b><i class="fa fa-calendar" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getYearEstablished() }}</b><p>Est.Year</p>
+                </div>
+                {% if listingtype not in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                    <div class="TotalProjects"><b><i class="fa fa-rocket" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getProjectsNumber() }}</b><p>{{ ProProfile.getProjectsNumber() <= 1 ? 'Project' : 'Projects' }}</p>
+                    </div>
+                {% endif %}
+                {% if listingtype in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+                    <div class="TotalProjects"><b><i class="fa fa-rocket" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getProductsNumber() }}</b><p>{{ ProProfile.getProductsNumber() <= 1 ? 'Product' : 'Products' }}</p>
+                    </div>
+                {% endif %}
+            </div>
+           
+            <div class="StarsRating">
+                {% set rating = ProProfile.getProRating() %}
+                {% set fullStars = rating | round(0, 'floor') %}
+                {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                
+                {% for i in range(1, 5) %}
+                    {% if i <= fullStars %}
+                        <span class="fa fa fa-star checked" style="color: orange;"></span>
+                    {% elseif hasHalfStar %}
+                        {% set hasHalfStar = false %}
+                        <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                    {% else %}
+                        <span class="fa fa-regular fa-star"></span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if listingtype == 'Contractor' %}
+                <div class="viewarchitect"><p><a href="/contractor/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Designer' %}
+                <div class="viewarchitect"><p><a href="/designer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Architect' %}
+                <div class="viewarchitect"><p><a href="/architect/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Builder' %}
+                <div class="viewarchitect"><p><a href="/builder/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Engineer' %}
+                <div class="viewarchitect"><p><a href="/engineer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Manufacturer' %}
+                <div class="viewarchitect"><p><a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Distributor' %}
+                <div class="viewarchitect"><p><a href="/distributor/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Dealer' %}
+                <div class="viewarchitect"><p><a href="/dealer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+            {% if listingtype == 'Retailer' %}
+                <div class="viewarchitect"><p><a href="/retailer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+{# This is data from the Architect database (array format) #}
+<div class="architect-item">
+    <div class="custom-icon-box">
+        <div class="ImageandTitle">
+            <div class="Featureimage"> 
+                {% if listingtype == 'Architect' %}
+                    {{ pimcore_asset_by_path('/Static/architects-default.jpeg').thumbnail('Architects').html|raw }}
+                {% else %}
+                    {{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').thumbnail('Architects').html|raw }}
+                {% endif %}
+            </div>
+            <div class="TitleDescriptionContact">
+                <div class="TitleAndDescription">
+                    <div class="ProfileTitle">
+                        <h3>
+                        <a href="javascript:void(0)">{{ ProProfile.Name }}</a>
+                        </h3>
+                    </div>
+                    {% if listingtype == 'Architect' %}
+                        <div class="ProfileDescription">
+                            <p>
+                                {% if ProProfile.Registered_Architect_No %}
+                                    Architect Registration No: {{ ProProfile.Registered_Architect_No }}<br>
+                                {% endif %}
+                                {% if ProProfile.Address %}
+                                    Address: {{ ProProfile.Address }}<br>
+                                {% endif %}
+                                {% if ProProfile.Pincode %}
+                                    Pincode: {{ ProProfile.Pincode }}<br>
+                                {% endif %}
+                                
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="YearStarsReadmore">
+            <div class="yearprojects">
+                <div class="EstYear"><b><i class="fa fa-calendar" style="font-size:15px;color:#48a89e"></i>-</b><p>Est.Year</p>
+                </div>
+                <div class="TotalProjects"><b><i class="fa fa-rocket" style="font-size:15px;color:#48a89e"></i>-</b><p>Projects</p>
+                </div>
+            </div>
+           
+            <div class="StarsRating">
+                {% set rating = 0 %}
+                {% set fullStars = rating | round(0, 'floor') %}
+                {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                
+                {% for i in range(1, 5) %}
+                    {% if i <= fullStars %}
+                        <span class="fa fa fa-star checked" style="color: orange;"></span>
+                    {% elseif hasHalfStar %}
+                        {% set hasHalfStar = false %}
+                        <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                    {% else %}
+                        <span class="fa fa-regular fa-star"></span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="viewarchitect"><p><a href="javascript:void(0)" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ProfileTitle h3 {
+        line-height: 40px !important;
+    }
+</style>
+{% endif %}

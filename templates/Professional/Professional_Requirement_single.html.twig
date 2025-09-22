@@ -1,0 +1,386 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_architectprofile.css') %}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form1 'bootstrap_3_layout.html.twig' %}
+{% form_theme form2 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+<link href="/static/css/boq_list.css" rel="stylesheet" />
+
+    <div id="main-content BOQ-page" class="main-content mb-5">
+    
+        {# <div class="page-header">
+            <h1>{{ architectProfile.getCompanyName() }}</h1>
+        </div> #}
+
+        <div class="architect-profile">
+
+            <div class="profile-image">
+                {% if architectProfile.getProfileImage() %}
+                    <img src="{{ architectProfile.getProfileImage().getThumbnail("galleryCarousel") }}" alt="Profile Image" class="profile-image">
+                {% else %}
+                    <img src="{{ asset('path/to/default/profile/image.jpg') }}" alt="Default Profile Image" class="default-profile-image">
+                {% endif %}
+            </div>
+
+            <div class="profile-details">
+                <div class="over-image">
+                    <div class="left-row">
+                        <div class="company-name">
+                            <h1><a href="/{{ architectProfile.getPortfolioType()|lower }}/portfolio/{{ architectProfile.getKey() }}" style="text-decoration:none;color:#fff;">{{ architectProfile.getCompanyName() }}</a></h1>
+                            
+                            <div class="architectcity">
+                            <p>{{ architectProfile.getCity() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-row">
+                        <div class="Stars">
+                            {% set rating = architectProfile.getProRating() %}
+                            {% set fullStars = rating | round(0, 'floor') %}
+                            {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                            <p>
+                            {% for i in range(1, 5) %}
+                                {% if i <= fullStars %}
+                                    <span class="fa fa fa-star checked" style="color: orange;"></span>
+                                {% elseif hasHalfStar %}
+                                    {% set hasHalfStar = false %}
+                                    <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                                {% else %}
+                                    <span class="fa fa-regular fa-star"></span>
+                                {% endif %}
+                            {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-content">
+                <div class="p-left-row">
+                    <div class="profile-details">
+                        <h2>{{ ProProject.Title() }}</h2>
+                    </div>
+
+
+                    <div class="portfolio-attributes" style="justify-content:center;gap:15px;">
+                        <div class="attributebox">
+                            <p><i class="fas fa-money-check" aria-hidden="true" style="font-size:17px;"></i> Value</p>
+                            {# {% set projectValue = ProProject.getMinPrice() %}
+                            {% if  projectValue == 'Less than 1 Lakh' %}
+                            <b>Less than ₹1 Lakh</b>
+                            {% elseif projectValue == '1 Lakh to 10 Lakhs' %}
+                            <b>₹1 Lakh to ₹10 Lakhs</b>
+                            {% else %}
+                            <b>N/A</b>
+                            {% endif %} #}
+                        </div>
+                        <div class="attributebox">
+                            <p><i class="fas fa-briefcase" aria-hidden="true" style="font-size:17px;"></i> Location</p>
+                            
+                        </div>
+                        
+                    </div>
+
+                    <div class="Architect-description">
+                        <h3>Requirement Description</h3>
+                        <p>{{ ProProject.getDescription() }}</p>
+                        <a href="{{ path('download_excel', {'filename': ProProject.getExcelFile().getFilename()}) }}" class="btn btn-primary" style="background:#23262f">Download Excel File</a>
+                    </div>
+
+                    
+
+                    <div class="Architect-description">
+                        <h3>Reffer Manufacturer</h3>
+                        <p>Reffer Manufacturers through Email Below.</p>
+                        {{ form(form1) }}
+
+                    </div>
+
+                    <div class="Architect-description">
+                        <h3>Send Proposal</h3>
+                        <p>Update your proposed price to the Requirements BOQ and upload below.</p>
+                        {{ form(form2) }}
+
+                    </div>
+
+
+                    
+                    <!-- Display Image Gallery as Thumbnails -->
+                    {# <div class="project-gallery">
+                        {% if ProProject.getExcelData() %}
+                            <div class="excel-data-table">
+                                <a href="{{ path('download_excel', {'filename': ProProject.getExcelFile().getFilename()}) }}" class="btn btn-primary" style="background:#23262f">Download Excel File</a>
+                                <h2>Excel Sheet Preview</h2> 
+                                <div class="previewtable">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                {% for header in ProProject.getExcelData()[0] %}
+                                                    <th>{{ header }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in ProProject.getExcelData()|slice(1) %}
+                                                <tr>
+                                                    {% for cell in row %}
+                                                        <td>{{ cell }}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div> #}
+                    <!-- Display Floor Maps as Thumbnails -->
+
+                <div class="BOQ-products">
+                    <h2>Products Listing</h2>
+                    <table class="requirements-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Reserve</th>
+                                <th>Min Dec</th>
+                                <th>Unit</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in ProRequirementProducts %}
+                                <tr class="requirement-item">
+                                    <td>{{ product.getKey()|default('N/A') }}</td>
+                                    <td>{{ product.getProductName()|default('N/A') }}</td>
+                                    <td>{{ product.getProductCategory()|default('N/A') }}</td>
+                                    <td>{{ product.getQuantity()|default('N/A') }}</td>
+                                    <td>{{ product.getMinimumReserve()|default('N/A') }}</td>
+                                    <td>{{ product.getMinDec()|default('N/A') }}</td>
+                                    <td>{{ product.getUnit()|default('N/A') }}</td>
+                                    <td>
+                                        <button class="details-button" 
+                                            data-productkey="{{ product|default('N/A') }}" 
+                                            data-productname="{{ product.getProductName()|default('N/A') }}"  
+                                            data-minimumreserve="{{ product.getMinimumReserve()|default('N/A') }}" 
+                                            data-bidmindec="{{ product.getMinDec()|default('N/A') }}">BID</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Popup -->
+                <div id="bid-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modalheader">
+                            <span class="close">&times;</span>
+                            <h2>Enter Bid Amount</h2>
+                        </div>
+                        <div class="modalcont">
+                            <div class="bidproductdetails">
+                                <p>Product Name: <span class="bidproductname"></span></p>
+                                <p>Reserve: <span class="bidreserveamt"></span></p>
+                                <p>Min Dec: <span class="bidMindec"></span></p>
+                            </div>
+                            <div class="proposalInputs">
+                                <input type="number" id="bid-amount" placeholder="Bid Amount"></input>
+                                <input type="number" id="delivery-time" placeholder="Delivery Time (Days)"></input>
+                            </div>
+                            <button class="details-button" id="submit-bid">BID</button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    /* Modal styles */
+                    .BOQ-products button {
+                        border: 0px !important;
+                    }
+                    .modal {
+                        display: none; /* Hidden by default */
+                        position: fixed;
+                        z-index: 1;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                        background-color: rgb(0,0,0);
+                        background-color: rgba(0,0,0,0.4);
+                        transition: all 0.3s;
+                    }
+                    #submit-bid {
+                        display: inline-block;
+                        padding: 8px 12px;
+                        background-color: #007bff;
+                        color: #ffffff;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        font-size: 14px;
+                        font-weight: bold;
+                        transition: background-color 0.3s ease;
+                        border: 0px !important;
+                        margin-top: 10px;
+                    }
+                    #bid-amount, #delivery-time {
+                        min-height: 35px;
+                        min-width: 50%;
+                    }
+                    .modal-content {
+                        background-color: #fefefe;
+                        margin: 15% auto;
+                        border: 1px solid #888;
+                        width: 80%;
+                        max-width: 400px;
+                        text-align: center;
+                        position: relative;
+                    }
+                    .modalheader h2 {
+                        color: #fff !important;
+                    }
+                    .modalheader {
+                        background-color: #007bff;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: .3rem;
+                        width: 100%;
+                        height: 100%;
+                    }
+                    .modalcont {
+                        padding: 20px 8px;
+                    }
+                    .modalcont p {
+                        font-weight: 600;
+                    }
+                    .close {
+                        color: #000;
+                        float: right;
+                        font-size: 28px;
+                        font-weight: bold;
+                    }
+                    .close:hover, .close:focus {
+                        color: black;
+                        text-decoration: none;
+                        cursor: pointer;
+                    }
+                    .proposalInputs{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        min-width: 100%;
+                        gap: 10px;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        // Get modal elements
+                        var modal = document.getElementById("bid-modal");
+                        var span = document.getElementsByClassName("close")[0];
+                        var submitButton = document.getElementById("submit-bid");
+                        var bidAmountInput = document.getElementById("bid-amount");
+                        var bidDeliveryTime = document.getElementById("delivery-time");
+                        var bidproductdetails = document.querySelector(".bidproductname");
+                        var bidreserveamt = document.querySelector(".bidreserveamt");
+                        var bidMindec = document.querySelector(".bidMindec");
+
+                        // Show modal when BID button is clicked
+                        document.querySelectorAll(".details-button").forEach(button => {
+                            button.addEventListener("click", function() {
+                                var currentProductKey = this.dataset.productkey;
+                                var currentProductname = this.dataset.productname;
+                                var currentMinimumReserve = this.dataset.minimumreserve;
+                                var currentMinDec = this.dataset.bidmindec;
+
+                                // Debugging statements
+                                console.log("Product Key: ", currentProductKey);
+                                console.log("Product Name: ", currentProductname);
+                                console.log("Minimum Reserve: ", currentMinimumReserve);
+                                console.log("Min Dec: ", currentMinDec);
+
+                                bidproductdetails.textContent = currentProductname;
+                                bidreserveamt.textContent = currentMinimumReserve;
+                                bidMindec.textContent = currentMinDec;
+
+                                // Adding data attributes to the submit button inside the modal
+                                submitButton.dataset.productkey = currentProductKey;
+
+                                modal.style.display = "block";
+                            });
+                        });
+
+                        // Close the modal when the close button is clicked
+                        span.onclick = function() {
+                            modal.style.display = "none";
+                        }
+
+                        // Close the modal when clicking outside of the modal content
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+
+                        // Submit the bid when the submit button is clicked
+                        submitButton.addEventListener("click", function() {
+                            var bidAmount = bidAmountInput.value;
+                            var DeliveryTime = bidDeliveryTime.value
+                            var currentProductKey = this.dataset.productkey;
+
+                            if (bidAmount) {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "/proposal-bid", true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                                xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                        alert("Bid successfully submitted!");
+                                        modal.style.display = "none";
+                                        // You can add success animation here
+                                    } else {
+                                        alert("Failed to submit bid. Please try again.");
+                                    }
+                                };
+
+                                // Debugging statements
+                                console.log("Sending Key: ", currentProductKey);
+
+                                xhr.send("BidAmount=" + encodeURIComponent(bidAmount) + "&ProRequirementProduct=" + encodeURIComponent(currentProductKey) + "&DeliveryTime=" + encodeURIComponent(DeliveryTime));
+                            } else {
+                                alert("Please enter a bid amount.");
+                            }
+                        });
+                    });
+                </script>
+                    
+                    
+
+                </div>
+                
+                {# <div class="p-right-row">
+                    <div class="enquiry-form">
+                        <div class="enquiry-title">
+                        <h2>Enquire with {{ architectProfile.getCompanyName() }}</h2>
+                        </div>
+                        {{ form(form) }}
+                    </div>
+                </div> #}
+            </div>
+
+
+        </div>
+
+
+        
+    </div>
+{% endblock %}

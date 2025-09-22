@@ -1,0 +1,232 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+    
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Deal Desk</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            {% if customertype == 'Admin' %}
+                <!-- Admin View -->
+                <div class="projectssection">
+                    <div class="dashboardheading-section">
+                        <div class="sectionheading">
+                            <h2>Deal Desk</h2>
+                            <p class="sectionsubheading">Manage professionals for deal assignments.</p> 
+                        </div>
+                        <div class="DashboardStatsSection">
+                            <div class="totalnumber">
+                                {% if dealDeskProfessionals |length < 10 %}
+                                    <p>0{{ dealDeskProfessionals |length }}</p>
+                                {% else %}
+                                    <p>{{ dealDeskProfessionals |length }}</p>
+                                {% endif %}    
+                            </div>
+                            <div class="totalnumberLable">
+                                {% if dealDeskProfessionals |length < 2 %}
+                                    <p>Professional</br>Found</p>
+                                {% else %}
+                                    <p>Professionals</br>Found</p>
+                                {% endif %}    
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="Add-professional-section" style="margin-bottom: 30px;">
+                        <form method="post" class="form-inline">
+                            <div class="form-group mb-2">
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter professional's email" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2 ml-2">Add to Deal Desk</button>
+                        </form>
+                    </div>
+
+                    <div class="RequirementsMain">
+                        <div class="DashboardRequirements">
+                            <table class="requirements-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for professional in dealDeskProfessionals %}
+                                        <tr class="requirement-item">
+                                            <td>{{ professional.getfirstname() }}</td>
+                                            <td>{{ professional.getemail() }}</td>
+                                            <td>{{ professional.getphone() }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary view-bookings-btn">View Bookings</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% elseif customertype == 'Professional' %}
+                <!-- Professional View -->
+                <div class="projectssection">
+                    <div class="dashboardheading-section">
+                        <div class="sectionheading">
+                            <h2>Deal Desk</h2>
+                            {% if customer.getDealDesk() %}
+                                <p class="sectionsubheading">You're participating in the Deal Desk event on <strong>{{ dealDeskDate }}</strong></p>
+                            {% else %}
+                                <p class="sectionsubheading">You are not yet added to Deal Desk</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if customer.getDealDesk() %}
+                        <!-- Time Slots Section -->
+                        <div class="time-slots-section" style="margin-bottom: 30px;">
+                            <h3>Your Available Time Slots</h3>
+                            <p>Click on a slot to toggle availability</p>
+                            
+                            <div class="slots-container">
+                                <div class="morning-slots">
+                                    <h4>Morning Session</h4>
+                                    <div class="slot-buttons">
+                                        {% for slot, details in slotsData.morning %}
+                                            <form method="post" style="display: inline-block; margin: 5px;">
+                                                <input type="hidden" name="slot" value="{{ slot }}">
+                                                <button type="submit" class="btn btn-sm {% if details.availability %}btn-success{% else %}btn-secondary{% endif %}">
+                                                    {{ slot }}
+                                                </button>
+                                            </form>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="break-time" style="text-align: center; margin: 15px 0;">
+                                    <strong>Lunch Break (1:00 PM - 2:00 PM)</strong>
+                                </div>
+                                
+                                <div class="afternoon-slots">
+                                    <h4>Afternoon Session</h4>
+                                    <div class="slot-buttons">
+                                        {% for slot, details in slotsData.afternoon %}
+                                            <form method="post" style="display: inline-block; margin: 5px;">
+                                                <input type="hidden" name="slot" value="{{ slot }}">
+                                                <button type="submit" class="btn btn-sm {% if details.availability %}btn-success{% else %}btn-secondary{% endif %}">
+                                                    {{ slot }}
+                                                </button>
+                                            </form>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bookings Section -->
+                        <div class="bookings-section">
+                            <h3>Your Booked Slots</h3>
+                            
+                            {% set hasBookings = false %}
+                            {% for session in ['morning', 'afternoon'] %}
+                                {% for slot, details in slotsData[session] %}
+                                    {% if details.booked %}
+                                        {% set hasBookings = true %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            
+                            {% if hasBookings %}
+                                <table class="requirements-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Slot Time</th>
+                                            <th>Booked By</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for session in ['morning', 'afternoon'] %}
+                                            {% for slot, details in slotsData[session] %}
+                                                {% if details.booked %}
+                                                    <tr>
+                                                        <td>{{ slot }}</td>
+                                                        <td>{{ details.booked_by }}</td>
+                                                        <td>
+                                                            <form method="post">
+                                                                <input type="hidden" name="cancel_slot" value="1">
+                                                                <input type="hidden" name="slot" value="{{ slot }}">
+                                                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p>No slots have been booked yet.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        .Add-professional-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e7dfdf;
+        }
+        
+        .form-inline .form-control {
+            width: 300px;
+        }
+        
+        .view-bookings-btn {
+            background-color: #1BA89D;
+            border-color: #1BA89D;
+        }
+        
+        .view-bookings-btn:hover {
+            background-color: #15887d;
+            border-color: #15887d;
+        }
+        
+        .slots-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e7dfdf;
+        }
+        
+        .slot-buttons {
+            margin-top: 10px;
+        }
+        
+        .bookings-section {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e7dfdf;
+        }
+    </style>
+{% endblock %}

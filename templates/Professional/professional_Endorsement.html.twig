@@ -1,0 +1,61 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+
+
+{% block content %}
+
+
+<div class="enquirybox">
+    <div class="enquirycontent">
+        <center><h2 class="mainheading">Feedback Form</h2></center>
+        <p>Rupesh Has Sent you a Link to give a feedback on his services. Request you to kindly fill the form below.</p>
+        <div class="detailss" style="margin-top:20px;">
+            {{ form_start(form) }}
+            <div class="detailss">
+                <div class="rows">
+                    {{ form_row(form.Profession) }}
+                </div>
+                <div class="rows">
+                    {{ form_row(form.Name) }}
+                </div>
+                <div class="rows">
+                    {{ form_row(form.Email) }}
+                </div>
+                <div class="rows">
+                    {{ form_row(form.Phone) }}
+                </div>
+                <div class="rows">
+                    <p>How Would you rate the Service Provided by {{ name }} ?</p>
+                    {{ form_row(form.q1) }}
+                </div>
+                <div class="rows">
+                    <p>Would you Recommend {{ name }} to Others?</p>
+                    {{ form_row(form.q2) }}
+                </div>
+                <div class="rows">
+                    <p>How much Would you rate overall Experience with {{ name }} (Out of 5)?</p>
+                    {{ form_row(form.q3) }}
+                </div>
+            </div>
+            <center>{{ form_row(form._submit) }}</center>
+
+            {{ form_end(form) }}
+        </div>
+        {# {{ form(form) }} #}
+    </div>
+</div>
+{% endblock %}
+
+
+
+{# To Display #}
+
+{# <div class="enquirybox">
+    <div class="enquirycontent">
+        <h2 class="mainheading">Enquiry Details</h2>
+        <p><div>Name: {{ProEnquiry.getfullname()}}</div></p>
+        <p><div>Email: {{ProEnquiry.getEmail()}}</div></p>
+        <p><div>Phone: {{ProEnquiry.getPhone()}}</div></p>
+        <p><div>Message: {{ProEnquiry.getMessage()}}</div></p>
+    </div>
+</div> #}

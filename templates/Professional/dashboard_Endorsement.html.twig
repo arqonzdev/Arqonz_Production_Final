@@ -1,0 +1,161 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+
+{% block content %}
+<link
+        rel="stylesheet"
+        href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css"
+        >
+
+<div class="dashboard-projects">
+    <span>
+        <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Endorsement</span>
+    </span>
+</div>
+<div class="line-8"></div>
+
+    <div class="dashboard-container" style="flex-direction:column;">
+        <div class="left-column" style="justify-content:center; width:100%;">
+            <!-- ArchitectProjects -->
+            <div class="projectssection">
+                <div class="dashboardheading-section">
+                    <div class="sectionheading" style="width: 100%;">
+                        <h2 style="text-align:center">Reviews And Recommendation</h2>
+                        <p class="sectionsubheading" style="text-align:center">Ask for review and recommendation through E-mail.</p> 
+                    </div>
+                </div>
+
+                <div class="Recommendationsection">
+                    <div class="recommendationtitle">
+                        <h3>Ask For Review?</h3>
+                    </div>
+                    <div class="RecommendationForm">
+                        {{ form_start(form) }}
+                        <div class="details" style="display:flex; flex-direction:column; margin-bottom: 38px; gap:16px; justify-content:center;">
+                            <div class="rows">
+                                {{ form_row(form.Profession) }}
+                            </div>
+                            <div class="rows">
+                                {{ form_row(form.Name) }}
+                            </div>
+                            <div class="rows">
+                                {{ form_row(form.Email) }}
+                            </div>
+                            <div class="rows">
+                                {{ form_row(form.Phone) }}
+                            </div>
+                            <small id="phone-error" style="color: red; display: none; font-size: 0.85em;"></small>
+                            <div class="rows">
+                                <center>{{ form_row(form._submit) }}</center>
+                            </div>
+                            
+                        </div>
+                        {{ form_end(form) }}
+
+        
+
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const phoneInput = document.getElementById('endorsement_request_form_Phone');
+                            const errorMsg = document.getElementById('phone-error');
+
+                            // Allow only digits
+                            phoneInput.addEventListener('input', function (e) {
+                                // Remove non-digit characters
+                                this.value = this.value.replace(/\D/g, '');
+
+                                // Validate on input
+                                validatePhone(this.value);
+                            });
+
+                            function validatePhone(value) {
+                                if (!/^\d{0,10}$/.test(value)) {
+                                    errorMsg.textContent = "Only digits allowed.";
+                                    errorMsg.style.display = "block";
+                                } else if (value.length !== 10) {
+                                    errorMsg.textContent = "Phone number must be exactly 10 digits.";
+                                    errorMsg.style.display = "block";
+                                } else {
+                                    errorMsg.style.display = "none";
+                                }
+                            }
+                        });
+                        </script>
+                        
+                        {% if numberOfEndorsements > 0 %}
+                        <div class="RecievedEndorsements">
+                            {% set counter = 1 %}
+                            {% for Endorsement in Endorsements %}
+                                <div class="RecievedEndorsement">
+                                    <h3>{{ Endorsement.getName() }}</h3>
+                                    {% set rating = Endorsement.getQ3() %}
+                                    {% set fullStars = rating | round(0, 'floor') %}
+                                    {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                                    <p>
+                                    {% for i in range(1, 5) %}
+                                        {% if i <= fullStars %}
+                                            <span class="fa fa fa-star checked" style="color: orange;"></span>
+                                        {% elseif hasHalfStar %}
+                                            {% set hasHalfStar = false %}
+                                            <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                                        {% else %}
+                                            <span class="fa fa-regular fa-star"></span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% set counter = counter + 1 %}
+                            {% endfor %}
+                            
+                        </div>
+                        {% endif %}
+
+
+                        
+                        
+                    </div>
+                </div>
+
+
+                
+            </div>
+        </div>
+
+        {# <div class="right-column" style="justify-content:center; width:100%;">
+            <div class="comTable profile-details">
+                <div class="sectionheading">
+                    <h2>Review & Recommendation Received</h2>
+                </div>
+                <div class="details">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Profession</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set counter = 1 %}
+                            {% for Endorsement in Endorsements %}
+                            
+                                <tr>
+                                    <td>{{ counter }}</td>
+                                    <td>
+                                        <strong>{{ Endorsement.getName() }}</strong>
+                                    </td>
+                                    <td>
+                                        {{ Endorsement.getProfession() }}
+                                    </td>
+                                </tr>
+                                {% set counter = counter + 1 %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div> #}
+    
+    
+{% endblock %}

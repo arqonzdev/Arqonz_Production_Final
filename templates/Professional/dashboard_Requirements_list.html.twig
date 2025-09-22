@@ -1,0 +1,338 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">Requirements</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; height: 100%; justify-content:center;">
+            <!-- Active Requirements -->
+            <div class="projectssection">
+
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>Requirements</h2>
+                        <p class="sectionsubheading">Add and manage your BOM</p> 
+                    </div>
+                    <div class="DashboardStatsSection">
+                        <div class="totalnumber">
+                            {% if activeRequirements |length < 10 %}
+                                <p>0{{ activeRequirements |length }}</p>
+                            {% else %}
+                                <p>{{ activeRequirements |length }}</p>
+                            {% endif %}    
+                        </div>
+                        <div class="totalnumberLable">
+                            {% if activeRequirements |length < 2 %}
+                                <p>Requirement</br>Found</p>
+                            {% else %}
+                                <p>Requirements</br>Found</p>
+                            {% endif %}    
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="RequirementsMain">
+                    <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/account/Add-Requirements" class="btn btn-lg btn-block btn-success btn addrequirebtn">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Requirement
+                        </a>
+                    </div>
+
+                    <div class="DashboardRequirements">
+                        <table class="requirements-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Views Count</th>
+                                    <th>Published Date</th>
+                                    <th>City</th>
+                                    <th>Instant Quote</th>
+                                    <th>Customize</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for requirement in activeRequirements %}
+                                    <tr class="requirement-item">
+                                        <td>{{ requirement.getKey() }}</td>
+                                        <td>
+                                            {% if requirement %}
+                                                <!-- <a href="/requirements/{{ requirement.getKey() }}" class="requirementTitle">{{ requirement.getTitle() }}</a> -->
+                                                <a href="javascript:void(0);" class="requirementTitle">{{ requirement.getTitle() }}</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ requirement.getPageViewsCount() }}</td>
+                                        <td>{{ requirement.getCreationDate()|date('d-m-Y') }}</td>
+                                        <td>{{ requirement.getCity() ?: 'N/A' }}</td>
+                                        <td>
+                                            <span class="download-quote-btn" data-id="{{ requirement.getKey() }}">
+                                                <img src="/static/icons/quickbid-downloadbtn.svg" alt="Download Quote">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="/BOQ/customize/{{ requirement.getKey() }}" class="custimize-quote-btn"><img src="/static/icons/boqEditbutton.svg" alt="Customize Quote"></a>
+                                        </td>
+                                        <td>
+                                            <button class="delete-requirement-btn" data-id="{{ requirement.getKey() }}" title="Delete Requirement">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Delete requirement functionality
+                    const deleteButtons = document.querySelectorAll('.delete-requirement-btn');
+                    
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const requirementId = this.getAttribute('data-id');
+                            
+                            // Show confirmation dialog
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: "This will permanently delete the requirement and all its products!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Show loading indicator
+                                    const loadingOverlay = document.querySelector('.loading-overlay');
+                                    loadingOverlay.style.display = 'flex';
+                                    
+                                    // Make AJAX request to delete
+                                    fetch('/account/delete-requirement/' + requirementId, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        loadingOverlay.style.display = 'none';
+                                        
+                                        if (data.success) {
+                                            // Remove the row from the table
+                                            const row = document.getElementById('requirement-' + requirementId);
+                                            if (row) {
+                                                row.remove();
+                                            }
+                                            
+                                            Swal.fire(
+                                                'Deleted!',
+                                                'Your requirement has been deleted.',
+                                                'success'
+                                            );
+                                            
+                                            // Update the count display
+                                            updateRequirementCount();
+                                        } else {
+                                            Swal.fire(
+                                                'Error!',
+                                                data.message || 'Failed to delete requirement',
+                                                'error'
+                                            );
+                                        }
+                                    })
+                                    .catch(error => {
+                                        loadingOverlay.style.display = 'none';
+                                        Swal.fire(
+                                            'Error!',
+                                            'An error occurred while deleting the requirement.',
+                                            'error'
+                                        );
+                                        console.error('Error:', error);
+                                    });
+                                }
+                            });
+                        });
+                    });
+                    
+                    // Function to update the requirement count display
+                    function updateRequirementCount() {
+                        const requirementRows = document.querySelectorAll('.requirement-item');
+                        const countElement = document.querySelector('.totalnumber p');
+                        const labelElement = document.querySelector('.totalnumberLable p');
+                        
+                        const count = requirementRows.length;
+                        
+                        // Update count
+                        if (count < 10) {
+                            countElement.textContent = '0' + count;
+                        } else {
+                            countElement.textContent = count;
+                        }
+                        
+                        // Update label
+                        if (count === 1) {
+                            labelElement.innerHTML = 'Requirement<br>Found';
+                        } else {
+                            labelElement.innerHTML = 'Requirements<br>Found';
+                        }
+                    }
+                });
+            </script>
+
+
+            <style>
+                .delete-requirement-btn {
+                    background: none;
+                    border: none;
+                    color: #dc3545;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    transition: color 0.2s;
+                    padding: 5px;
+                    border-radius: 4px;
+                }
+
+                .delete-requirement-btn:hover {
+                    color: #a71d2a;
+                    background-color: rgba(220, 53, 69, 0.1);
+                }
+
+                /* Make sure SweetAlert2 is loaded */
+                @import url('https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css');
+            </style>
+
+             <!-- <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const downloadButtons = document.querySelectorAll('.download-quote-btn');
+                    downloadButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const id = this.getAttribute('data-id');
+
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', '{{ path('generate_quote') }}', true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.responseType = 'blob';
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    const blob = new Blob([xhr.response], { type: 'application/pdf' });
+                                    const link = document.createElement('a');
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = 'InstantQuote.pdf';
+                                    link.click();
+                                }
+                            };
+                            xhr.send('id=' + encodeURIComponent(id));
+                        });
+                    });
+                });
+            </script> -->
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const downloadButtons = document.querySelectorAll('.download-quote-btn');
+                    const loadingOverlay = document.querySelector('.loading-overlay'); // Select the overlay container
+            
+                    downloadButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const id = this.getAttribute('data-id');
+            
+                            // Show loading overlay
+                            loadingOverlay.style.display = 'flex';
+            
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', '{{ path('generate_quote') }}', true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.responseType = 'blob';
+            
+                            xhr.onload = function () {
+                                // Hide loading overlay when the request is completed
+                                loadingOverlay.style.display = 'none';
+            
+                                if (xhr.status === 200) {
+                                    const blob = new Blob([xhr.response], { type: 'application/pdf' });
+                                    const link = document.createElement('a');
+                                    link.href = window.URL.createObjectURL(blob);
+                                    link.download = 'InstantQuote.pdf';
+                                    link.click();
+                                } else {
+                                    console.error('Error downloading the PDF:', xhr.statusText);
+                                }
+                            };
+            
+                            xhr.onerror = function () {
+                                // Hide loading overlay in case of error
+                                loadingOverlay.style.display = 'none';
+                                console.error('An error occurred while making the request.');
+                            };
+            
+                            xhr.send('id=' + encodeURIComponent(id));
+                        });
+                    });
+                });
+            </script>
+
+            
+            {# <!-- Expired Requirements -->
+            <div class="projectssection">
+                <div class="sectionheading">
+                    <h2>Expired Requirements</h2>
+                </div>
+
+                
+
+
+                <div class="details">
+                    <div class="pro-projects">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Requirement Title</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if expiredRequirements is not empty %}
+                                    {% for requirement in expiredRequirements %}
+                                        {% if requirement.Professional == ProProfile %}
+                                            <tr>
+                                                <td><input type="checkbox"></td>
+                                                <td>
+                                                    <strong>{{ requirement.getTitle() }}</strong>
+                                                </td>
+                                                <td><a href="/account/Requirements/view/{{ requirement.getKey() }}">View</a></td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="3">No expired requirements found.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> #}
+            
+        </div>
+    </div>
+{% endblock %}

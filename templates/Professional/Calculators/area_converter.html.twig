@@ -1,0 +1,217 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Area Converter</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Area Converter</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>STEP 1: Begin by entering the value you wish to convert in the "Enter Value" field.</li>
+                    <li>STEP 2: Choose the unit of measurement for your input value (e.g., square foot, square meter, acre) from the dropdown menu next to the input field.</li>
+                    <li>STEP 3: In the "Convert To" section, select the unit you want to convert the value into. For example, if you're converting square feet to square meters, choose "Square meter" from the dropdown.</li>
+                    <li>STEP 4: Click the "CALCULATE NOW" button to view the converted result in the results section below.</li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Area Converter</h2>
+    
+            <!-- Convert From -->
+            <div class="FormField">
+                <label for="Area">Enter Value:</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="Area" placeholder="0" />
+
+                    <select id="Unit">
+                        <option value="sqcm">Square cm</option>
+                        <option value="sqin">Square inch</option>
+                        <option value="sqft" selected="selected">Square foot</option>
+                        <option value="sqyd">Square yard</option>
+                        <option value="sqm">Square meter</option>
+                        <option value="acre">Acre</option>
+                        <option value="ha">Hectare</option>
+                        <option value="sqkm">Square km</option>
+                        <option value="sqmi">Square mile</option>
+                    </select>
+                </div>
+            </div>
+
+             <!-- Concrete Mix -->
+             <div class="FormField">
+                <label>Convert To:</label>
+                <select id="brick-country">
+                    <option value="sqcm">Square cm</option>
+                    <option value="sqin">Square inch</option>
+                    <option value="sqft" selected="selected">Square foot</option>
+                    <option value="sqyd">Square yard</option>
+                    <option value="sqm">Square meter</option>
+                    <option value="acre">Acre</option>
+                    <option value="ha">Hectare</option>
+                    <option value="sqkm">Square km</option>
+                    <option value="sqmi">Square mile</option>
+                </select>
+            </div>
+
+    
+            <!-- Calculate and Reset Buttons -->
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const calculateBtn = document.getElementById("calculate-btn");
+                const resetBtn = document.getElementById("reset-btn");
+                const resultDiv = document.getElementById("result");
+                const resultSection = document.getElementById("resultssection");
+    
+                // Conversion factors for areas to square meters (base unit)
+                const conversionToSquareMeters = {
+                    sqcm: 0.0001,
+                    sqin: 0.00064516,
+                    sqft: 0.092903,
+                    sqyd: 0.836127,
+                    sqm: 1,
+                    acre: 4046.86,
+                    ha: 10000,
+                    sqkm: 1e6,
+                    sqmi: 2.59e6,
+                };
+    
+                calculateBtn.addEventListener("click", () => {
+                    const areaValue = parseFloat(document.getElementById("Area").value);
+                    const fromUnit = document.getElementById("Unit").value;
+                    const toUnit = document.getElementById("brick-country").value;
+    
+                    if (isNaN(areaValue) || areaValue <= 0) {
+                        resultDiv.innerHTML = `<p style="color: red;">Please enter a valid area value.</p>`;
+                        resultSection.style.display = "block";
+                        return;
+                    }
+    
+                    // Convert to square meters (base unit), then to the target unit
+                    const areaInSquareMeters = areaValue * conversionToSquareMeters[fromUnit];
+                    const convertedArea = areaInSquareMeters / conversionToSquareMeters[toUnit];
+    
+                    resultDiv.innerHTML = `
+                        <p><strong>Converted Area:</strong></p>
+                        <p>${areaValue} ${fromUnit} = <span>${convertedArea.toFixed(4)} ${toUnit}</span></p>
+                    `;
+                    resultSection.style.display = "block"; // Show result section
+                });
+    
+                resetBtn.addEventListener("click", () => {
+                    // Reset form inputs
+                    document.getElementById("Area").value = "";
+                    document.getElementById("Unit").value = "sqft";
+                    document.getElementById("brick-country").value = "sqft";
+    
+                    // Clear results
+                    resultDiv.innerHTML = "";
+                    resultSection.style.display = "none";
+                });
+            });
+        </script>
+    
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const areaInput = document.getElementById("Area");
+            const fromUnit = document.getElementById("Unit");
+            const toUnit = document.getElementById("brick-country");
+
+            function checkFields() {
+                if (
+                    areaInput.value !== "" &&
+                    fromUnit.value !== "" &&
+                    toUnit.value !== ""
+                ) {
+                    calculateBtn.style.color = "#000"; // Set color to black
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            areaInput.addEventListener("input", checkFields);
+            fromUnit.addEventListener("change", checkFields);
+            toUnit.addEventListener("change", checkFields);
+        });
+    </script>
+
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<!-- <div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div> -->
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        border: 1px solid rgba(0, 0, 0, 0.20) !important;
+    }
+</style>
+
+<div class="TileCalculatorMain">
+    <div class="TilecalculatorLeft">
+        <div class="CalcHeader">
+            <div class="CalcheaderLeft">
+                <img src="/static/icons/calculator_Icon.svg" alt="">
+            </div>
+            <div class="CalcheaderRight">
+                <h1>Brick Calculator</h1>
+                <p>Easy Steps</p>
+            </div>
+        </div>
+        <div class="calchowtoDownsection">
+            <div class="calchowtoheader">
+                <img src="/static/icons/helpHowto.svg" alt="">
+                <h2>How To Use Bricks Calculator</h2>
+            </div>
+            <div class="CalcHowtoSteps">
+                <ul>
+                    <li>Enter the height of the wall in feet in the input field labeled "Wall Height".</li>
+                    <li>Enter the length of the wall in feet in the input field labeled "Wall Length".</li>
+                    <li>Select the brick size from the dropdown menu:
+                      <ul>
+                        <li>Half Brick (4.5 inch) for thinner walls.</li>
+                        <li>Full Brick (9 inch) for thicker walls.</li>
+                      </ul>
+                    </li>
+                    <li>Click the "Calculate" button to determine the number of bricks required.</li>
+                    <li>The result will display the total number of bricks needed based on your inputs.</li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+    <div class="TilecalculatorRight">
+        <div id="tile-calculator">
+            <h2>Bricks Calculator</h2>
+    
+            <!-- Wall Length -->
+            <div class="FormField">
+                <label for="wall-length">Wall Length (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-length" placeholder="0" />
+                </div>
+            </div>
+    
+            <!-- Wall Height -->
+            <div class="FormField">
+                <label for="wall-height">Wall Height (ft):</label>
+                <div class="FormFieldgroup">
+                    <input type="number" id="wall-height" placeholder="0" />
+                </div>
+            </div>
+    
+            <!-- Brick Size and Mortar -->
+            <div class="FormField">
+                <label>Brick Size:</label>
+                <select id="brick-country">
+                    <option value="half">Half Brick (4.5 inch)</option>
+                    <option value="full">Full brick (9 inch)</option>
+                </select>
+            </div>
+    
+            <!-- Calculate and Reset Buttons -->
+            <div class="CalculateButtons">
+                <button id="calculate-btn">CALCULATE NOW</button>
+                <button id="reset-btn">RESET</button>
+            </div>
+    
+            <!-- Results Section -->
+            <div id="resultssection">
+                <div id="result"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const calculateBtn = document.getElementById('calculate-btn');
+                const resetBtn = document.getElementById('reset-btn');
+                const resultDiv = document.getElementById('result');
+                const resultsection = document.getElementById('resultssection');
+        
+                calculateBtn.addEventListener('click', () => {
+                    // Get input values
+                    const wallLength = parseFloat(document.getElementById('wall-length').value) || 0;
+                    const wallHeight = parseFloat(document.getElementById('wall-height').value) || 0;
+                    const brickType = document.getElementById('brick-country').value;
+        
+                    // Brick dimensions in feet (approx.)
+                    const brickDimensions = {
+                        half: { length: 0.75, height: 0.25 }, // Half brick (4.5 inch)
+                        full: { length: 0.75, height: 0.5 }  // Full brick (9 inch)
+                    };
+        
+                    // Fetch selected brick dimensions
+                    const selectedBrick = brickDimensions[brickType];
+        
+                    if (wallLength <= 0 || wallHeight <= 0) {
+                        resultDiv.innerText = "Please enter valid wall dimensions.";
+                        return;
+                    }
+        
+                    // Calculate area of the wall and single brick
+                    const wallArea = wallLength * wallHeight; // in square feet
+                    const brickArea = selectedBrick.length * selectedBrick.height; // in square feet
+        
+                    // Calculate number of bricks (add 10% for mortar and breakage)
+                    const numberOfBricks = Math.ceil(wallArea / brickArea * 1.1);
+        
+                    // Display result
+                    resultDiv.innerHTML = `<p>Number of bricks required: <span>${numberOfBricks}</span></p>`;
+                    resultsection.style.display = 'block';
+                });
+        
+                resetBtn.addEventListener('click', () => {
+                    // Reset form fields
+                    document.getElementById('wall-length').value = '';
+                    document.getElementById('wall-height').value = '';
+                    document.getElementById('brick-country').value = 'half';
+        
+                    // Clear result
+                    resultDiv.innerText = '';
+                    resultsection.style.display = 'none';
+                });
+            });
+        </script>
+    
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const calculateBtn = document.getElementById("calculate-btn");
+            const wallLength = document.getElementById("wall-length");
+            const wallHeight = document.getElementById("wall-height");
+            const brickCountry = document.getElementById("brick-country");
+
+            function checkFields() {
+                if (wallLength.value !== "" && wallHeight.value !== "" && brickCountry.value !== "") {
+                    calculateBtn.style.color = "#000";
+                } else {
+                    calculateBtn.style.color = ""; // Reset to default color
+                }
+            }
+
+            // Attach event listeners to the fields
+            wallLength.addEventListener("input", checkFields);
+            wallHeight.addEventListener("input", checkFields);
+            brickCountry.addEventListener("change", checkFields);
+        });
+    </script>
+
+
+    <div class="TilecalculatorCol3">
+        
+    </div>
+</div>
+
+<div class="Productsmain">
+    <div class="RelatedProductsH">
+        <h2>Related Products</h2>
+    </div>
+    <div class="PageProductsList">
+        {% for product in products %}
+            <div class="PageProductCard">
+                <div class="ProductFeaImg">
+                    <img src="/static/images/Product_IMAGES{{ product.Image_Path }}" alt="SteelBars">
+                </div>
+                <div class="ProductPropertiesSection">
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdName">
+                            <p class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</p>
+                            {# <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">{{ product.Product_Name|length > 50 ? product.Product_Name|slice(0, 50) ~ '...' : product.Product_Name }}</a> #}
+                        </div>
+                    </a>
+
+                    <div class="ProdPrice">
+                        <p class="ProductcardPrice"><span class="ProdPriceRs"><span class="RupeeSymbol">₹</span> <span class="ProductPriceAmt">{{ product.Product_Price }}</span><span class="PriceUnits">/ {{ product.Product_Unit }}</span></p>
+                    </div>
+
+                    <div class="ProdReviews">
+                        <p class="ProdCardReviews">24 Reviews</p>
+                    </div>
+
+                    <a href="/products/{{ product.Unique_ID }}" class="ProductCardName">
+                        <div class="ProdEnquire">
+                            <p class="ProdCardEnquire">View</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

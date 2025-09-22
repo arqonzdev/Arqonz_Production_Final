@@ -1,0 +1,161 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%;">
+            <div class="no-responses-container">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-clipboard-question"></i>
+                    </div>
+                    <h2>No Responses Yet</h2>
+                    <p class="lead">This survey hasn't received any responses yet.</p>
+                    
+                    <div class="survey-meta">
+                        <p><strong>Survey Title:</strong> {{ survey.getTitle() }}</p>
+                        <p><strong>Customer:</strong> {{ survey.getFirstname() }} {{ survey.getLastname() }}</p>
+                        <p><strong>Email:</strong> {{ survey.getEmail() }}</p>
+                        <p><strong>Created:</strong> {{ survey.getCreationDate()|date('F j, Y') }}</p>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{{ path('account-customers') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Surveys
+                        </a>
+                        <button class="btn btn-primary" id="copySurveyLink">
+                            <i class="fas fa-link"></i> Copy Survey Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .no-responses-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .empty-state {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .empty-state-icon {
+            font-size: 60px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h2 {
+            color: #4a6fa5;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state .lead {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        
+        .survey-meta {
+            text-align: left;
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .survey-meta p {
+            margin: 10px 0;
+        }
+        
+        .survey-meta strong {
+            color: #4a6fa5;
+            display: inline-block;
+            width: 100px;
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-primary {
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8c;
+        }
+        
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButton = document.getElementById('copySurveyLink');
+            
+            if (copyButton) {
+                copyButton.addEventListener('click', function() {
+                    const surveyUrl = `https://arqonz.com/customer-survey/{{ survey.getKey() }}`;
+                    
+                    navigator.clipboard.writeText(surveyUrl)
+                        .then(() => {
+                            // Change button text temporarily
+                            const originalText = copyButton.innerHTML;
+                            copyButton.innerHTML = '<i class="fas fa-check"></i> Link Copied!';
+                            
+                            // Reset after 2 seconds
+                            setTimeout(() => {
+                                copyButton.innerHTML = originalText;
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy: ', err);
+                            alert('Failed to copy link. Please try again.');
+                        });
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'layouts/arqonz_updated_layout.html.twig' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+
+<div class="About-herosection">
+    <img class="HeroBackgroundimg" src="/static/images/About-background-min.jpeg" alt="">
+    <div class="TextContainer">
+        <h2>Data Deletion Request</h2>
+        {# <h6>Your privacy matters to us</h6> #}
+    </div>
+</div>
+
+<div class="Single">
+    <div class="TermsTextContainer">
+        <h2>Your Data, Your Control</h2>
+        <p>At Arqonz, we respect your privacy and your right to control your personal information. This page outlines the process for requesting the deletion of your personal data from our systems in accordance with our <a href="/privacy-policy">Privacy Policy</a>.</p>
+
+        <h3>How to Request Data Deletion</h3>
+        <p>To ensure we accurately identify and process your request, please follow these simple steps:</p>
+        
+        <ol>
+            <li><strong>Contact Us:</strong> Visit our Contact Us page at <a href="https://arqonz.com/contact-us">https://arqonz.com/contact-us</a>.</li>
+            <li><strong>Submit Your Request:</strong> Use the contact form to send us a message requesting the deletion of your personal data.</li>
+            <li><strong>Provide Your Email:</strong> <strong>Please include the email address associated with your Arqonz account</strong> in your message. This is crucial for us to locate your data in our systems.</li>
+        </ol>
+
+        <h3>What Happens Next?</h3>
+        <ol>
+            <li><strong>Verification:</strong> Our support team will receive your request and may contact you for verification to protect your account's security.</li>
+            <li><strong>Processing:</strong> Once verified, we will process your request and delete all personal data linked to your account from our active systems, in line with our data retention policies.</li>
+            <li><strong>Confirmation:</strong> You will receive a confirmation email from us at the address you provided once the deletion process is complete.</li>
+        </ol>
+
+        <div class="notice-box">
+            <p><strong>Please note:</strong> Some data may be retained in backup archives for a limited period as necessary for legal, tax, or regulatory purposes, or as required for the establishment, exercise, or defense of legal claims. This data will be deleted upon the expiration of its retention period.</p>
+        </div>
+
+        <h3>Need Help?</h3>
+        <p>If you have any questions about this process or your data privacy, please don't hesitate to reach out to us directly at <strong>support@arqonz.com</strong>.</p>
+    </div>
+</div>
+
+<style>
+.notice-box {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin: 20px 0;
+}
+.notice-box p {
+    margin: 0;
+}
+ol {
+    padding-left: 20px;
+}
+ol li {
+    margin-bottom: 10px;
+}
+</style>
+{% endblock %}

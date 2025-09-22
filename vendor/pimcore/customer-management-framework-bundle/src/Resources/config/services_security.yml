@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    security.user_checker:
+        class: Symfony\Component\Security\Core\User\InMemoryUserChecker
+        public: true
+
+    CustomerManagementFrameworkBundle\Security\Authentication\LoginManagerInterface: '@CustomerManagementFrameworkBundle\Security\Authentication\LoginManager'
+    CustomerManagementFrameworkBundle\Security\Authentication\LoginManager:
+        arguments:
+            $firewallMap: '@security.firewall.map'
+            $sessionStrategy: '@security.authentication.session_strategy'
+            $defaultUserChecker: '@security.user_checker'
+            $container: '@service_container'
+
+    # The user provider loads users by Username.
+    # Pimcore provides a simple ObjectUserProvider which is able to load users from a specified class by a configured
+    # field. The website_demo.security.user_provider will load users from the AppBundle\Model\DataObject\User by looking at
+    # their username field.
+    cmf.security.user_provider:
+        class: CustomerManagementFrameworkBundle\Security\UserProvider\CustomerObjectUserProvider
+        arguments:
+            - '@cmf.customer_provider'
+            - 'email'
+
+    # The hasher factory is responsible for verifying the password hash for a given user. As we need some special
+    # handling to be able to work with the password field, we use the UserAwarePasswordHasherFactory to build a dedicated
+    # hasher per user. This service is configured in pimcore.security.password_hasher_factories to handle our user model.
+    cmf.security.user_password_hasher_factory:
+        class: Pimcore\Security\Hasher\Factory\UserAwarePasswordHasherFactory
+        arguments:
+            - Pimcore\Security\Hasher\PasswordFieldHasher
+            - [ 'password' ]
+
+    # Custom Authenticator for handling webservice login
+    CustomerManagementFrameworkBundle\Security\Authenticator\WebserviceAuthenticator:
+        public: false
+        calls:
+            - [ setLogger, [ '@logger' ] ]
+        tags:
+            - { name: monolog.logger, channel: security }

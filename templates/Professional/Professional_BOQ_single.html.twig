@@ -1,0 +1,626 @@
+{% extends 'layouts/UserDashboard_layout.html.twig' %}
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-projects">
+        <span>
+            <span class="Breadcrumb-nonactive"><a href="/en/account/index">Dashboard</a></span><span class="breadcrumb-divider">></span><span class="Breadcrumb-active">BOQ Listing</span>
+        </span>
+    </div>
+    <div class="line-8"></div>
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; height: 100%; justify-content:center;">
+            <!-- Active Requirements -->
+            <div class="projectssection">
+
+                <div class="dashboardheading-section">
+                    <div class="sectionheading">
+                        <h2>BOQs Listing</h2>
+                        <p class="sectionsubheading">See the latest BOQ listing on Arqonz</p> 
+                    </div>
+
+                    <div class="BOQBidMeanings">
+                        <p style="font-weight: 500;"><span class="WonBid"></span> Winning Bid</p>
+                        <p style="font-weight: 500;"><span class="LostBid"></span> Loosing Bid</p> 
+                    </div>
+                </div>
+
+
+                <div class="RequirementsMain">
+                    <!-- <div class="Add-project-button" style="padding: 20px 0px; margin-bottom: 20px;">
+                        <a href="/account/Add-Requirements" class="btn btn-lg btn-block btn-success btn addrequirebtn" target="_blank">
+                            <i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Requirement
+                        </a>
+                    </div> -->
+
+                    <div class="DashboardRequirements">
+                        <table class="requirements-table">
+                            <thead>
+                                <tr class="requirement-item">
+                                    <th style="display:none">ID</th>
+                                    <th>Product</th>
+                                    <th>brand</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Response</th>
+                                    <th>Current bid</th>
+                                    <th>My bid</th>
+                                    <th>Expiry</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for RequirementProduct in enabledProducts %}
+                                    {% set myBid = null %}
+                                    {% set BidSupplier = null %}
+                                    
+
+                                    {% for SupplierBid in RequirementProduct.getSupplierBid() %}
+                                        {% set currentSupplier = SupplierBid.getSupplier() %}
+                                        {% if currentSupplier %}
+                                            {% set BidSupplier = currentSupplier %}
+                                        {% endif %}
+                                        {% if currentSupplier.getKey() == UserProfile.getKey() %}
+                                            {% set myBid = SupplierBid.getBidAmount() %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    
+                                    <tr data-requirement-id="{{ RequirementProduct.getKey() }}" class="ProductEnabled">
+                                        <td class="ImpProductKey" style="display:none">{{ RequirementProduct.getKey() }}</td>
+                                        <td class="ImpProductDescription" style="display:none">{{ RequirementProduct.getDescription() }}</td>
+                                        <td class="ImpProductName">{{ RequirementProduct.getProductName() }}</td>
+                                        <td class="ImpProductBrand">{{ RequirementProduct.getBrand() }}</td>
+                                        <td class="ImpProductQuantity">{{ RequirementProduct.getQuantity() }}</td>
+                                        <td class="ImpProductUnit">{{ RequirementProduct.getUnit() }}</td>
+                                        <td class="editBid">{{ myBid is not null ? 'Edit Bid' : 'Place Bid' }}</td>
+                                        <td>{{ RequirementProduct.getL1Amt() }}</td>
+                                        <td>
+                                            {% if myBid is not null %}
+                                                {% if myBid <= RequirementProduct.getL1Amt() %}
+                                                    <span class="WonBid"></span>{{ myBid }}
+                                                {% else %}
+                                                    <span class="LostBid"></span>{{ myBid }}
+                                                {% endif %}
+
+                                            {% else %}
+                                                <span>No bid</span>
+                                            {% endif %}
+                                            
+                                        </td>
+                                        <!-- <td>{{ RequirementProduct.getEndDate()|date('d-m-Y') }}</td> -->
+                                        <td>
+                                            <span class="countdown" data-end="{{ RequirementProduct.getEndDate()|date('Y-m-d H:i:s') }}">
+                                                <!-- Countdown will be dynamically updated -->
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                {% for RequirementProduct in disabledProducts %}
+                                    {% set myBid = null %}
+                                    {% set BidSupplier = null %}
+                                    
+
+                                    {% for SupplierBid in RequirementProduct.getSupplierBid() %}
+                                        {% set currentSupplier = SupplierBid.getSupplier() %}
+                                        {% if currentSupplier %}
+                                            {% set BidSupplier = currentSupplier %}
+                                        {% endif %}
+                                        {% if currentSupplier.getKey() == UserProfile.getKey() %}
+                                            {% set myBid = SupplierBid.getBidAmount() %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                        <tr data-requirement-id="{{ RequirementProduct.getKey() }}" class="ProductDisabled">
+                                            <td class="ImpProductKey" style="display:none">{{ RequirementProduct.getKey() }}</td>
+                                            <td class="ImpProductDescription" style="display:none">{{ RequirementProduct.getDescription() }}</td>
+                                            <td class="ImpProductName">{{ RequirementProduct.getProductName() }}</td>
+                                            <td class="ImpProductBrand">{{ RequirementProduct.getBrand() }}</td>
+                                            <td class="ImpProductQuantity">{{ RequirementProduct.getQuantity() }}</td>
+                                            <td class="ImpProductUnit">{{ RequirementProduct.getUnit() }}</td>
+                                            <td class="editBid">{{ myBid is not null ? 'Edit Bid' : 'Place Bid' }}</td>
+                                            <td>{{ RequirementProduct.getL1Amt() }}</td>
+                                            <td>
+                                                {{ myBid is not null ? myBid : 'No Bid' }}
+                                            </td>
+                                            <td>{{ RequirementProduct.getEndDate()|date('d-m-Y') }}</td>
+                                            
+                                        </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                function updateCountdowns() {
+                                    const now = new Date();
+                        
+                                    document.querySelectorAll('.countdown').forEach(function (countdownElement) {
+                                        const endDate = new Date(countdownElement.getAttribute('data-end'));
+                                        const timeDiff = endDate - now;
+                        
+                                        if (timeDiff > 0) {
+                                            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                                            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                                            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                        
+                                            // Construct the countdown text
+                                            let countdownText = "";
+                                            if (days > 0) {
+                                                countdownText += `${days}Days `;
+                                            }
+                                            countdownText += `${hours}hrs ${minutes}mins ${seconds}secs`;
+                        
+                                            // Update countdown text
+                                            countdownElement.innerText = countdownText;
+                                        } else {
+                                            countdownElement.innerText = "Expired";
+                                        }
+                                    });
+                                }
+                        
+                                // Update countdowns every second
+                                setInterval(updateCountdowns, 1000);
+                        
+                                // Initial call to display countdowns on page load
+                                updateCountdowns();
+                            });
+                        </script>
+
+                        <!-- <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                function updateCountdowns() {
+                                    const now = new Date();
+
+                                    document.querySelectorAll('.countdown').forEach(function (countdownElement) {
+                                        const endDate = new Date(countdownElement.getAttribute('data-end'));
+                                        const timeDiff = endDate - now;
+
+                                        if (timeDiff > 0) {
+                                            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                                            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                                            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                                            
+                                            
+                                            // Update countdown text
+                                            countdownElement.innerText = `${days}Days ${hours}hrs ${minutes}mins ${seconds}secs`;
+                                        } else {
+                                            countdownElement.innerText = "Expired";
+                                        }
+                                    });
+                                }
+
+                                // Update countdowns every second
+                                setInterval(updateCountdowns, 1000);
+
+                                // Initial call to display countdowns on page load
+                                updateCountdowns();
+                            });
+                        </script> -->
+
+                        
+                    </div>
+                </div>
+            </div>
+
+             
+
+            
+            
+        </div>
+    </div>
+
+    <!-- Unique Popup for BOQ -->
+    <div id="boqPopup" class="boq-popup">
+        <div class="boq-popup-content">
+            <span class="boq-close">&times;</span>
+            <h2 id="boqProductName" class="boq-product-name">Enter Quote</h2>
+            <p class="boq-instructions">You can only edit the Bid Amount and Delivery Date</p>
+            <form id="boqQuoteForm">
+               
+                <input type="hidden" type="text" id="boqProductKey" name="productKey" />
+
+                <label for="boqProductNameField">Product Name:</label>
+                <input type="text" id="boqProductNameField" name="productName" placeholder="Product Name" readonly/>
+
+                <label for="boqProductBrandField">Brand:</label>
+                <input type="text" id="boqProductBrandField" name="productBrand" placeholder="Brand" readonly/>
+
+                <label for="boqProductQuantityField">Quantity:</label>
+                <input type="text" id="boqProductQuantityField" name="productQuantity" placeholder="Quantity" readonly/>
+
+                <label for="boqProductUnitField">Unit:</label>
+                <input type="text" id="boqProductUnitField" name="productUnit" placeholder="Unit" readonly/>
+
+                <label for="boqProductMaterial">Material:</label>
+                <input type="text" id="boqProductMaterial" name="productMaterial" placeholder="Material" readonly/>
+
+                <label for="boqProductDescription">Description:</label>
+                <textarea type="text" id="boqProductDescription" name="productDescription" placeholder="Product Description" readonly></textarea>
+                
+                <label for="boqBidAmount">Bid Amount</label>
+                <input type="number" id="boqBidAmount" name="bidAmount" placeholder="Enter Bid Amount" required>
+
+                <!-- <label for="boqDeliveryTime">Delivery Time</label>
+                <input type="datetime-local" id="boqDeliveryTime" name="deliveryTime" required> -->
+
+                <label for="boqTimeDuration">Time Duration (in days)</label>
+                <input type="number" id="boqTimeDuration" name="timeDuration" placeholder="Enter Duration in Days" min="1" required>
+
+                <label for="boqBidWarrantyPeriod">Warranty Period</label>
+                <input type="text" id="boqBidWarrantyPeriod" name="bidWarrantyPeriod" placeholder="Enter Warranty Period" required>
+
+                <label for="boqBidPaymentTerms">Payment Terms</label>
+                <textarea id="boqBidPaymentTerms" name="bidPaymentTerms" placeholder="Enter Payment Terms" required></textarea>
+
+                <!-- <input type="hidden" id="boqNotificationPath" name="notificationPath" value=""> -->
+
+                <button type="submit">Submit</button>
+            </form>
+            <div id="boqQuoteSuccess" style="display: none;">Your bid has been submitted successfully!</div>
+        </div>
+    </div>
+
+
+    <style>
+        /* Styles for the Popup */
+        .boq-popup {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed in place */
+            z-index: 1000; /* Ensure it's on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full screen width */
+            height: 100%; /* Full screen height */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            overflow: auto; /* Allow scrolling if content is too large */
+        }
+
+        /* Popup Content */
+        .boq-popup-content {
+            background-color: #fff; /* White background */
+            margin: 15% auto; /* Center it vertically and horizontally */
+            padding: 32px 40px;
+            border-radius: 8px;
+            width: 80%; /* Adjust width */
+            max-width: 600px; /* Max width to avoid too wide popups */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Close Button */
+        .boq-close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .boq-close:hover,
+        .boq-close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Instructions text */
+        .boq-instructions {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Form Fields */
+        .boq-popup form label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .boq-popup form input[type="text"],
+        .boq-popup form input[type="number"],
+        .boq-popup form input[type="datetime-local"],
+        .boq-popup form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            margin-top: 3px;
+        }
+
+        .boq-popup form button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 46px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .boq-popup form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Success Message */
+        #boqQuoteSuccess {
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .boq-popup-content {
+                width: 90%; /* Make the popup wider on small screens */
+                padding: 15px;
+            }
+
+            .boq-popup form button {
+                width: 100%; /* Make the submit button full-width */
+            }
+        }
+
+    </style>
+    <div id="customerCredits" data-credits="{{ customer.getCreditPoints() }}" style="display: none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const boqPopup = document.getElementById("boqPopup");
+            const oneTimePurchasePopUp = document.getElementById("oneTimePurchasePopUp");
+            const boqCloseButton = document.querySelector(".boq-close");
+            const oneTimeCloseButton = oneTimePurchasePopUp.querySelector(".boq-close");
+            const boqQuoteForm = document.getElementById("boqQuoteForm");
+            const boqQuoteSuccess = document.getElementById("boqQuoteSuccess");
+
+            // Function to check customer credits
+            function checkCustomerCredits() {
+                // Get the credits from the hidden div's data attribute
+                const customerCredits = parseInt(document.getElementById("customerCredits").getAttribute("data-credits"), 10);
+                return customerCredits > 0;
+            }
+
+            // Open Popup on Edit Bid Click
+            document.querySelectorAll('.editBid').forEach(editButton => {
+                editButton.addEventListener('click', function (event) {
+                    event.stopPropagation(); // Prevent the row click from triggering
+
+                    if (checkCustomerCredits()) {
+                        const row = editButton.closest('tr');
+                        const productName = row.querySelector('.ImpProductName').textContent;
+                        const productBrand = row.querySelector('.ImpProductBrand').textContent;
+                        const productQuantity = row.querySelector('.ImpProductQuantity').textContent;
+                        const productUnit = row.querySelector('.ImpProductUnit').textContent;
+                        const productKey = row.querySelector('.ImpProductKey').textContent;
+                        const productDescription = row.querySelector('.ImpProductDescription').textContent;
+
+                        // Populate the Form Fields
+                        document.getElementById("boqProductNameField").value = productName;
+                        document.getElementById("boqProductBrandField").value = productBrand;
+                        document.getElementById("boqProductQuantityField").value = productQuantity;
+                        document.getElementById("boqProductUnitField").value = productUnit;
+                        document.getElementById("boqProductKey").value = productKey;
+                        document.getElementById("boqProductDescription").value = productDescription;
+
+                        // Show the Popup
+                        boqPopup.style.display = "block";
+                    } else {
+                        // Show the OneTimePurchasePopUp
+                        oneTimePurchasePopUp.style.display = "block";
+                    }
+                });
+            });
+
+            // Close Popup
+            boqCloseButton.onclick = () => boqPopup.style.display = "none";
+            oneTimeCloseButton.onclick = () => oneTimePurchasePopUp.style.display = "none";
+            window.addEventListener('click', event => {
+                if (event.target === boqPopup) boqPopup.style.display = "none";
+                if (event.target === oneTimePurchasePopUp) oneTimePurchasePopUp.style.display = "none";
+            });
+
+            // Handle Form Submission
+            boqQuoteForm.addEventListener('submit', event => {
+                event.preventDefault();
+
+                const formData = new FormData(boqQuoteForm);
+                fetch('/api/supplier-bid', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        boqQuoteSuccess.style.display = "block";
+                        setTimeout(() => {
+                            boqPopup.style.display = "none";
+                            boqQuoteSuccess.style.display = "none";
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        console.error('Error:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle Buy Credits Button Click
+            document.getElementById('buyCreditsButton').addEventListener('click', function () {
+                // Redirect to the buy credits page or handle the buy credits logic
+                window.location.href = '/account/buy-credits';
+            });
+
+            
+        });
+    </script>
+
+    <!-- <script>
+        // Popup Element
+        const boqPopup = document.getElementById("boqPopup");
+        const boqCloseButton = document.querySelector(".boq-close");
+        const boqQuoteForm = document.getElementById("boqQuoteForm");
+        const boqQuoteSuccess = document.getElementById("boqQuoteSuccess");
+
+        // Open Popup on Edit Bid Click
+        document.querySelectorAll('.editBid').forEach(editButton => {
+            editButton.addEventListener('click', function (event) {
+                event.stopPropagation(); // Prevent the row click from triggering
+                
+                const row = editButton.closest('tr');
+                const productName = row.querySelector('.ImpProductName').textContent;
+                const productBrand = row.querySelector('.ImpProductBrand').textContent;
+                const productQuantity = row.querySelector('.ImpProductQuantity').textContent;
+                const productUnit = row.querySelector('.ImpProductUnit').textContent;
+                const productKey = row.querySelector('.ImpProductKey').textContent;
+                const productDescription = row.querySelector('.ImpProductDescription').textContent;
+                
+                // Populate the Form Fields
+                document.getElementById("boqProductNameField").value = productName;
+                document.getElementById("boqProductBrandField").value = productBrand;
+                document.getElementById("boqProductQuantityField").value = productQuantity;
+                document.getElementById("boqProductUnitField").value = productUnit;
+                document.getElementById("boqProductKey").value = productKey;
+                document.getElementById("boqProductDescription").value = productDescription;
+            
+                // Show the Popup
+                boqPopup.style.display = "block";
+            });
+        });
+
+        // Close Popup
+        boqCloseButton.onclick = () => boqPopup.style.display = "none";
+        window.addEventListener('click', event => {
+            if (event.target === boqPopup) boqPopup.style.display = "none";
+        });
+
+        // Handle Form Submission
+        boqQuoteForm.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const formData = new FormData(boqQuoteForm);
+            fetch('/api/supplier-bid', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    boqQuoteSuccess.style.display = "block";
+                    setTimeout(() => {
+                        boqPopup.style.display = "none";
+                        boqQuoteSuccess.style.display = "none";
+                        location.reload();
+                    }, 2000);
+                } else {
+                    console.error('Error:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script> -->
+
+
+    <!-- OneTimePurchasePopUp -->
+    <div id="oneTimePurchasePopUp" class="boq-popup">
+        <div class="boq-popup-content">
+            <span class="boq-close">&times;</span>
+            <h2>Insufficient Credits</h2>
+            <p>You have 0 credits, please buy credits or pay the unlock fee of 100rs to place a bid.</p>
+            <div class="popup-actions">
+                <button id="buyCreditsButton">Buy Credits</button>
+                <button id="payUnlockFeeButton">Pay Unlock Fee</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Styles for the OneTimePurchasePopUp */
+        #oneTimePurchasePopUp .boq-popup-content {
+            text-align: center;
+        }
+
+        #oneTimePurchasePopUp .popup-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        #oneTimePurchasePopUp .popup-actions button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #oneTimePurchasePopUp .popup-actions button:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('payUnlockFeeButton').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Send AJAX request to create order
+                fetch('{{ path("create_unlock_order") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    var options = {
+                        "key": data.razorpayKey,
+                        "amount": data.amount, 
+                        "currency": "INR",
+                        "name": data.name,
+                        "description": data.description,
+                        "order_id": data.orderId,
+                        "handler": function(response) {
+                            window.location.href = "{{ path('bid-payment-verify') }}?payment_id=" + response.razorpay_payment_id + "&order_id=" + response.razorpay_order_id + "&razorpay_signature=" + response.razorpay_signature;
+                        },
+                        "prefill": {
+                            "name": "John Doe", // Pre-filled customer's name
+                            "email": "john.doe@example.com", // Pre-filled customer's email
+                            "contact": "9000090000" // Pre-filled customer's phone number
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+    
+{% endblock %}

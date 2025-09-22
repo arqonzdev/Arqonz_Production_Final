@@ -1,0 +1,104 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+    <style>
+        .Register {
+            display:none;
+        }
+        .OTPVerificationSection button {
+            background: #00A79D;
+            border: 0px;
+            padding-bottom: 8px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+        .OTPVerificationSection .form-group {
+            margin-top: 1rem;
+        }
+        #resendForm button {
+            background-color: #000;
+            padding-bottom: 8px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        #verification-form {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .FormButtonsCont {
+            display: flex;
+            justify-content: center;
+            gap: 11px;
+        }
+        .alert-info {
+            margin-top: 1rem;
+        }
+        #Step2Btn {
+            background: #00A79D;
+            border: 0px;
+            padding-bottom: 8px;
+            padding-left: 28px;
+            padding-right: 28px;
+        }
+        .OTPVerificationSection {
+            margin-top: 1rem;
+        }
+        #verification-form h2{
+            line-height: 4rem;
+            font-size: 35px;
+        }
+        
+    </style>
+    <div class="container">
+        <div class="mb-5 d-flex justify-content-center">
+            <div class="col-12 col-md-6" id="verification-form">
+                <h2>Phone Number Verification</h2>
+
+                <p>We’ve sent a 6-digit OTP (One-Time Password) to your Whatsapp Number. Please enter the OTP below to verify your Phone Number and continue.</p>
+
+                
+
+                <div class="OTPVerificationSection">
+                    {# Success Message and Button #}
+                    {% if verificationStatus == 'success' %}
+                        <div class="alert alert-success">
+                            Your Phone has been successfully verified!
+                        </div>
+                        <a href="{{ path('account-index') }}" class="btn btn-primary" id="Step2Btn">Go to Dashboard</a>
+                    {% else %}
+                        {# Failure and Resend OTP Messages #}
+                        {% if verificationStatus == 'failure' %}
+                            <div class="alert alert-danger">
+                                Invalid OTP. Please try again.
+                            </div>
+                        {% endif %}
+                        {% if otpResent %}
+                            <div class="alert alert-info">
+                                A new OTP has been sent to your Whatsapp.
+                            </div>
+                        {% endif %}
+
+                        {# Verification Form #}
+                        {{ form_start(form) }}
+                            <div class="form-group">
+                                {{ form_row(form.EmailOTP, { 'attr': {'placeholder': 'Enter OTP'} }) }}
+                            </div>
+                            
+                            <div class="FormButtonsCont">
+                                    
+                                {{ form_end(form) }}
+
+                                {# Resend OTP Button #}
+                                <form method="get" id="resendForm" action="{{ path('Account-Verification-Step-1') }}">
+                                    <input type="hidden" name="resend_otp" value="1">
+                                    <button type="submit" class="btn btn-link mt-3">Resend OTP</button>
+                                </form>
+                            </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

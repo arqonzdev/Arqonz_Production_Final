@@ -1,0 +1,172 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_custom.css') %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz-home.css') %}
+{% do pimcore_head_link().appendStylesheet('https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css') %}
+{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
+{% form_theme form1 'bootstrap_5_layout_custom.html.twig' %}
+
+{% block content %}
+    <script src="https://unpkg.com/lenis@1.0.45-dev.0/dist/lenis.min.js"></script> 
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer" preload></script>
+    <script src="static/js/home.js" preload></script>
+    <script src="static/js/lenis-script.js" preload></script>
+    
+    <div id="X"></div>
+    <div id="Y"></div>
+    
+    {# <div class="loading-container">
+        <!-- Create a progress bar -->
+        <p>Loading the experience</p>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+        <!-- Create a text element to display the percentage -->
+        <p class="loading-text">0%</p>
+    </div>
+    <div id="canvas-container">
+        <div id="animatedtext">
+            <p id="uppertext">Welcome To Arqonz</p>
+            <p id="lowertext">A Better Way To Build</p>
+        </div>
+
+        <div class="overlay-div">
+            <div class="scroll-down">
+                <h3>SCROLL DOWN</h3>
+                <i class="fa-solid fa-down"></i>
+            </div>
+        </div>
+
+        <canvas id="canvasA"></canvas>
+
+    </div> #}
+    
+
+    <section id="hero-section">
+        <div class="hero-content">
+            <div class="leftcolumn">
+                <div class="contentarea">
+                    <h2>Everything you need to build your dream home</h2>
+                    <p>We will give you everything the best in the whole industry.</p>
+                    <div class="toppart">
+                        <div class="search-box">
+                            <div id="searchicon">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                            {{ form_start(form) }}
+                            <div id="hero-formfield">
+                                {{ form_row(form.Search) }}
+                            </div>
+                            <div class="hero-submitbutton">
+                                {{ form_row(form._submit) }}
+                                {{ form_end(form) }}
+                            </div>
+                        
+                            {# {{ form_start(form) }}
+                            {{ form_row(form.Search) }}
+                            {{ form_row(form.Search) }} #}
+
+                        </div>
+                        
+                    </div>
+                    <p>Frequently Searched: Architect, Builders</p>
+                    
+                </div>
+            </div>
+            <div class="rightcolumn">
+                <img id="" src="{{ asset('/static/images/hero-home.jpeg') }}" alt="Find Professionals for Construction">
+            </div>
+        </div>
+    </section>
+    <section id="architects-list">
+        <div class="architects-featured">
+            <h2>Professionals For You</h2>
+            <p>Explore the best Architects to build your home.</p>
+            <div id="featured-button">
+                <p><i class="fa-regular fa-star"></i> Featured</p>
+            </div>
+            <div class="featured-list">
+            
+            {% for architect in architects %}
+                {% include '/Professional/featured-listing-card.html.twig' with {'ProProfile': architect, 'listingtype': 'Architect'} %}
+            {% endfor %}
+            </div>
+            <div class="learnmorebutton">
+                    <a href="/architects">Explore All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+        </div>
+    </section>
+    <section id="architects-list" style="background-color:#eff8f8;">
+        <div class="architects-featured" style="background-color:#eff8f8;">
+            <h2>Projects For You</h2>
+            <p>Explore the best Designers around you.</p>
+            <div id="featured-button">
+                <p><i class="fa-regular fa-star"></i> Featured</p>
+            </div>
+            <div class="featured-list">
+            
+                <div class="home-project-list">
+                    {% for project in projects %}
+                        {% include '/Professional/home_Projects_listing_card.html.twig' with {'project': project, 'portfolioType':'Builder'} %}
+                    {% endfor %}
+                </div>
+            <div>
+            <div class="learnmorebutton">
+                    <a href="/builders">Explore All <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    {# <section>
+        <div id="india-first">
+            <div id="sideimage">
+                <img id="" src="{{ asset('/static/images/Building.jpg') }}" alt="Find Professionals for Construction">
+            </div>
+            <div id="rightcontent">
+                <h2>India's First proper Realestate Website</h2>
+                <p>We are building Indians first ecomerce site for you and your next genarationWe are building indians first ecomerce site for you and your next genaration We are building indians first ecomerce site for you and your next genaration.</p>
+                <p><i class="fa-regular fa-shield-check" style="color:#48a89e;"></i> Secure and Protected</p>
+                <p><i class="fa-regular fa-shield-check" style="color:#48a89e;"></i> Secure and Protected</p>
+                <p><i class="fa-regular fa-shield-check" style="color:#48a89e;"></i> Secure and Protected</p>
+                <p><i class="fa-regular fa-shield-check" style="color:#48a89e;"></i> Secure and Protected</p>
+                <div class="learnmorebutton">
+                    <a href="#">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section> #}
+
+    <section id="architects-list">
+        <div class="architects-featured" style="background-color:#48a89e; border-radius:9px; display:flex; padding-right:0;padding-bottom:0;">
+            <div id="newletter">
+                <h2 id ="newslettertitle" style="color:#fff; margin-bottom:0 !important;">Join Our Newsletter</h2>
+                <p style="color:#fff;">We are building indians first ecomerce site for you and your next genarationWe are building indians first ecomerce site for you and your next genaration</p>
+                
+                <div class="NewsLetterForm">
+                    <div id="co1">
+                        {{ form_start(form1) }}
+                        {{ form_row(form1.FullName) }}
+                    </div>
+                    
+                    <div id="co2">
+                        {{ form_row(form1.Email) }}
+                    </div>
+                    <div class="co3">
+                        {{ form_row(form1._submit) }}
+                        {{ form_end(form1) }}
+                    </div>
+
+                </div>
+            </div>
+            <div id="backsideimage" style="display:flex;">
+                <img style="" id="" src="{{ asset('/static/images/house.png') }}" alt="Find Professionals for Construction">
+            </div>
+        </div>
+        </div>
+    </section>
+
+{% endblock %}

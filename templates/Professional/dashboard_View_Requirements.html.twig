@@ -1,0 +1,53 @@
+{% extends 'layouts/arqonz_layout.html.twig' %}
+{% do pimcore_head_link().appendStylesheet('/static/css/arqonz_Prodashboard.css') %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+
+{% block content %}
+    {% include 'Professional/dashboard_navigation.html.twig' %}
+
+    <div class="dashboard-container">
+        <div class="left-column" style="width: 100%; justify-content:center;">
+            <!-- ArchitectProjects -->
+            <div class="projectssection">
+                <div class="sectionheading">
+                <h2>Edit Requirement</h2> 
+                </div>
+                <div class="Add-project-button">
+                    <a href="/account/Add-Requirements" class="btn btn-lg btn-block btn-success btn" target="_blank"><i class="fa fa-plus" aria-hidden="true" style="font-size:15px;"></i> Add Requirement</a>
+                </div>
+                    <!-- ArchitectProjects -->
+                <div class="editform" style="padding:0px 20px">
+                    {{ form(form) }}
+                </div>
+
+                 {% if ProRequirement.getExcelData() %}
+                    <div class="excel-data-table">
+                        <a href="{{ path('download_excel', {'filename': ProRequirement.getExcelFile().getFilename()}) }}" class="btn btn-primary" style="background:#23262f">Download Excel File</a>
+                        <h2>Excel Sheet Preview</h2> 
+                        <table>
+                            <thead>
+                                <tr>
+                                    {% for header in ProRequirement.getExcelData()[0] %}
+                                        <th>{{ header }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in ProRequirement.getExcelData()|slice(1) %}
+                                    <tr>
+                                        {% for cell in row %}
+                                            <td>{{ cell }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div> 
+        </div>
+    
+    
+{% endblock %}
