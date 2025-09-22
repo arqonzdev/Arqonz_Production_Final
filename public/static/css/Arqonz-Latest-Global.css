@@ -1,0 +1,321 @@
+/* Website Navigation CSS */
+
+
+:root {
+    --Primary-font: Poppins, sans-serif;
+}
+
+
+.DashnavMain {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Parent-Menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.Parent-Menu > li {
+    position: relative;
+}
+
+.Parent-Menu > li > a {
+    display: block;
+    padding: 10px 20px;
+    color: rgba(32, 34, 36, 0.80);
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.Children-Menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0;
+    list-style: none;
+    min-width: 200px; /* Adjust as needed */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 99999;
+
+}
+
+.Children-Menu li {
+    margin: 0;
+}
+
+.Children-Menu li a {
+    display: block;
+    padding: 10px 20px;
+    color: rgba(32, 34, 36, 0.80);
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.Children-Menu li a:hover {
+    background-color: #f8f9fa;
+    
+}
+
+.Parent-Menu > li:hover .Children-Menu {
+    display: block;
+}
+
+/* Second-level dropdown (Contractors > Earth Movers) */
+.Sub-Children-Menu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0;
+    list-style: none;
+    min-width: 200px;
+    /* box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); */
+    z-index: 1000;
+
+}
+@media (max-width: 768px) {
+    .Sub-Children-Menu {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 24%;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 0;
+        list-style: none;
+        min-width: 200px;
+        /* box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); */
+        z-index: 1000;
+    }
+}
+
+
+/* Show the Sub-Children-Menu when hovering over Contractors */
+.Children-Menu li:hover > .Sub-Children-Menu {
+    display: block;
+}
+
+/* Styling for each menu item */
+.Children-Menu li, .Sub-Children-Menu li {
+    position: relative;
+}
+
+.Children-Menu li a, .Sub-Children-Menu li a {
+    display: block;
+    padding: 10px 20px;
+    color: rgba(32, 34, 36, 0.80);
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.Children-Menu li a:hover, .Sub-Children-Menu li a:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .Parent-Menu {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .Children-Menu, .Sub-Children-Menu {
+        position: relative;
+        box-shadow: none;
+        border: none;
+    }
+
+    .Parent-Menu > li.active > .Children-Menu,
+    .Children-Menu li.active > .Sub-Children-Menu {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* Website Navigation Ends */
+
+/* Header Animation */
+#titleEffects {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 800px;
+    user-select: none;
+  }
+  
+  #titleEffects li {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: rotateX(90deg);
+    backface-visibility: hidden;
+    font-size: 48px;
+    font-family: var(--Primary-font);
+    font-weight: 700;
+    margin-bottom: 28px;
+    transition: color 0.4s ease-in-out;
+    transform-origin: center;
+    transform: rotateX(90deg) scale(0.9);
+  }
+
+  @media (max-width: 504px) {
+    #titleEffects li {
+        font-size: 28px !important;
+    }
+  }
+  @media (max-width: 1265px) {
+    #titleEffects li {
+        font-size: 38px !important;
+    }
+  }
+
+/* Header Animation Close */
+
+/* Notifications CSS */
+
+.NotificationsIcon {
+    width: 26px;
+}
+.nav-container {
+    position: relative;
+}
+
+.nav-list {
+    display: flex;
+    gap: 35px;
+    padding-top: 8px;
+    align-items: center;
+}
+.nav-list .profile-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.profile-item span h3 {
+    line-height: 1rem;
+}
+.profile-item span p {
+    margin: 0;
+}
+.profile-item h3 {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.notification-item {
+    position: relative;
+}
+
+.notif-icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    position: relative;
+}
+
+.notif-badge {
+        position: absolute;
+        top: 9px;
+        right: -5px;
+        background-color: #292929;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-weight: bold;
+}
+
+.notif-dropdown {
+    display: none;
+    position: absolute;
+    top: 38px; /* Adjust based on your layout */
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    width: 334px; /* Adjust width as needed */
+    z-index: 1000;
+}
+
+.notif-dropdown.show {
+    display: block;
+}
+
+.notif-entry {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.notif-entry .notif-content {
+    line-height: 1rem;
+}
+
+.notif-entry:last-child {
+    border-bottom: none;
+}
+
+.notif-link {
+    display: block;
+    text-decoration: none;
+    color: #333;
+}
+
+.notif-link:hover {
+    background-color: #f9f9f9;
+}
+
+
+.notif-bell-icon {
+    margin-right: 10px;
+}
+
+.notif-text {
+    flex-grow: 1;
+}
+
+.notif-time {
+    font-size: 12px;
+    color: #888;
+}
+.nav-container li {
+    list-style: none;
+}
+.headerProfilePicture {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+}
+
+.arqonzlogo img {
+    width:100%;
+}
+.DashboardRow {
+    padding: 10px 0px;
+}
+/* Notifications CSS Ends */
+
+/* Login Page Buttons */
+
+#send-otp-btn {
+    margin-bottom: 10px;
+    padding: 0px 7px;
+    color: #000;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+#send-otp-btn:hover {
+    background-color: #efefef;
+}
+/* Login Page Buttons End */

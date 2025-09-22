@@ -1,0 +1,82 @@
+/* Add general styles here */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+}
+
+
+/* Two-column layout for larger screens */
+
+.profile-image {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.profile-details {
+    flex: 2;
+}
+
+/* Add this CSS to your existing stylesheet or create a new one */
+.architect-profile {
+    position: relative;
+}
+
+.profile-image {
+    position: relative;
+    width: 100%;
+    margin-top: 25px;
+}
+
+.over-image {
+    position: absolute;
+    margin-top:-89px;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+    background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.2));
+    /* background-color: rgba(0, 0, 0, 0.5); 50% transparent black */
+    padding: 10px; /* Adjust padding as needed */
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: row;;
+    justify-content: space-between;
+    align-items: center;
+}
+.left-row h2{
+    color:white;
+}
+.left-row p{
+    color:white;
+}
+
+.Stars{
+    background-color: #48a89e;
+    padding:10px;
+    font-size: 10px;
+    margin-bottom: 0px;
+    line-height: 10px;
+    padding-bottom: 2px;
+    border-radius: 50px;
+
+}
+
+
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .architect-profile {
+        flex-direction: column;
+    }
+
+    .profile-details {
+        width: 100%;
+        margin-right: 0;
+    }
+    .profile-image
+    {
+        min-height: 200px;
+    }
+    .over-image {
+        flex-direction: column;
+    }
+}
+

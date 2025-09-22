@@ -1,0 +1,805 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+/* Poppin theme classes */
+.poppins-thin {
+  font-family: "Poppins", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.poppins-extralight {
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.poppins-light {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-medium {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+
+.Urbanist-Bold {
+  font-family: "Urbanist", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.urbanist-normal {
+  font-family: "Urbanist", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  color: #333;
+  /* Background image on the body */
+  
+  
+}
+
+
+.FullContentheight {
+
+  background: linear-gradient(
+    186deg, 
+    rgba(134, 0, 167, 0.00) 10.88%, 
+    rgba(134, 0, 167, 0.80) 16.24%, 
+    #5100A7 21.79%, 
+    #0097A7 82.02%
+  );
+  z-index: -1; /* Place behind all content but above body BG */
+  
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* Hero Section */
+
+.HeroFullCont {
+  
+  background-size: cover; /* Ensure the image covers the container */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+#BuildingBg {
+    position: absolute;
+    width:100vw !important;
+    z-index: -2;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #4e54c8;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #3a3fbb;
+}
+
+/* Responsive Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+}
+p {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+a {
+    font-family: "Poppins", sans-serif;
+}
+li {
+    font-family: "Poppins", sans-serif;
+}
+
+/* Utility */
+.text-white {
+  color: #fff !important;
+}
+
+
+
+
+/* Baisc CSS Ends */
+
+/* Navigation CSS */
+.navbar {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: white !important;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 17rem;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.btn-contact {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white !important;
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-contact:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    color: white !important;
+}
+
+/* Bootstrap navbar toggler styling for dark background */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        margin: 0.5rem 0;
+    }
+    
+    .btn-contact {
+        margin-top: 1rem;
+        display: inline-block;
+    }
+}
+
+.MainHeroLine p {
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25);
+    font-size: 90px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+    line-height: 7rem;
+}
+.mainherosection {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+#HeroTagline {
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0px 2.311px 5.778px rgba(0, 0, 0, 0.25), 0px 2.311px 5.778px rgba(0, 0, 0, 0.25), 0px 2.311px 5.778px rgba(0, 0, 0, 0.25);
+    font-family: Poppins;
+    font-size: 54px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 1.387px;
+}
+.maintagline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Navigation CSS End */
+
+
+/* Events Section */
+.event-section {
+    color: white;
+    padding: 60px 0;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+.building-image {
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.date-badge {
+    
+    display: inline-flex;
+    gap:10px;
+    align-items: center;
+    
+    backdrop-filter: blur(10px);
+    font-size: 22px;
+    font-family: 'Poppins';
+}
+
+.time-badge {
+    
+    display: inline-flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    gap:10px;
+    font-size: 22px;
+    font-family: 'Poppins';
+}
+
+.location-text {
+    font-size: 22px;
+    line-height: 1.6;
+    margin: 20px 0;
+    font-family: 'Poppins';
+}
+
+.submit-btn-final {
+    background: white;
+    padding: 15px 40px;
+    border: none;
+    font-weight: 600;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.submit-btn-final:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    
+}
+
+.icon-spacing {
+    margin-right: 10px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .event-section {
+        padding: 40px 0;
+    }
+    
+    .location-text {
+        font-size: 1em;
+    }
+    
+    .submit-btn-final {
+        padding: 12px 30px;
+        font-size: 1em;
+    }
+}
+/* Events Section Ends */
+
+
+
+/* AboutDealDeskSection */
+
+.aboutTitle h2{
+  color: #FEFCFF;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 32x;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 1.208px;
+}
+.aboutDesc {
+  display: flex;
+  justify-content: center;
+}
+.aboutDesc p {
+  color: #FFF;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.725px;
+  max-width: 52rem;
+}
+.nocommission {
+  display: flex;
+  padding: 1px 45px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  width: fit-content;
+
+  border-radius: 200px;
+  background: linear-gradient(90deg, #372FA7 0%, #FFF 28.65%, #FFF 73.13%, #4020A7 100%);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+.nocommission p{
+  margin-bottom: 0px;
+  color: #000;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 1px;
+  margin: 10px 24px;
+}
+.zerocomm {
+  display: flex;
+  justify-content: center;
+  
+  gap:40px;
+  padding-bottom: 150px;
+}
+.nocommcont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 41px 0px;
+
+}
+#back-ring {
+  position: absolute;
+  bottom: 100px;
+  z-index: 1;
+} 
+.ZeroCommRIght img{
+  max-width:24rem;
+}
+.zerocommleft {
+  padding-top: 30px;
+}
+/* AboutDealDesk Ends */
+
+
+
+/* WhyNotSection */
+.whynotmisscont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0px;
+}
+.whynotmiss {
+  display: flex;
+  padding: 9px 85px;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #264FA7 0%, #FFF 40.38%, #FFF 68.27%, #303DA7 100%);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  width:fit-content;
+}
+
+.whydeal {
+  padding: 37px 0px;
+}
+.WhyMisstexttitle p{
+  color: #FFF;
+  text-align: center;
+  font-family: 'Poppins';
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+}
+.whyMissPara {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.whyMissPara p{
+  color: #FFF;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 500;
+  max-width: 48rem;
+}
+/* WhyNotSection Ends */
+
+
+
+/* BuildersListing  */
+.BuilderCard {
+  background: linear-gradient(210deg, #FFF 2.65%, #C7FCFF 56.88%, #FFF 104.78%);
+  box-shadow: 0 2.519px 2.519px 0 rgba(0, 0, 0, 0.25), 0 2.519px 2.519px 0 rgba(0, 0, 0, 0.25);
+}
+.CardspecsCont {
+  background: linear-gradient(117deg, #6B78FF 32.95%, #404899 97.62%);
+  min-height: 12rem;
+}
+.card-log0 {
+  display: flex;
+  align-items: center;
+  height: 115px;
+  flex-direction: column;
+}
+.materials-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0px;
+}
+
+.material-tag {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+/* BuildersListing Ends */
+
+
+/* Tell Us Section */
+.form-includes {
+  border-radius: 20px;
+  background: #FFF;
+  box-shadow: 0 8px 6.9px 0 rgba(0, 0, 0, 0.25);
+  padding: 36px 21px;
+}
+.tell-main-title {
+  color: #FFF;
+  text-align: center;
+  font-family: 'Poppins';
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 1.208px;
+}
+.TellUsSec {
+  padding: 33px 0px;
+}
+.tell-subtitle {
+  color: #FFF;
+  text-align: center;
+  font-family: 'Poppins';
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.725px;
+}
+.form-includes ul li {
+  padding:5px 0px;
+}
+.tell-submit-btn {
+  border: 2px solid #6B78FF;
+  background: linear-gradient(90deg, #5100FF 0%, #854CFF 100%);
+
+  color: #FFF;
+  text-align: center;
+  font-family: 'Poppins';
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.8px;
+  padding: 10px 30px;
+  transition: all 0.3s ease;
+}
+.tell-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+}
+.featurelists li {
+  color: #E2F4FF;
+  font-family: 'Poppins';
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.72px;
+  padding: 10px 0px;
+}
+/* tell Us Section Ends */
+
+
+/* FAQ Section Style */
+
+.faq-section {
+    padding: 80px 0;
+}
+
+.faq-title {
+    color: #FFF;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 1px;
+    padding-bottom: 20px;
+}
+
+.faq-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.accordion-item {
+    border: none;
+    margin-bottom: 20px;
+    border-radius: 15px !important;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.accordion-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.accordion-header {
+    border: none;
+}
+
+.accordion-button {
+    background: white;
+    border: none;
+    padding: 25px 30px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    border-radius: 15px !important;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.accordion-button::after {
+    background-image: none;
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+    color: white;
+}
+
+.accordion-body {
+    padding: 30px;
+    background: #f8f9fa;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    border-top: 3px solid #e9ecef;
+}
+
+.logo-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.accordion-button-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .faq-title {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+    }
+    
+    .faq-container {
+        padding: 25px;
+        margin: 0 15px;
+    }
+    
+    .accordion-button {
+        font-size: 1.1rem;
+        padding: 20px;
+    }
+    
+    .logo-placeholder {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+}
+/* FAQ Section Style Ends */
+
+
+
+
+/* Footer Styles */
+.footertitle {
+  color: #FFF;
+  text-align: center;
+  font-family: 'Poppins';
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.48px;
+}
+/* Footer Styles End */
+
+/* Responsive */
+
+@media (max-width: 1080px) {
+  .MainHeroLine p {
+    font-size: 70px;
+    line-height: 4rem;
+  }
+  #HeroTagline {
+    font-size: 31px;
+  }
+  .skilledpersondiv {
+    justify-content: center;
+  }
+}
+
+
+@media (max-width: 856px) {
+  .MainHeroLine p {
+    font-size: 51px;
+    line-height: 3rem;
+  }
+  .mainherosection {
+    min-height: 74vh;
+  }
+  .nocommission p {
+    font-size: 14px;
+  }
+  .submit-btn-final {
+    font-size: 12px;
+  }
+  .zerocomm  {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .whynotmiss h2 {
+    font-size: 18px;
+  }
+  .whynotmiss {
+    padding: 9px 55px;
+  }
+}
+@media (max-width: 705px) {
+  .MainHeroLine p {
+    font-size: 51px;
+    line-height: 3rem;
+  }
+  #BuildingBg {
+      min-height: 69rem;
+  }
+  #sparkimg {
+    display: none;
+  }
+}
+
+@media (max-width: 630px) {
+  .MainHeroLine p {
+    font-size: 34px;
+    line-height: 3rem;
+  }
+  #BuildingBg {
+      min-height: 78rem;
+  }
+  #sparkimg {
+    display: none;
+  }
+  #HeroTagline {
+    font-size: 22px;
+  }
+}

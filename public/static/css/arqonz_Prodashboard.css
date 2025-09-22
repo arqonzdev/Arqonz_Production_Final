@@ -1,0 +1,451 @@
+:root {
+    --Primary-font: Poppins, sans-serif;
+}
+
+
+/* arqonz_architectdashboard.css */
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 1vw;
+    margin-bottom: 15px;
+}
+.dashboard-container h2{
+    font-size: 23px;
+    line-height: 29px;
+    letter-spacing:0.5px;
+}
+
+
+/* Left Column */
+.left-column {
+    width: 40%; /* Adjust as needed */
+    box-sizing: border-box;
+}
+
+/* Right Column */
+.right-column {
+    width: 60%; /* Adjust as needed */
+    
+}
+
+/* Profile Details */
+.profile-details{
+    margin-bottom: 20px;
+    padding:0px;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+    border-radius: 22px;
+    
+}
+.pro-profile-details {
+    padding:0px;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+    border-radius: 22px;
+}
+
+/* Architect Projects */
+.pro-projects {
+    max-height: 600px; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+/* Architect Project Table */
+.pro-projects table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Architect Project Table Header */
+.pro-projects th {
+    padding: 5px;
+    text-align: left;
+    background-color: #f4fcfc;
+    border: 1px solid #ccc;
+}
+
+/* Architect Project Table Rows */
+.pro-projects td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* Dashboard Menu & Close Icon CSS */
+
+#DashboardNavigationContainer i{
+    font-size: 40px;
+}
+#DashboardNavigationContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#dashboard-menu-icon, #dashboard-menu-close-icon{
+    margin-top: 1vh;
+    text-align: center;
+}
+
+/* END */
+
+
+/* Endorsement table */
+.comTable{
+    min-height:94.35%;
+    margin-bottom: 20px;
+}
+.comTable table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comTable th {
+    padding: 5px;
+    text-align: left;
+    background-color: #f4fcfc;
+    border: 1px solid #ccc;
+}
+
+.comTable td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+/* End */
+.sectionheading{
+    background-color: #f4fcfc;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 22px 22px 0px 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.details{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-right: 20px;
+    padding-bottom: 30px;
+}
+.Add-project-button{
+    max-width: 300px;
+    margin: 15px;
+}
+.requirements{
+    box-sizing: border-box;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+    border-radius: 22px;
+}
+.projectssection{
+    /* min-height:189px; */
+    min-height: 100%;
+    margin-bottom:20px;
+    box-sizing: border-box;
+    border:solid;
+    background-color: #ffffff;
+    border-color:#eaeaea;
+    padding-bottom: 30px;
+    border-radius: 22px;
+}
+.requirementcontent{
+    margin:0px 20px;
+}
+#pro_requirement_form_excelFile{
+padding-bottom: 43px;
+}
+
+#endorsement_request_form__submit{
+    max-width: 12rem;
+}
+#endorsement_request_form_Profession{
+    min-height: 37px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    color: #495057;
+}
+
+/* Dashbaord Navigation CSS */
+#dashboardnav{
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+}
+#dashmenu{
+    color: #000;
+    font-weight: 400;
+}
+#dashboardnav a{
+    text-decoration: none;
+}
+
+#dashboardnav li{
+    padding: 0.5rem 1.5rem .5rem 1.5rem !important;
+    transition: 0.3s ease;
+    
+}
+#dashboardnav li:hover{
+    background-color: #f3fbfb;
+
+}
+
+
+/* END */
+
+.welcomeMessage{
+    margin: 15px 9px;
+}
+.welcomeMessage p{
+    font-size: 1.7rem;
+}
+.userDetails{
+    /* border: solid #eaeaea; */
+    padding: 2px 2px;
+}
+
+/* ExcelData Table Styling */
+.excel-data-table {
+    margin-top: 20px;
+}
+
+.excel-data-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.excel-data-table th, .excel-data-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.excel-data-table th {
+    background-color: #f2f2f2;
+}
+.Probelowtitle .btn{
+    margin-bottom: 25px;
+}
+
+/* Pricing Table V2 */
+
+/* Reset default padding and margin */
+#pricingtable {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+}
+
+.subplan {
+    flex: 1; /* Make each plan equal width */
+    max-width: 300px; /* Limit the width to avoid stretching on larger screens */
+}
+
+.price {
+    list-style: none;
+    padding: 0;
+    border: 1px solid #e0e0e0; /* Lighter border color for separation */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Lighter background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+.price .header {
+    background-color: #262626;
+    color: #fff;
+    padding: 15px;
+    border-top-left-radius: 8px; /* Rounded top-left corner */
+    border-top-right-radius: 8px; /* Rounded top-right corner */
+}
+
+.price .priceli {
+    padding: 20px;
+    font-size: 24px; /* Larger font size for price */
+}
+
+.price li {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0; /* Light border at top of each item */
+}
+
+.price li:last-child {
+    border-bottom-left-radius: 8px; /* Rounded bottom-left corner */
+    border-bottom-right-radius: 8px; /* Rounded bottom-right corner */
+}
+
+.price .buttonli {
+    text-align: center; /* Center the button */
+}
+
+.price a.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #262626;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; 
+}
+
+.price a.button:hover {
+    background-color: #404040;
+}
+
+/* END */
+
+#CityCountry select{
+    width: 50%;
+    min-height: 34px;
+}
+#CountryPincode select{
+    width: 50%;
+    min-height: 34px;
+}
+
+/* Profile Completion Bar CSS */
+.profile-image img{
+    width: 100%;
+
+}
+
+#meterouter{
+    min-height: 15px;
+    /* background-color: azure; */
+    margin: 10px 0px;
+    border: 1px solid #a5a5a5;
+    border-radius: 22px;
+    width:100%;
+    position: relative;
+}
+
+#completion{
+    min-height: 100%;
+    background-color: #00FF00;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    border-radius: 22px;
+}
+
+#ProfileCompletionMeter{
+    border: solid 1px #c5c5c5;
+    padding: 10px;
+    margin: 25px 0px;
+}
+
+.profile-image .dashbord-profile-image{
+    max-width: 100%;
+}
+.companydetailsdash{
+    margin: 1rem 1rem;
+}
+.citylist{
+    display:flex;
+    flex-wrap: wrap;
+    gap:6px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.citytagbox{
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:6px;
+    padding-bottom:6px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    
+}
+.view-button{
+    margin-top: 10px;
+    width:100%;
+    display:flex;
+    justify-content: center;
+    gap: 15px;
+}
+.view-button a{
+    border: 1px solid #23262f;
+    padding: 10px 20px;
+    background-color: #23262f;
+    
+    color: #fff;
+    border-radius: .3rem;
+}
+.view-button a:hover{
+    color: #fff;
+    text-decoration: none;
+}
+.form-control {
+    height: auto !important;
+}
+.CreditBalance {
+    font-size: 13px;
+}
+
+/* END */
+
+/* Pricing Table V1 */
+/* 
+#pricingtable{
+    display:flex;
+    gap:20px;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0px;
+}
+
+#pricingtable li{
+    list-style: none;
+    padding: 15px 39px;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+#pricingtable .header {
+    background-color: #262626;
+    color:#fff;
+}
+
+#pricingtable .priceli {
+    background-color: #F2F2F2;
+}
+#pricingtable .buttonli {
+    background-color: #F2F2F2;
+    padding:26px 0px;
+}
+
+#pricingtable a{
+    border: 1px solid;
+    text-decoration: none;
+    padding: 8px 30px;
+    background-color: #262626;
+    color:#fff;
+}
+#pricingtable a:hover{
+    background-color:#404040;
+} */
+
+/* Pricing Table End */
+
+/* Responsive Design - Adjust as needed */
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    #dashboardnav{
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .left-column, .right-column {
+        width: 100%;
+    }
+    .right-column {
+        margin-top: 20px;
+    }
+}

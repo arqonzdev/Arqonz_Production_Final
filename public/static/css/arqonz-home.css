@@ -1,0 +1,383 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,800;1,800&display=swap');
+
+:root {
+    --Primary-font: Poppins, sans-serif;
+}
+
+#hero-section{
+    position: relative;
+    overflow: hidden;
+    background-color: #F3FBFB;
+}
+#intro-section{
+    height: 100vh;
+}
+#hero-section img {
+    max-width: 100%;
+    object-fit: cover;
+    height: auto;
+}
+
+.hero-content{
+    overflow: hidden;
+    max-height: 90vh;
+    display:flex;
+    align-items: center;
+    
+}
+.contentarea{
+    margin-left:5vw;
+   
+}
+.rightcolumn{
+    flex: 0 0 50%;
+    overflow: hidden;
+    
+}
+.leftcolumn h2{
+    font-family: var(--Primary-font);
+    font-weight: 800;
+    font-style: normal;
+    text-transform: capitalize;
+    line-height: 68px;
+    letter-spacing: 0px;
+    font-size: 2.6rem;
+    color:#23262f;
+}
+.leftcolumn p{
+    font-size: 19px;
+    color: #747a7f;
+    
+}
+.toppart{
+    position: relative;
+    z-index: 2;
+    padding:11px;
+    background-color: #fff;
+    border-radius: 22px;
+    margin-bottom: 10px;
+    border:solid 0.2px #e6e8ec;
+    margin-right:10px;
+}
+.toppart p{
+    position: relative;
+    
+}
+.search-box {
+    display: flex;
+    align-items: center;
+    gap:10px;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.search-box i {
+    font-size: 27px;
+}
+#searchicon{
+    border: solid #e6e8ec 1px;;
+    padding: 8px 10px;
+}
+
+.search-box form {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    
+}
+
+.form-control {
+    height: calc(1.5em + .75rem + 7px) !important;
+}
+
+#searchicon {
+    flex: 0 0 auto; /* This will make sure the icon takes its necessary space without growing or shrinking */
+}
+
+#hero-formfield {
+    flex: 1; /* This will make the form field take the remaining space */
+    margin-right: 10px; /* Optional: Add some margin between form field and submit button */
+}
+#hero-formfield input{
+    width:31vw;
+}
+
+.hero-submitbutton {
+    flex: 0 0 auto; /* This will make the submit button take its necessary space without growing or shrinking */
+}
+#architects-list{
+    padding:18px 6vw;
+    
+}
+.architects-featured{
+    background-color: #f4f4f5;
+    padding:13px 4vw;
+    border-radius: 40px;
+}
+.architects-featured h2{
+    font-family: var(--Primary-font);
+    font-size: 31px;
+    letter-spacing: 0px;
+    margin-bottom: -1.5rem !important;
+}
+#featured-button p{
+    background-color: #000;
+    padding: 7px;
+    max-width: 112px;
+    text-align: center;
+    color:#fff;
+    border-radius: 20px;
+}
+#india-first{
+    display:flex;
+    overflow: hidden;
+    max-height: 90vh;
+    margin: 57px 0px;
+    gap:45px;
+    align-items:center;
+}
+#sideimage{
+    flex: 0 0 50%;
+}
+
+#rightcontent h2{
+    font-family: var(--Primary-font);
+    font-size: 49px;
+    letter-spacing: 0px;
+    margin-bottom: 1.5rem !important;
+    line-height: 60px;
+}
+.learnmorebutton a{
+    
+    background-color: #000;
+    padding: 12px 30px;
+    max-width: 112px;
+    text-align: center;
+    color:#fff;
+    border-radius: 6px;
+    text-decoration: none;
+    
+}
+.learnmorebutton a:hover {
+    color:#fff;
+    text-decoration: none;
+}
+
+.learnmorebutton{
+    margin:45px 0px;
+}
+.NewsLetterForm{
+    max-width: 300px;
+}
+.home-project-list{
+    display:flex;
+    gap:10px;
+}
+.project-item{
+    border: solid 1px #ccc;
+    border-radius: 22px;
+}
+.project-item img{
+    border-radius: 22px;
+}
+.project-item h3{
+    line-height: 49px;
+    padding-left:10px;
+    padding-right: 10px;
+    font-size: 27px;
+    
+}
+.project-item p{
+    padding-left:10px;
+    padding-right: 10px;
+}
+.project-item a{
+    text-decoration: none;
+    color:#2f2f2f;
+}
+.project-item a:hover{
+    text-decoration: none;
+}
+
+/* Home Animation CSS */
+
+/* This was to make heder non sticky */
+
+#canvas-container {
+    position:relative;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+    background-color: #fff;
+    
+}
+
+#canvasA {
+    width: 100%;
+    height: 100%;
+}
+
+#animatedtext {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+#animatedtext p{
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin:0
+}
+#uppertext{
+    font-size: 20px;
+    margin-top: 200px;
+    
+}
+#lowertext{
+    font-size: 30px;
+}
+
+/* Scroll Down Anim */
+.overlay-div{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background-color: #00000000;
+    font-size: 5vw;
+}
+.overlay-div h1{
+    opacity: 0;
+
+}
+.scroll-down{
+    position: absolute;
+    bottom: 14%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+    color: #000;
+}
+
+.scroll-down h3{
+    font-size: 1rem;
+    line-height: 0px;
+}
+
+.scroll-p{
+    width: 6vw;
+    height: 2px;
+    border-radius: 50px;
+    background-color: #ffffff55;
+}
+
+.scrolling{
+    width: 0vw;
+    height: 2px;
+    border-radius: 50px;
+    background-color: #000;
+}
+.scroll-down i{
+    font-size: 15px;
+}
+
+/* Home Animation CSS Ends */
+
+/* Loading CSS */
+
+/* Style the loading container */
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    background-size: cover;
+    background-position: center;
+    background-color: #f3fbfb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Style the progress bar */
+  .progress-bar {
+    width: 80%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* Style the progress bar inner element */
+  .progress-bar-inner {
+    width: 0%;
+    height: 100%;
+    background-color: #4CAF50;
+    border-radius: 10px;
+  }
+  
+  /* Style the loading text */
+  .loading-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+  }
+/* Loading CSS END */
+
+@media (max-width: 992px) {
+    .rightcolumn{
+        display:none;
+        
+    }
+    #hero-section{
+        padding:10vh 0vh;
+    }
+    .toppart{
+        max-width:360px;
+    }
+    .architects-featured h2 {
+        margin-bottom: 0.5rem !important;
+        font-size: 28px;
+    }
+    .leftcolumn h2 {
+        font-size: 33px;
+        line-height: 41px;
+    }
+    .search-box {
+        justify-content: center;
+    }
+    .leftcolumn{
+        justify-content: center;
+    }
+    #sideimage{
+        display:none;
+    }
+    #footersections{
+        flex-direction: column;
+    }
+    #rightcontent{
+        padding:0px 48px;
+    }
+    #backsideimage{
+        display:none !important;
+    }
+
+}

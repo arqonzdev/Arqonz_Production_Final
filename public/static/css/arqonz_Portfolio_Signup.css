@@ -1,0 +1,91 @@
+:root {
+    --Primary-font: Poppins, sans-serif;
+}
+
+#content {
+    max-width: 100% !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+#page-header{
+    position: relative;
+    min-height: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../images/hero1.png");
+}
+
+#page-header h3{
+
+    text-align: center;
+    max-width: 40rem;
+    padding: 0px 10px;
+    line-height: 2.7rem;
+    font-size: 2.7rem;
+    color:#fff;
+    position:relative;
+    z-index: 2;
+}
+.backgroundoverlay{
+    position: absolute;
+    top:0;
+    left:0;
+    background: #0000009e;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+#pagecontent{
+    margin: 20px 10vw;
+    padding-left: 15px;
+    padding-right: 15px;
+    overflow-x: hidden;
+}
+#pagecontent h2{
+
+    text-align: center;
+    padding: 0px 10px;
+    line-height: 2.2rem;
+    font-size: 1.5rem;
+    color:#000000;
+}
+.featuresbox{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap:15px;
+}
+.joinnow{
+    padding:10px 20px;
+    margin: 20px 0px;
+    background-color: #000000;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 8px;
+}
+.joinnow:hover{
+    text-decoration: none;
+    background-color: #282727;
+    color: #fff;
+}
+
+.feature{
+    flex: 0 0 40%;
+}
+
+#pagecontent h3{
+    line-height: 2.7rem;
+    font-size: 1.7rem;
+}
+.joinbutton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+hr{
+    border:none;
+    border-top: 1px solid #000000;
+    max-width: 100%;
+}
