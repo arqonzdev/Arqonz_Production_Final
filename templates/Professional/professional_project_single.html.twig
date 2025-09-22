@@ -120,8 +120,32 @@
                                         <div class="thumbnail-container">
                                             <a href="{{ image.getThumbnail('galleryLightbox')|raw }}" data-lightbox="project-gallery" class="thumbnail">
                                                 <img src="{{ image.getThumbnail('ProjectGalleryThumbnail') }}" alt="Gallery Thumbnail">
+                                                <div class="image-badge">Image</div>
                                             </a>
                                         </div>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <!-- Display Videos -->
+                                {% set videoPaths = ProProject.getProjectVideoPaths() %}
+                                {% if videoPaths is not empty %}
+                                    {% set videoArray = videoPaths|split('|') %}
+                                    {% for videoPath in videoArray %}
+                                        {% if videoPath is not empty %}
+                                            <div class="thumbnail-container video-thumbnail">
+                                                <div class="video-thumbnail-wrapper" onclick="openVideoModal('{{ videoPath }}')">
+                                                    <video class="video-thumbnail-preview" muted>
+                                                        <source src="{{ videoPath }}" type="video/mp4">
+                                                        <source src="{{ videoPath }}" type="video/webm">
+                                                        <source src="{{ videoPath }}" type="video/ogg">
+                                                    </video>
+                                                    <div class="video-play-overlay">
+                                                        <i class="fas fa-play-circle"></i>
+                                                    </div>
+                                                    <div class="video-badge">Video</div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     {% endfor %}
                                 {% endif %}
                             </div>
@@ -163,7 +187,282 @@
 
         </div>
 
+        <!-- Video Modal -->
+        <div id="videoModal" class="video-modal" style="display: none;">
+            <div class="video-modal-content">
+                <span class="video-modal-close" onclick="closeVideoModal()">&times;</span>
+                <video id="modalVideo" controls autoplay>
+                    <source src="" type="video/mp4">
+                    <source src="" type="video/webm">
+                    <source src="" type="video/ogg">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
 
+        <style>
+            /* Modern Gallery Container */
+            .gallerycontainer {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                padding: 30px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 12px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Consistent Thumbnail Container */
+            .thumbnail-container {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .thumbnail-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Image Thumbnails */
+            .thumbnail-container .thumbnail {
+                display: block;
+                width: 100%;
+                height: 100%;
+                text-decoration: none;
+            }
+
+            .thumbnail-container .thumbnail img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .thumbnail-container:hover .thumbnail img {
+                transform: scale(1.05);
+            }
+
+            /* Video Thumbnail Styles */
+            .video-thumbnail {
+                position: relative;
+            }
+
+            .video-thumbnail-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                border-radius: 12px;
+            }
+
+            .video-thumbnail-preview {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .video-thumbnail-wrapper:hover .video-thumbnail-preview {
+                transform: scale(1.05);
+            }
+
+            .video-play-overlay {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 40px;
+                text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+                transition: all 0.3s ease;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(5px);
+            }
+
+            .video-thumbnail-wrapper:hover .video-play-overlay {
+                color: #007bff;
+                transform: translate(-50%, -50%) scale(1.1);
+                background: rgba(0, 123, 255, 0.2);
+            }
+
+            .video-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #007bff, #0056b3);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Image Badge for consistency */
+            .image-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Video Modal Styles */
+            .video-modal {
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .video-modal-content {
+                position: relative;
+                max-width: 90%;
+                max-height: 90%;
+                width: auto;
+                height: auto;
+            }
+
+            .video-modal-close {
+                position: absolute;
+                top: -40px;
+                right: 0;
+                color: white;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                z-index: 1001;
+            }
+
+            .video-modal-close:hover {
+                color: #007bff;
+            }
+
+            #modalVideo {
+                width: 100%;
+                height: auto;
+                max-width: 800px;
+                max-height: 600px;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .gallerycontainer {
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 15px;
+                    padding: 20px;
+                }
+                
+                .thumbnail-container {
+                    height: 180px;
+                }
+                
+                .video-play-overlay {
+                    font-size: 32px;
+                    width: 50px;
+                    height: 50px;
+                }
+                
+                .video-badge, .image-badge {
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }
+                
+                #modalVideo {
+                    max-width: 95%;
+                    max-height: 400px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .gallerycontainer {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                    padding: 15px;
+                }
+                
+                .thumbnail-container {
+                    height: 160px;
+                }
+                
+                .video-play-overlay {
+                    font-size: 28px;
+                    width: 45px;
+                    height: 45px;
+                }
+            }
+        </style>
+
+        <script>
+            function openVideoModal(videoPath) {
+                const modal = document.getElementById('videoModal');
+                const video = document.getElementById('modalVideo');
+                
+                // Set video source
+                video.src = videoPath;
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // Play video
+                video.play();
+            }
+
+            function closeVideoModal() {
+                const modal = document.getElementById('videoModal');
+                const video = document.getElementById('modalVideo');
+                
+                // Pause and reset video
+                video.pause();
+                video.currentTime = 0;
+                video.src = '';
+                
+                // Hide modal
+                modal.style.display = 'none';
+            }
+
+            // Close modal when clicking outside the video
+            document.getElementById('videoModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeVideoModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeVideoModal();
+                }
+            });
+        </script>
         
     </div>
 {% endblock %}
