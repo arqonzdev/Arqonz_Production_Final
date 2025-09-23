@@ -192,60 +192,40 @@
 
             <div class="productReviewForm">
                 <h3>Rate this Product</h3>
-                <form id="productReviewForm">
-                    <div class="rating">
-                        <label for="rating">Rating:</label>
-                        <div class="stars">
-                            {% for i in 5..1 %}
-                                <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required />
-                                <label for="star{{ i }}" title="{{ i }} stars">
-                                    &#9733;
-                                </label>
-                            {% endfor %}
+                
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <form id="productReviewForm">
+                        <div class="rating">
+                            <label for="rating">Rating:</label>
+                            <div class="stars">
+                                {% for i in 5..1 %}
+                                    <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required />
+                                    <label for="star{{ i }}" title="{{ i }} stars">
+                                        &#9733;
+                                    </label>
+                                {% endfor %}
+                            </div>
                         </div>
+                        <div class="review">
+                            <label for="review">Review:</label>
+                            <textarea id="review" name="review" rows="4" placeholder="Write your review here..." required></textarea>
+                        </div>
+                        <div class="submit">
+                            <input type="submit" value="Submit Review">
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="login-prompt" style="text-align: center; padding: 20px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; margin: 20px 0;">
+                        <p style="margin-bottom: 15px; color: #6c757d; font-size: 16px;">Login to leave a Review</p>
+                        <a href="/account/sign-in" class="btn btn-primary" style="text-decoration: none;">Login</a>
                     </div>
-                    <div class="review">
-                        <label for="review">Review:</label>
-                        <textarea id="review" name="review" rows="4" placeholder="Write your review here..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="fullName">Full Name :</label>
-                        <input type="text" id="fullName" name="fullName" placeholder="Enter Name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email :</label>
-                        <input type="email" id="email" name="email" placeholder="Enter Email" class="form-control" 
-                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
-                            title="Enter a valid email address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone :</label>
-                        <input type="text" id="phone" name="phone" placeholder="Enter Phone Number" class="form-control" 
-                            pattern="\d{10}" title="Enter exactly 10 digits" maxlength="10"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
-                    </div>
-                    <div class="submit">
-                        <input type="submit" value="Submit Review">
-                    </div>
-                </form>
+                {% endif %}
             </div>
             
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <script>
                 document.getElementById('productReviewForm').addEventListener('submit', function(event) {
                     event.preventDefault();
-            
-                    const phoneNumber = document.getElementById('phone').value;
-                    if (phoneNumber.length !== 10) {
-                        alert("Phone number must be exactly 10 digits.");
-                        return;
-                    }
-            
-                    const email = document.getElementById('email').value;
-                    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    if (!emailPattern.test(email)) {
-                        alert("Please enter a valid email address.");
-                        return;
-                    }
             
                     const formData = new FormData(this);
                     formData.append('productUrl', window.location.href);
@@ -268,7 +248,88 @@
                     });
                 });
             </script>
+            {% endif %}
+
+            <!-- Reviews Display Section -->
+            <div class="productReviewsSection" style="margin-top: 20px;">
+                <h3 style="margin-bottom: 30px; color: #333; font-size: 24px; font-weight: 600;">Customer Reviews</h3>
+                
+                {% if reviews.items|length > 0 %}
+                    <div class="reviewsContainer">
+                        {% for review in reviews.items %}
+                            <div class="reviewItem" style="background: #fff; border: 1px solid #e1e5e9; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                <div class="reviewHeader" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                                    <div class="reviewerInfo">
+                                        <div class="reviewerName" style="font-weight: 600; color: #333; font-size: 16px; margin-bottom: 4px;">
+                                            {% if review.customer %}
+                                                {{ review.customer.firstname }} {{ review.customer.lastname }}
+                                            {% else %}
+                                                Anonymous
+                                            {% endif %}
+                                        </div>
+                                        <div class="reviewDate" style="color: #666; font-size: 14px;">
+                                            {{ review.creationDate|date('M d, Y') }}
+                                        </div>
+                                    </div>
+                                    <div class="reviewRating" style="display: flex; align-items: center;">
+                                        {% for i in 1..5 %}
+                                            <span style="color: {{ i <= review.rating ? '#ffc107' : '#e1e5e9' }}; font-size: 18px;">★</span>
+                                        {% endfor %}
+                                        <span style="margin-left: 8px; color: #666; font-size: 14px;">({{ review.rating }}/5)</span>
+                                    </div>
+                                </div>
+                                <div class="reviewContent" style="color: #555; line-height: 1.6; font-size: 15px;">
+                                    {{ review.review }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if reviews.pageCount > 1 %}
+                        <div class="reviewsPagination" style="margin-top: 30px; text-align: center;">
+                            <nav aria-label="Reviews pagination">
+                                <ul class="pagination" style="display: inline-flex; list-style: none; padding: 0; margin: 0;">
+                                    {% if reviews.currentPageNumber > 1 %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('Manufacturer_product_single', {'CustomerType': CustomerType, 'url': ProProject.key, 'page': reviews.currentPageNumber - 1}) }}" 
+                                            style="padding: 8px 16px; margin: 0 4px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; color: #007bff; text-decoration: none; transition: all 0.2s;">
+                                                Previous
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    
+                                    {% for page in 1..reviews.pageCount %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('Manufacturer_product_single', {'CustomerType': CustomerType, 'url': ProProject.key, 'page': page}) }}" 
+                                            style="padding: 8px 16px; margin: 0 4px; background: {{ page == reviews.currentPageNumber ? '#007bff' : '#f8f9fa' }}; border: 1px solid #dee2e6; border-radius: 6px; color: {{ page == reviews.currentPageNumber ? '#fff' : '#007bff' }}; text-decoration: none; transition: all 0.2s;">
+                                                {{ page }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    
+                                    {% if reviews.currentPageNumber < reviews.pageCount %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ path('Manufacturer_product_single', {'CustomerType': CustomerType, 'url': ProProject.key, 'page': reviews.currentPageNumber + 1}) }}" 
+                                            style="padding: 8px 16px; margin: 0 4px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; color: #007bff; text-decoration: none; transition: all 0.2s;">
+                                                Next
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="noReviews" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 12px; color: #666;">
+                        <p style="font-size: 16px; margin: 0;">No reviews yet. Be the first to review this product!</p>
+                    </div>
+                {% endif %}
+            </div>
+
         </div>
+
+        
 
         <div class="ProductEnquiryForm">
             <h3>Need Bulk Orders ?</h3>
@@ -298,6 +359,9 @@
                 {{ form_end(form) }}
             </div>
         </div>
+    </div>
+
+        
     </div>
 
     <hr style="border-top: 1px solid #EEF2F5; border-bottom: 0px; margin: 50px 0px;">
