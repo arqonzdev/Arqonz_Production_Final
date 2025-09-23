@@ -508,20 +508,38 @@ class ContentController extends BaseController
      */
     private function getProductImagePath($product, $thumbnail = 'product_listing')
     {
-        $gallery = $product->getProductImage();
-        if ($gallery instanceof ImageGallery && $gallery->getItems()) {
-            $firstItem = $gallery->getItems()[0];
-            if ($firstItem instanceof Hotspotimage) {
-                $image = $firstItem->getImage();
-                if ($image instanceof Image) {
-                    if ($thumbnail) {
-                        return $image->getThumbnail($thumbnail)->getPath();
-                    } else {
-                        return $image->getFullPath();
+        try {
+            $gallery = $product->getProductImage();
+            
+            // Handle ImageGallery
+            if ($gallery instanceof ImageGallery && $gallery->getItems()) {
+                $firstItem = $gallery->getItems()[0];
+                if ($firstItem instanceof Hotspotimage) {
+                    $image = $firstItem->getImage();
+                    if ($image instanceof Image) {
+                        if ($thumbnail) {
+                            return $image->getThumbnail($thumbnail)->getPath();
+                        } else {
+                            return $image->getFullPath();
+                        }
                     }
                 }
             }
+            
+            // Handle direct Image (fallback for old data)
+            if ($gallery instanceof Image) {
+                if ($thumbnail) {
+                    return $gallery->getThumbnail($thumbnail)->getPath();
+                } else {
+                    return $gallery->getFullPath();
+                }
+            }
+            
+        } catch (\Exception $e) {
+            // Log error and return empty string
+            error_log('Error getting product image path: ' . $e->getMessage());
         }
+        
         return '';
     }
 
