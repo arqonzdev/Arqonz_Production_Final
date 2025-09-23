@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\All;
 
 class AddProductFormType extends AbstractType
 {
@@ -101,24 +102,13 @@ class AddProductFormType extends AbstractType
                 'required' => true,
             ])
             ->add('ProductImage', FileType::class, [
-                'label' => 'Display Picture:',
+                'label' => 'Product Images & Videos:',
                 'attr' => [
                     'placeholder' => '',
                 ],
                 'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '3000k',
-                        'mimeTypes' => [
-                            'image/png',
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/gif',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid image file (png, jpg, jpeg, gif)',
-                    ]),
-                ],
-                'help' => 'Maximum file size: 300KB. Allowed file types: png, jpg, jpeg, gif.',
+                'multiple' => 'multiple',
+                'help' => 'Maximum file size: 10MB per file. Allowed file types: images (png, jpg, jpeg, gif) and videos (mp4, webm, ogg, avi, mov). You can select multiple files.',
             ])
             ->add('ProductTags', TextAreaType::class, [
                 'label' => 'Product Tags: ',

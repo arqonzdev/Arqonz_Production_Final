@@ -504,6 +504,28 @@ class ContentController extends BaseController
 
 
     /**
+     * Helper method to get product image path from gallery
+     */
+    private function getProductImagePath($product, $thumbnail = 'product_listing')
+    {
+        $gallery = $product->getProductImage();
+        if ($gallery instanceof ImageGallery && $gallery->getItems()) {
+            $firstItem = $gallery->getItems()[0];
+            if ($firstItem instanceof Hotspotimage) {
+                $image = $firstItem->getImage();
+                if ($image instanceof Image) {
+                    if ($thumbnail) {
+                        return $image->getThumbnail($thumbnail)->getPath();
+                    } else {
+                        return $image->getFullPath();
+                    }
+                }
+            }
+        }
+        return '';
+    }
+
+    /**
      * @Route("/products", name="Products-List")
      * @Route("/products/load-more", name="Products-List-Load-More")
      */
@@ -566,7 +588,7 @@ class ContentController extends BaseController
         foreach ($proProducts as $proProduct) {
             $proProfile = $proProduct->getProfessional();
             $portfolioType = $proProfile ? strtolower($proProfile->getPortfolioType()) : '';
-            $imagePath = $proProduct->getProductImage() ? $proProduct->getProductImage()->getFullPath() : '';
+            $imagePath = $this->getProductImagePath($proProduct, null);
             
             $proProductsArray[] = [
                 'Unique_ID' => $proProduct->getKey(),
@@ -870,7 +892,7 @@ class ContentController extends BaseController
             foreach ($proProducts as $product) {
                 $proProfile = $product->getProfessional();
                 $portfolioType = $proProfile ? strtolower($proProfile->getPortfolioType()) : '';
-                $imagePath = $product->getProductImage() ? $product->getProductImage()->getFullPath() : '';
+                $imagePath = $this->getProductImagePath($product, null);
                 
                 $proProductsArray[] = [
                     'Unique_ID' => $product->getKey(),
@@ -1252,7 +1274,7 @@ class ContentController extends BaseController
             foreach ($proProducts as $product) {
                 $proProfile = $product->getProfessional();
                 $portfolioType = $proProfile ? strtolower($proProfile->getPortfolioType()) : '';
-                $imagePath = $product->getProductImage() ? $product->getProductImage()->getFullPath() : '';
+                $imagePath = $this->getProductImagePath($product, null);
                 
                 $proProductsArray[] = [
                     'Unique_ID' => $product->getKey(),
@@ -5592,6 +5614,7 @@ class ContentController extends BaseController
                         }
 
                         $items = [];
+                        $videoPaths = [];
                         $hotspotImages = [];
 
                         foreach ($FloormapData as $file) {
@@ -6008,6 +6031,7 @@ class ContentController extends BaseController
     </html>
     HTML;
     }
+
 
 
 
@@ -9609,9 +9633,12 @@ public function ManufacturerlistingAction(
     // ---- 3. Sort by rating DESC ----
         usort($sortableProfiles, fn($a, $b) => $b['rating'] <=> $a['rating']);
 
-    // ---- 4. Pagination ----
+    // ---- 4. Extract objects for pagination ----
+        $sortedObjects = array_column($sortableProfiles, 'object');
+
+    // ---- 5. Pagination ----
         $pagination = $paginator->paginate(
-        $sortableProfiles,
+        $sortedObjects,
             $request->query->getInt('page', 1),
             10
         );
@@ -11247,7 +11274,7 @@ public function ManufacturerlistingAction(
         return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
-            'listingtype' => 'Manufacturer',
+            'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
         ]);
     }
@@ -11319,7 +11346,7 @@ public function ManufacturerlistingAction(
         return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
-            'listingtype' => 'Dealer',
+            'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
         ]);
     }
@@ -11391,7 +11418,7 @@ public function ManufacturerlistingAction(
         return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
-            'listingtype' => 'Distributor',
+            'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
         ]);
     }
@@ -11462,7 +11489,7 @@ public function ManufacturerlistingAction(
         return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
-            'listingtype' => 'Retailer',
+            'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
         ]);
     }
@@ -13770,24 +13797,113 @@ public function ManufacturerlistingAction(
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
                     // $ProProduct->setProductCategories($form->get('categories')->getData());
 
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        // $previousimage = $ProProduct->getProductImage();
-                        // $previousimage->delete();
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                    // Handle image gallery upload (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    if ($galleryData) {
+                        $items = [];
+                        $videoPaths = [];
+                        
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
                         
+                                if ($customertype === 'Manufacturer') {
                         $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
-                        
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
+                                } elseif ($customertype === 'Dealer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                } elseif ($customertype === 'Distributor') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
+                                
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                        
+                        // Set the gallery
+                        if (!empty($items)) {
+                            $ProProduct->setProductImage(new ImageGallery($items));
+                        }
+                        
+                        // Handle video paths (if any videos were uploaded)
+                        if (!empty($videoPaths)) {
+                            // Store video paths in the dedicated ProductVideoPaths field
+                            $ProProduct->setProductVideoPaths(implode('|', $videoPaths));
+                        }
                     }  
                     $ProProduct->setPublished(true);    
                     $ProProduct->save();
@@ -13803,6 +13919,7 @@ public function ManufacturerlistingAction(
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => false,
                 ]);
             }
         }
@@ -13851,24 +13968,113 @@ public function ManufacturerlistingAction(
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
                     // $ProProduct->setProductCategories($form->get('categories')->getData());
 
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        // $previousimage = $ProProduct->getProductImage();
-                        // $previousimage->delete();
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                    // Handle image gallery upload (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    if ($galleryData) {
+                        $items = [];
+                        $videoPaths = [];
+                        
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
                         
+                                if ($customertype === 'Manufacturer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                } elseif ($customertype === 'Dealer') {
                         $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
-                        
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
+                                } elseif ($customertype === 'Distributor') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
+                                
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                        
+                        // Set the gallery
+                        if (!empty($items)) {
+                            $ProProduct->setProductImage(new ImageGallery($items));
+                        }
+                        
+                        // Handle video paths (if any videos were uploaded)
+                        if (!empty($videoPaths)) {
+                            // Store video paths in the dedicated ProductVideoPaths field
+                            $ProProduct->setProductVideoPaths(implode('|', $videoPaths));
+                        }
                     }  
                     $ProProduct->setPublished(true);    
                     $ProProduct->save();
@@ -13883,6 +14089,7 @@ public function ManufacturerlistingAction(
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => false,
                 ]);
             }
         }
@@ -13931,24 +14138,113 @@ public function ManufacturerlistingAction(
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
                     // $ProProduct->setProductCategories($form->get('categories')->getData());
 
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        // $previousimage = $ProProduct->getProductImage();
-                        // $previousimage->delete();
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                    // Handle image gallery upload (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    if ($galleryData) {
+                        $items = [];
+                        $videoPaths = [];
+                        
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
-                        
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
+                                
+                                if ($customertype === 'Manufacturer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                } elseif ($customertype === 'Dealer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                } elseif ($customertype === 'Distributor') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
                         $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
                         
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                        
+                        // Set the gallery
+                        if (!empty($items)) {
+                            $ProProduct->setProductImage(new ImageGallery($items));
+                        }
+                        
+                        // Handle video paths (if any videos were uploaded)
+                        if (!empty($videoPaths)) {
+                            // Store video paths in the dedicated ProductVideoPaths field
+                            $ProProduct->setProductVideoPaths(implode('|', $videoPaths));
+                        }
                     }  
                     $ProProduct->setPublished(true);    
                     $ProProduct->save();
@@ -13964,6 +14260,7 @@ public function ManufacturerlistingAction(
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => false,
                 ]);
             }
         }
@@ -14012,24 +14309,113 @@ public function ManufacturerlistingAction(
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
                     // $ProProduct->setProductCategories($form->get('categories')->getData());
 
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        // $previousimage = $ProProduct->getProductImage();
-                        // $previousimage->delete();
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                    // Handle image gallery upload (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    if ($galleryData) {
+                        $items = [];
+                        $videoPaths = [];
+                        
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
-                        
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
+                                
+                                if ($customertype === 'Manufacturer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                } elseif ($customertype === 'Dealer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                } elseif ($customertype === 'Distributor') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
                         $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
                         
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                        
+                        // Set the gallery
+                        if (!empty($items)) {
+                            $ProProduct->setProductImage(new ImageGallery($items));
+                        }
+                        
+                        // Handle video paths (if any videos were uploaded)
+                        if (!empty($videoPaths)) {
+                            // Store video paths in the dedicated ProductVideoPaths field
+                            $ProProduct->setProductVideoPaths(implode('|', $videoPaths));
+                        }
                     }  
                     $ProProduct->setPublished(true);    
                     $ProProduct->save();
@@ -14045,6 +14431,7 @@ public function ManufacturerlistingAction(
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => false,
                 ]);
             }
         }
@@ -14094,24 +14481,113 @@ public function ManufacturerlistingAction(
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
                     // $ProProduct->setProductCategories($form->get('categories')->getData());
 
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        // $previousimage = $ProProduct->getProductImage();
-                        // $previousimage->delete();
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                    // Handle image gallery upload (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    if ($galleryData) {
+                        $items = [];
+                        $videoPaths = [];
+                        
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
                         
+                                if ($customertype === 'Manufacturer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                } elseif ($customertype === 'Dealer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                } elseif ($customertype === 'Distributor') {
                         $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
                         
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                        
+                        // Set the gallery
+                        if (!empty($items)) {
+                            $ProProduct->setProductImage(new ImageGallery($items));
+                        }
+                        
+                        // Handle video paths (if any videos were uploaded)
+                        if (!empty($videoPaths)) {
+                            // Store video paths in the dedicated ProductVideoPaths field
+                            $ProProduct->setProductVideoPaths(implode('|', $videoPaths));
+                        }
                     }  
                     $ProProduct->setPublished(true);    
                     $ProProduct->save();
@@ -14127,6 +14603,7 @@ public function ManufacturerlistingAction(
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => false,
                 ]);
             }
         }
@@ -14187,18 +14664,35 @@ public function ManufacturerlistingAction(
 
             $form = $this->createForm(AddProductFormType::class);
             
-            // Set form data for all fields
-            $form->get('ProductName')->setData($ProProduct->getProductName());
-            $form->get('ProductDescription')->setData($ProProduct->getProductDescription());
-            $form->get('Specifications')->setData($ProProduct->getSpecifications());
-            $form->get('ProductBrand')->setData($ProProduct->getProductBrand());
-            $form->get('ProductMaterial')->setData($ProProduct->getMaterial());
-            $form->get('ProductPrice')->setData($ProProduct->getPrice());
-            $form->get('ProductUnit')->setData($ProProduct->getUnit());
-            $form->get('ProductTags')->setData($ProProduct->getTags());
-            $form->get('ParentCategory')->setData($ProProduct->getParentCategory());
-            $form->get('SubCategory')->setData($ProProduct->getSubCategory());
-            $form->get('SubSubCategory')->setData($ProProduct->getSubSubCategory());
+            // Populate form fields (same approach as projects)
+            foreach ($form->all() as $formField) {
+            $fieldName = $formField->getName();
+
+                // Exclude ProductImage field (same as ProjectGallery exclusion)
+                if ($fieldName !== 'ProductImage' && $fieldName !== '_submit') {
+                    if ($fieldName === 'InternationalBrand') {
+                        // Handle InternationalBrand field specially (same as ReraApproval in projects)
+                        $internationalBrandValue = $ProProduct->getInternationalBrand();
+                        $internationalBrandBoolean = $internationalBrandValue === '1' || $internationalBrandValue === true || $internationalBrandValue === 1;
+                        $formField->setData($internationalBrandBoolean);
+                    } else {
+                        // Map form field names to class method names
+                        $classFieldName = $fieldName;
+                        if ($fieldName === 'ProductMaterial') {
+                            $classFieldName = 'Material';
+                        } elseif ($fieldName === 'ProductPrice') {
+                            $classFieldName = 'Price';
+                        } elseif ($fieldName === 'ProductUnit') {
+                            $classFieldName = 'Unit';
+                        } elseif ($fieldName === 'ProductTags') {
+                            $classFieldName = 'Tags';
+                        }
+                        
+                        $formField->setData($ProProduct->{'get' . ucfirst($classFieldName)}());
+                    }
+                }
+            }
+            
             $form->handleRequest($request);
             
             if (in_array($customertype, ['Manufacturer', 'Dealer', 'Distributor', 'Retailer', 'Supplier']) && $PortfolioActivate === 'true') {
@@ -14211,49 +14705,255 @@ public function ManufacturerlistingAction(
                     $ProProduct->setTags($form->get('ProductTags')->getData());
                     $ProProduct->setPrice($form->get('ProductPrice')->getData());
                     $ProProduct->setProductBrand($form->get('ProductBrand')->getData());
-                    
-
                     $ProProduct->setParentCategory($form->get('ParentCategory')->getData());
                     $ProProduct->setSubCategory($form->get('SubCategory')->getData());
                     $ProProduct->setSubSubCategory($form->get('SubSubCategory')->getData());
 
-                    
-                    $imageData = $form->get('ProductImage')->getData();
-
-                    if ($imageData) {
-
-                        $previousimage = $ProProduct->getProductImage();
-                        if ($previousimage) {
-                            $previousimage->delete();
+                    // Handle deleted images from request (same approach as projects)
+                    $deletedImages = $request->request->get('deleted_images', '');
+                    if (!empty($deletedImages)) {
+                        if (is_array($deletedImages)) {
+                            $deletedImageIds = $deletedImages;
+                        } else {
+                            $deletedImageIds = explode(',', $deletedImages);
                         }
+                        $deletedImageIds = array_filter($deletedImageIds);
                         
-
-                        $imageName = $imageData->getClientOriginalName();
-                        $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                        foreach ($deletedImageIds as $imageId) {
+                            if (!empty($imageId)) {
+                                $image = Image::getById($imageId);
+                                if ($image instanceof Image) {
+                                    $image->delete();
+                                }
+                            }
+                        }
+                    } else {
+                        $deletedImageIds = [];
+                    }
+                    
+                    // Handle deleted videos from request
+                    $deletedVideos = $request->request->get('deleted_videos', '');
+                    if (!empty($deletedVideos)) {
+                        if (is_array($deletedVideos)) {
+                            $deletedVideoPaths = $deletedVideos;
+                        } else {
+                            $deletedVideoPaths = explode(',', $deletedVideos);
+                        }
+                        $deletedVideoPaths = array_filter($deletedVideoPaths);
+                        
+                        foreach ($deletedVideoPaths as $videoPath) {
+                            if (!empty($videoPath)) {
+                                // Delete the video file from the filesystem
+                                $fullPath = '/var/www/pimcore/public' . $videoPath;
+                                if (file_exists($fullPath)) {
+                                    unlink($fullPath);
+                                }
+                            }
+                        }
+                    } else {
+                        $deletedVideoPaths = [];
+                    }
+                    
+                    // Handle new gallery uploads (same approach as projects)
+                    $galleryData = $form->get('ProductImage')->getData();
+                    $logger->info("Gallery data received: " . gettype($galleryData));
+                    if ($galleryData) {
+                        $logger->info("Gallery data is not empty");
+                        if (is_array($galleryData)) {
+                            $logger->info("Gallery data is array with " . count($galleryData) . " items");
+                        }
+                    } else {
+                        $logger->info("Gallery data is empty");
+                    }
+                    $items = [];
+                    $videoPaths = [];
+                    
+                    // Add existing images that weren't deleted
+                    $gallery = $ProProduct->getProductImage();
+                    if ($gallery instanceof ImageGallery) {
+                        foreach ($gallery->getItems() as $item) {
+                            if ($item instanceof Hotspotimage) {
+                                $image = $item->getImage();
+                                if ($image instanceof Image && !in_array($image->getId(), $deletedImageIds)) {
+                                    $items[] = $item;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Add new uploaded images
+                    if ($galleryData) {
+                        if (is_array($galleryData)) {
+                            foreach ($galleryData as $file) {
+                                if ($file) {
+                                    $imageName = $file->getClientOriginalName();
+                                    $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                                    
+                                    // Check if it's a video file
+                                    if (strpos($file->getMimeType(), 'video/') === 0) {
+                                        // Handle videos - save to static directory (same as project functions)
+                                        $videoDir = '/var/www/pimcore/public/static/videos';
+                                        if (!file_exists($videoDir)) {
+                                            mkdir($videoDir, 0777, true);
+                                        }
+                                        
+                                        $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                        $videoPath = $videoDir . '/' . $videoName;
+                                        move_uploaded_file($file->getPathname(), $videoPath);
+                                        
+                                        // Store relative path (we'll handle this separately)
+                                        $videoPaths[] = '/static/videos/' . $videoName;
+                                    } else {
+                                        // Handle images - create Pimcore asset
                         $newAsset = new Image();
-                        
+                                        $newAsset->setFilename($imageName);
+                                        $newAsset->setData(file_get_contents($file->getPathname()));
+                                        
+                                        // Set parent based on customer type
+                                        if ($customertype === 'Manufacturer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                        } elseif ($customertype === 'Dealer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                        } elseif ($customertype === 'Distributor') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                        } elseif ($customertype === 'Supplier') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                        } elseif ($customertype === 'Retailer') {
+                                            $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                        }
+                                        
+                                        $newAsset->save();
+                                        
+                                        $hotspotImage = new Hotspotimage();
+                                        $hotspotImage->setImage($newAsset);
+                                        $items[] = $hotspotImage;
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle single file upload
+                            $imageName = $galleryData->getClientOriginalName();
+                            $imageName = pathinfo($imageName, PATHINFO_FILENAME) . '-' . time() . '-' . rand(1000, 9999) . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+                            
+                            if (strpos($galleryData->getMimeType(), 'video/') === 0) {
+                                // Handle videos - save to static directory (same as project functions)
+                                $videoDir = '/var/www/pimcore/public/static/videos';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $galleryData->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($galleryData->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $videoPaths[] = '/static/videos/' . $videoName;
+                            } else {
+                                // Handle images - create Pimcore asset
+                                $newAsset = new Image();
                         $newAsset->setFilename($imageName);
-                        
-                        $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/".ucfirst($ProProfileType)."s/ProductGallery"));
-                        
-                        $newAsset->setData(file_get_contents($imageData->getPathname()));
+                                $newAsset->setData(file_get_contents($galleryData->getPathname()));
+                                
+                                if ($customertype === 'Manufacturer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Manufacturers/ProductGallery"));
+                                } elseif ($customertype === 'Dealer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Dealers/ProductGallery"));
+                                } elseif ($customertype === 'Distributor') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Distributors/ProductGallery"));
+                                } elseif ($customertype === 'Supplier') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Suppliers/ProductGallery"));
+                                } elseif ($customertype === 'Retailer') {
+                                    $newAsset->setParent(\Pimcore\Model\Asset::getByPath("/Services/Retailers/ProductGallery"));
+                                }
+                                
                         $newAsset->save();
-                        $ProProduct->setProductImage($newAsset);
-                    }  
+                                
+                                $hotspotImage = new Hotspotimage();
+                                $hotspotImage->setImage($newAsset);
+                                $items[] = $hotspotImage;
+                            }
+                        }
+                    }
+                    
+                    // Set the updated gallery
+                    if (!empty($items)) {
+                        $ProProduct->setProductImage(new ImageGallery($items));
+                    } else {
+                        $ProProduct->setProductImage(null);
+                    }
+                    
+                    // Handle video paths (preserve existing + add new ones - exclude deleted)
+                    $existingVideoPaths = $ProProduct->getProductVideoPaths();
+                    $allVideoPaths = [];
+                    
+                    // Add existing video paths (if any) - exclude deleted ones
+                    if (!empty($existingVideoPaths)) {
+                        $existingArray = explode('|', $existingVideoPaths);
+                        foreach ($existingArray as $path) {
+                            if (!empty($path) && !in_array($path, $deletedVideoPaths)) {
+                                $allVideoPaths[] = $path;
+                            }
+                        }
+                    }
+                    
+                    // Add new video paths
+                    if (!empty($videoPaths)) {
+                        foreach ($videoPaths as $newPath) {
+                            $allVideoPaths[] = $newPath;
+                        }
+                    }
+                    
+                    // Set all video paths
+                    if (!empty($allVideoPaths)) {
+                        $ProProduct->setProductVideoPaths(implode('|', $allVideoPaths));
+                    } else {
+                        $ProProduct->setProductVideoPaths(null);
+                    }
                        
                     $ProProduct->save();
-    
-    
                     $this->addFlash('success', $translator->trans('Product Updated succesfully.'));
-    
-                    
                 }
 
+                
+                // Get existing images for preview (same approach as projects)
+                $existingImages = [];
+                $existingVideos = [];
+                
+                $gallery = $ProProduct->getProductImage();
+                if ($gallery instanceof ImageGallery) {
+                    foreach ($gallery->getItems() as $item) {
+                        if ($item instanceof Hotspotimage) {
+                            $image = $item->getImage();
+                            if ($image instanceof Image) {
+                                $existingImages[] = [
+                                    'id' => $image->getId(),
+                                    'path' => $image->getFullPath(),
+                                    'thumbnail' => $image->getThumbnail('product_listing')
+                                ];
+                            }
+                        }
+                    }
+                }
+                
+                // Get existing videos
+                $videoPaths = $ProProduct->getProductVideoPaths();
+                if (!empty($videoPaths)) {
+                    $videoArray = explode('|', $videoPaths);
+                    foreach ($videoArray as $videoPath) {
+                        if (!empty($videoPath)) {
+                            $existingVideos[] = $videoPath;
+                        }
+                    }
+                }
                 
                 return $this->render('Professional/professional_add_product.html.twig', [
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
+                    'editMode' => true,
+                    'product' => $ProProduct,
+                    'existingImages' => $existingImages,
+                    'existingVideos' => $existingVideos,
                 ]);
             }
         }
@@ -18353,7 +19053,7 @@ public function ManufacturerlistingAction(
                     'material' => $product->getMaterial(),
                     'quantity' => $product->getQuantity(),
                     'unit' => $product->getUnit(),
-                    'imagePath' => $product->getFeaturedImagePath(),
+                    'imagePath' => $this->getProductImagePath($product),
                     'l1' => $product->getL1(),
                     'l2' => $product->getL2(),
                     'l3' => $product->getL3(),

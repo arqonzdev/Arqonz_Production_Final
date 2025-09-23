@@ -272,7 +272,18 @@
                 {% for product in products %}
                     <div class="PageProductCard">
                         <div class="ProductFeaImg">
-                            <img src="{{ product.getProductImage().getThumbnail('galleryCarousel') }}" alt="Profile Image" class="profile-image">
+                        {% if product.getProductImage() and product.getProductImage().getItems()|length > 0 %}
+                            {% set firstItem = product.getProductImage().getItems()[0] %}
+                            {% if firstItem.getImage().getMimeType() starts with 'video/' %}
+                                <video class="profile-image" muted>
+                                    <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
+                                </video>
+                            {% else %}
+                                <img src="{{ firstItem.getImage().getThumbnail('galleryCarousel') }}" alt="Profile Image" class="profile-image">
+                            {% endif %}
+                        {% else %}
+                                <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Product Image" class="profile-image">
+                            {% endif %}
                             
                         </div>
                         <div class="ProductPropertiesSection">

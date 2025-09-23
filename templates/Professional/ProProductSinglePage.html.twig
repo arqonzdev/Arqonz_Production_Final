@@ -9,13 +9,24 @@
     <div class="ProductsHero">
         <div class="productGallery">
             <div class="productSlider">
+        {% if ProProject.getProductImage() and ProProject.getProductImage().getItems()|length > 0 %}
+            {% for item in ProProject.getProductImage().getItems() %}
                 <div class="slide">
-                    {% if ProProject.getProductImage() %}
-                        <img src="{{ ProProject.getProductImage().getThumbnail('galleryCarousel') }}" alt="Product Image">
+                    {% if item.getImage().getMimeType() starts with 'video/' %}
+                        <video controls>
+                            <source src="{{ item.getImage().getFullPath() }}" type="{{ item.getImage().getMimeType() }}">
+                            Your browser does not support the video tag.
+                        </video>
                     {% else %}
-                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Product Image">
+                        <img src="{{ item.getImage().getThumbnail('galleryCarousel') }}" alt="Product Image">
                     {% endif %}
                 </div>
+            {% endfor %}
+        {% else %}
+                    <div class="slide">
+                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Product Image">
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="productMainDetails">

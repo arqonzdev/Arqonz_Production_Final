@@ -76,7 +76,18 @@
                 <div class="CustProdCard">
                     <div class="BOQProdCol1">
                         <div class="BOQprodimage">
-                            <img style="width:178px;" src="{{ product.getFeaturedImagePath() }}" alt="BOQ_ProductImage">
+                        {% if product.getProductImage() and product.getProductImage().getItems()|length > 0 %}
+                            {% set firstItem = product.getProductImage().getItems()[0] %}
+                            {% if firstItem.getImage().getMimeType() starts with 'video/' %}
+                                <video style="width:178px;" muted>
+                                    <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
+                                </video>
+                            {% else %}
+                                <img style="width:178px;" src="{{ firstItem.getImage().getThumbnail('product_listing').getPath() }}" alt="BOQ_ProductImage">
+                            {% endif %}
+                        {% else %}
+                                <img style="width:178px;" src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('product_listing').getPath() }}" alt="Default Product Image">
+                            {% endif %}
                         </div>
                     </div>
                     <div class="BOQProdRightCOL">
