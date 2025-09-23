@@ -73,9 +73,12 @@
 
 
 
-{# <script type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function() {
-  $(".js-select-cities").select2();
+  // Only initialize select2 if the element exists
+  if ($(".js-select-cities").length > 0) {
+    $(".js-select-cities").select2();
+  }
 });
-</script> #}
+</script>
 {% endblock %}

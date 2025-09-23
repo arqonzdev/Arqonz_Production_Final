@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const showMoreBtn = document.getElementById('showMoreBtn');
     const showLessBtn = document.getElementById('showLessBtn');
 
+    // Only proceed if the required elements exist
+    if (!viewContainer) {
+        return;
+    }
+
     let views = [];
     let displayedViews = 6;
     const renderers = [];
