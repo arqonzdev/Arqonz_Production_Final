@@ -21013,7 +21013,11 @@ public function ManufacturerlistingAction(
                                 
                                 if ($existingAsset && $existingAsset instanceof \Pimcore\Model\Asset\Image) {
                                     $logger->info('Found existing asset: ' . $fullAssetPath);
-                                    $proProduct->setProductImage($existingAsset);
+                                    // Create ImageGallery with the single image
+                                    $hotspotImage = new \Pimcore\Model\DataObject\Data\Hotspotimage();
+                                    $hotspotImage->setImage($existingAsset);
+                                    $imageGallery = new \Pimcore\Model\DataObject\Data\ImageGallery([$hotspotImage]);
+                                    $proProduct->setProductImage($imageGallery);
                                 } else {
                                     $logger->warning('Asset not found at path: ' . $fullAssetPath . ' for product: ' . $productName);
                                     // Optionally, you can add a flash message for missing images
@@ -21155,7 +21159,11 @@ public function ManufacturerlistingAction(
                                 
                                 if ($existingAsset && $existingAsset instanceof \Pimcore\Model\Asset\Image) {
                                     $logger->info('Found existing asset: ' . $fullAssetPath);
-                                    $proProduct->setProductImage($existingAsset);
+                                    // Create ImageGallery with the single image
+                                    $hotspotImage = new \Pimcore\Model\DataObject\Data\Hotspotimage();
+                                    $hotspotImage->setImage($existingAsset);
+                                    $imageGallery = new \Pimcore\Model\DataObject\Data\ImageGallery([$hotspotImage]);
+                                    $proProduct->setProductImage($imageGallery);
                                 } else {
                                     $logger->warning('Asset not found at path: ' . $fullAssetPath . ' for product: ' . $productName);
                                     // Optionally, you can add a flash message for missing images
@@ -21297,7 +21305,11 @@ public function ManufacturerlistingAction(
                                 
                                 if ($existingAsset && $existingAsset instanceof \Pimcore\Model\Asset\Image) {
                                     $logger->info('Found existing asset: ' . $fullAssetPath);
-                                    $proProduct->setProductImage($existingAsset);
+                                    // Create ImageGallery with the single image
+                                    $hotspotImage = new \Pimcore\Model\DataObject\Data\Hotspotimage();
+                                    $hotspotImage->setImage($existingAsset);
+                                    $imageGallery = new \Pimcore\Model\DataObject\Data\ImageGallery([$hotspotImage]);
+                                    $proProduct->setProductImage($imageGallery);
                                 } else {
                                     $logger->warning('Asset not found at path: ' . $fullAssetPath . ' for product: ' . $productName);
                                     // Optionally, you can add a flash message for missing images
@@ -21438,7 +21450,11 @@ public function ManufacturerlistingAction(
                                 
                                 if ($existingAsset && $existingAsset instanceof \Pimcore\Model\Asset\Image) {
                                     $logger->info('Found existing asset: ' . $fullAssetPath);
-                                    $proProduct->setProductImage($existingAsset);
+                                    // Create ImageGallery with the single image
+                                    $hotspotImage = new \Pimcore\Model\DataObject\Data\Hotspotimage();
+                                    $hotspotImage->setImage($existingAsset);
+                                    $imageGallery = new \Pimcore\Model\DataObject\Data\ImageGallery([$hotspotImage]);
+                                    $proProduct->setProductImage($imageGallery);
                                 } else {
                                     $logger->warning('Asset not found at path: ' . $fullAssetPath . ' for product: ' . $productName);
                                     // Optionally, you can add a flash message for missing images
