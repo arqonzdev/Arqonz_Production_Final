@@ -101,11 +101,18 @@
                     {% for ProProduct in ProProducts %}
                         <div class="product-card" data-product-name="{{ ProProduct.ProductName() ?: '' }}" data-product-brand="{{ ProProduct.ProductBrand() ?: '' }}" data-product-category="{{ ProProduct.ParentCategory() ?: '' }}">
                             <div class="product-image-container">
-                                {% if ProProduct.getProductImage() %}
-                                    <img src="{{ ProProduct.getProductImage().getThumbnail('product_listing').getPath() }}" 
-                                         alt="{{ ProProduct.ProductName() }}" 
-                                         class="product-image"
-                                         loading="lazy">
+                                {% if ProProduct.getProductImage() and ProProduct.getProductImage().getItems()|length > 0 %}
+                                    {% set firstItem = ProProduct.getProductImage().getItems()[0] %}
+                                    {% if firstItem.getImage().getMimeType() starts with 'video/' %}
+                                        <video class="product-image" muted>
+                                            <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
+                                        </video>
+                                    {% else %}
+                                        <img src="{{ firstItem.getImage().getThumbnail('product_listing').getPath() }}" 
+                                             alt="{{ ProProduct.ProductName() }}" 
+                                             class="product-image"
+                                             loading="lazy">
+                                    {% endif %}
                                 {% else %}
                                     <div class="product-image-placeholder">
                                         <i class="fas fa-image"></i>
@@ -188,11 +195,18 @@
                             {% for ProProduct in ProProducts %}
                                 <tr class="requirement-item" data-product-name="{{ ProProduct.ProductName() ?: '' }}" data-product-brand="{{ ProProduct.ProductBrand() ?: '' }}" data-product-category="{{ ProProduct.ParentCategory() ?: '' }}">
                                     <td class="product-image-cell">
-                                        {% if ProProduct.getProductImage() %}
-                                            <img src="{{ ProProduct.getProductImage().getThumbnail('product_listing').getPath() }}" 
-                                                 alt="{{ ProProduct.ProductName() }}" 
-                                                 class="table-product-image"
-                                                 loading="lazy">
+                                        {% if ProProduct.getProductImage() and ProProduct.getProductImage().getItems()|length > 0 %}
+                                            {% set firstItem = ProProduct.getProductImage().getItems()[0] %}
+                                            {% if firstItem.getImage().getMimeType() starts with 'video/' %}
+                                                <video class="table-product-image" muted>
+                                                    <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
+                                                </video>
+                                            {% else %}
+                                                <img src="{{ firstItem.getImage().getThumbnail('product_listing').getPath() }}" 
+                                                     alt="{{ ProProduct.ProductName() }}" 
+                                                     class="table-product-image"
+                                                     loading="lazy">
+                                            {% endif %}
                                         {% else %}
                                             <div class="table-image-placeholder">
                                                 <i class="fas fa-image"></i>

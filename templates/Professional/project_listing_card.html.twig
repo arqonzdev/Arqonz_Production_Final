@@ -2,8 +2,19 @@
     {% set architectProfile = project.getProfessional() %}
 
 
-    {% if portfolioType in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
-        <img src="{{ project.getProductImage().getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+        {% if portfolioType in ['Manufacturer', 'Dealer', 'Distributor', 'Retailer'] %}
+            {% if project.getProductImage() and project.getProductImage().getItems()|length > 0 %}
+                {% set firstItem = project.getProductImage().getItems()[0] %}
+                {% if firstItem.getImage().getMimeType() starts with 'video/' %}
+                    <video class="profile-image" muted>
+                        <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
+                    </video>
+                {% else %}
+                    <img src="{{ firstItem.getImage().getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
+                {% endif %}
+            {% else %}
+            <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail("grid") }}" alt="Default Product Image" class="profile-image">
+        {% endif %}
     {% else %}
         {% if architectProfile.getProfileImage() %}
             {% if portfolioType in ['Architect', 'Builder', 'Contractor', 'Designer', 'Engineer'] %}
