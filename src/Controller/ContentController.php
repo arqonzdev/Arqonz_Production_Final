@@ -10617,7 +10617,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'designer',
@@ -10691,7 +10691,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'designer',
@@ -10764,7 +10764,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'engineer',
@@ -10834,7 +10834,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'architect',
@@ -10904,7 +10904,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'contractor',
@@ -10975,7 +10975,7 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'Builder',
@@ -11271,11 +11271,12 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
             'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
+            'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
         ]);
     }
 
@@ -11343,11 +11344,12 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
             'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
+            'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
         ]);
     }
 
@@ -11415,11 +11417,12 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
             'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
+            'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
         ]);
     }
 
@@ -11486,11 +11489,12 @@ public function ManufacturerlistingAction(
         }
         
 
-        return $this->render('Professional/professional_project_single.html.twig', [
+        return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
             'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
+            'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
         ]);
     }
 

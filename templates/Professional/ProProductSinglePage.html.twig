@@ -1,42 +1,129 @@
-{# /var/www/pimcore/templates/Professional/ProProductSinglePage.html.twig #}
 {% extends 'layouts/arqonz_updated_layout.html.twig' %}
-{% form_theme form 'bootstrap_5_layout_custom.html.twig' %}
 
 {% block content %}
 <link rel="stylesheet" href="/static/css/ArqonzWebsite-Pages.css">
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css">
+
+<style>
+/* Form field styling - uniform full width */
+.ProdEnquiryFormFields input[type="text"],
+.ProdEnquiryFormFields input[type="email"],
+.ProdEnquiryFormFields input[type="number"],
+.ProdEnquiryFormFields textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.ProdEnquiryFormFields input[type="text"]:focus,
+.ProdEnquiryFormFields input[type="email"]:focus,
+.ProdEnquiryFormFields input[type="number"]:focus,
+.ProdEnquiryFormFields textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.ProdEnquiryFormFields textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Submit button styling */
+.submit-button {
+    width: 100%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+}
+
+.submit-button:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+}
+</style>
 
 <div class="productsPageMain">
     <div class="ProductsHero">
         <div class="productGallery">
             <div class="productSlider">
-        {% if ProProject.getProductImage() and ProProject.getProductImage().getItems()|length > 0 %}
-            {% for item in ProProject.getProductImage().getItems() %}
-                <div class="slide">
-                    {% if item.getImage().getMimeType() starts with 'video/' %}
-                        <video controls>
-                            <source src="{{ item.getImage().getFullPath() }}" type="{{ item.getImage().getMimeType() }}">
-                            Your browser does not support the video tag.
-                        </video>
-                    {% else %}
-                        <img src="{{ item.getImage().getThumbnail('galleryCarousel') }}" alt="Product Image">
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
+                {% if ProProject.getProductImage() and ProProject.getProductImage().getItems()|length > 0 %}
+                    {% for item in ProProject.getProductImage().getItems() %}
+                        {% if item.getImage() %}
+                            <div class="slide">
+                                <img src="{{ item.getImage().getThumbnail('galleryCarousel').getPath() }}" alt="Product Image">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
                     <div class="slide">
-                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Product Image">
+                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel').getPath() }}" alt="Default Product Image">
                     </div>
                 {% endif %}
             </div>
+            <div class="dots">
+                {% if ProProject.getProductImage() and ProProject.getProductImage().getItems()|length > 0 %}
+                    {% for item in ProProject.getProductImage().getItems() %}
+                        {% if item.getImage() %}
+                            <span class="dot"></span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <span class="dot"></span>
+                {% endif %}
+            </div>
+
+            <script>
+                let slideIndex = 0;
+                showSlides(slideIndex);
+
+                function showSlides(n) {
+                    let slides = document.querySelectorAll('.productSlider .slide');
+                    let dots = document.querySelectorAll('.dot');
+                    if (n >= slides.length) { slideIndex = 0 }
+                    if (n < 0) { slideIndex = slides.length - 1 }
+                    for (let i = 0; i < slides.length; i++) {
+                        slides[i].style.transform = `translateX(-${slideIndex * 100}%)`;
+                    }
+                    for (let i = 0; i < dots.length; i++) {
+                        dots[i].className = dots[i].className.replace(" active", "");
+                    }
+                    dots[slideIndex].className += " active";
+                }
+
+                document.querySelectorAll('.dot').forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        slideIndex = index;
+                        showSlides(slideIndex);
+                    });
+                });
+            </script>
         </div>
         <div class="productMainDetails">
-            <h2>{{ ProProject.ProductName() }}</h2>
+            <h2>{{ ProProject.getProductName() }}</h2>
             <div class="ProdReviewRatings">
                 <img src="/static/icons/ProdStars.svg" alt="">
-                <p>(24 Reviews)</p>
+                <p>({{ architectProfile.getProRating()|round }} Reviews)</p>
             </div>
-            
-            {% if ProProject.getPrice() %}
             <div class="productPrice">
                 <p class="ProductcardPrice" style="justify-content: left;">
                     <span class="ProdPriceRs">
@@ -46,18 +133,17 @@
                     </span>
                 </p>
             </div>
-            {% endif %}
-            
             <div class="ProdDescSnippet">
                 <p>{{ ProProject.getProductDescription()|length > 231 ? ProProject.getProductDescription()|slice(0, 231) ~ '...' : ProProject.getProductDescription() }}</p>
             </div>
             <div class="ProdManufacturer">
                 <img src="/static/icons/ProdManufacturer.svg" alt="">
-                <p>{{ architectProfile.getCompanyName() }}</p>
+                <p class="blurred-text">: {{ architectProfile.getCompanyName() }}</p>
             </div>
             <div class="ProdStarSpecifications">
-                {% if ProProject.getProductBrand() %}
-                    <p><span class="specLable">Brand</span><span class="SpecValue"> : {{ ProProject.getProductBrand() }}</span></p>
+                <p><span class="specLable">Brand</span><span class="SpecValue"> : {{ ProProject.getProductBrand() }}</span></p>
+                {% if ProProject.getMaterial() %}
+                    <p><span class="specLable">Material</span><span class="SpecValue"> : {{ ProProject.getMaterial() }}</span></p>
                 {% endif %}
             </div>
         </div>
@@ -77,8 +163,31 @@
                 </a>
             </div>
             <p class="ProdDataDescription">{{ ProProject.getProductDescription() }}</p>
-            <div class="ProdComplSpecifications" style="display: none;">
-                <p>{{ ProProject.getSpecifications() }}</p>
+            <div class="ProdComplSpecifications">
+                {% if ProProject.getSpecifications() %}
+                    <p><span class="specLable">Specifications</span><span class="SpecValue"> : {{ ProProject.getSpecifications() }}</span></p>
+                {% endif %}
+                {% if ProProject.getProductBrand() %}
+                    <p><span class="specLable">Brand</span><span class="SpecValue"> : {{ ProProject.getProductBrand() }}</span></p>
+                {% endif %}
+                {% if ProProject.getMaterial() %}
+                    <p><span class="specLable">Material</span><span class="SpecValue"> : {{ ProProject.getMaterial() }}</span></p>
+                {% endif %}
+                {% if ProProject.getUnit() %}
+                    <p><span class="specLable">Unit</span><span class="SpecValue"> : {{ ProProject.getUnit() }}</span></p>
+                {% endif %}
+                {% if ProProject.getParentCategory() %}
+                    <p><span class="specLable">Category</span><span class="SpecValue"> : {{ ProProject.getParentCategory() }}</span></p>
+                {% endif %}
+                {% if ProProject.getSubCategory() %}
+                    <p><span class="specLable">Sub Category</span><span class="SpecValue"> : {{ ProProject.getSubCategory() }}</span></p>
+                {% endif %}
+                {% if ProProject.getSubSubCategory() %}
+                    <p><span class="specLable">Sub Sub Category</span><span class="SpecValue"> : {{ ProProject.getSubSubCategory() }}</span></p>
+                {% endif %}
+                {% if ProProject.getTags() %}
+                    <p><span class="specLable">Tags</span><span class="SpecValue"> : {{ ProProject.getTags() }}</span></p>
+                {% endif %}
             </div>
 
             <div class="productReviewForm">
@@ -120,87 +229,72 @@
                     </div>
                 </form>
             </div>
+            
+            <script>
+                document.getElementById('productReviewForm').addEventListener('submit', function(event) {
+                    event.preventDefault();
+            
+                    const phoneNumber = document.getElementById('phone').value;
+                    if (phoneNumber.length !== 10) {
+                        alert("Phone number must be exactly 10 digits.");
+                        return;
+                    }
+            
+                    const email = document.getElementById('email').value;
+                    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailPattern.test(email)) {
+                        alert("Please enter a valid email address.");
+                        return;
+                    }
+            
+                    const formData = new FormData(this);
+                    formData.append('productUrl', window.location.href);
+            
+                    fetch('/product-review-submit', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Thank you for your review!');
+                            document.getElementById('productReviewForm').reset(); // Clears the form fields
+                        } else {
+                            alert('There was an issue submitting your review. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('An error occurred while submitting your review. Please try again.');
+                    });
+                });
+            </script>
         </div>
 
         <div class="ProductEnquiryForm">
-            <h3>Enquire About This Product</h3>
+            <h3>Need Bulk Orders ?</h3>
             <div class="ProdsellerInfo">
                 <div class="SellerImage">
                     {% if architectProfile.getProfileImage() %}
-                        <img src="{{ architectProfile.getProfileImage().getThumbnail('galleryCarousel') }}" alt="Profile Image">
+                        <img src="{{ architectProfile.getProfileImage().getThumbnail('galleryCarousel').getPath() }}" alt="Seller Image">
                     {% else %}
-                        <img src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('galleryCarousel') }}" alt="Default Profile Image">
+                        <img src="/static/icons/boy-avator-1.svg" alt="Default Seller Image">
                     {% endif %}
                 </div>
                 <div class="sellerInfo">
                     <p class="SellerInfoTag">Seller Information</p>
                     <p class="SellerInfoName">{{ architectProfile.getCompanyName() }}</p>
-                    <p class="SellerInfoDescription">{{ architectProfile.getCity() }}</p>
+                    <p class="SellerInfoDescription">{{ architectProfile.getDescription()|slice(0, 100) }}{% if architectProfile.getDescription()|length > 100 %}...{% endif %}</p>
                 </div>
             </div>
-
-            {# Original Enquiry Form #}
+        
             <div class="ProdEnquiryFormFields">
                 {{ form_start(form) }}
-                    {{ form_row(form.fullname, {
-                        'attr': {
-                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
-                            'placeholder': 'Enter Full Name'
-                        }
-                    }) }}
-                    
-                    {{ form_row(form.Phone, {
-                        'attr': {
-                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
-                            'placeholder': 'Enter Phone Number',
-                            'pattern': '\\d{10}',
-                            'title': 'Enter exactly 10 digits',
-                            'maxlength': '10',
-                            'oninput': "this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
-                        }
-                    }) }}
-                    
-                    {{ form_row(form.Email, {
-                        'attr': {
-                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
-                            'placeholder': 'Enter Email Address',
-                            'pattern': '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-                            'title': 'Enter a valid email address'
-                        }
-                    }) }}
-                    
-                    {{ form_row(form.Message, {
-                        'attr': {
-                            'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
-                            'placeholder': 'Enter Your Message'
-                        }
-                    }) }}
-                    
-                    {% if form.City is defined %}
-                        {{ form_row(form.City, {
-                            'attr': {
-                                'style': 'box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.15);',
-                                'placeholder': 'Enter Your City'
-                            }
-                        }) }}
-                    {% endif %}
-                    
-                    
-                    <style>
-                        #pro_enquiry_form__submit {
-                            background-color: #23262F; color: #fff; font-size: 16px; cursor: pointer; margin-top: 12px; width: 100%; padding: 10px; border: none;
-                        }
-                        #pro_enquiry_form_Message {
-                            padding: 18px 16px;
-                            border: 0px;
-                            border-radius: 6px;
-                            width: 100%;
-                        }
-                        .ProdEnquiryFormFields form input {
-                            
-                            width: 100%;
-                        }
-                    </style>
+                    {{ form_widget(form.fullname, {'attr': {'placeholder': 'Enter Full Name *'}}) }}
+                    {{ form_widget(form.Phone, {'attr': {'placeholder': 'Enter Phone Number *'}}) }}
+                    {{ form_widget(form.Email, {'attr': {'placeholder': 'Enter Email Address *'}}) }}
+                    {{ form_widget(form.City, {'attr': {'placeholder': 'Enter City'}}) }}
+                    {{ form_widget(form.Message, {'attr': {'placeholder': 'Enter your message... *'}}) }}
+                    {{ form_widget(form._submit, {'attr': {'class': 'submit-button'}}) }}
                 {{ form_end(form) }}
             </div>
         </div>
@@ -261,54 +355,17 @@
 
         // Event listeners for the description and specification links
         descriptionLink.addEventListener('click', function (e) {
-            e.preventDefault();
+            e.preventDefault(); // Prevent the default anchor behavior
             updateSelection(descriptionLink);
             toggleContent(descriptionLink);
         });
 
         specificationLink.addEventListener('click', function (e) {
-            e.preventDefault();
+            e.preventDefault(); // Prevent the default anchor behavior
             updateSelection(specificationLink);
             toggleContent(specificationLink);
         });
-
-        // Review form validation
-        document.getElementById('productReviewForm')?.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const phoneNumber = document.getElementById('phone')?.value;
-            if (phoneNumber && phoneNumber.length !== 10) {
-                alert("Phone number must be exactly 10 digits.");
-                return;
-            }
-
-            const email = document.getElementById('email')?.value;
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (email && !emailPattern.test(email)) {
-                alert("Please enter a valid email address.");
-                return;
-            }
-
-            const formData = new FormData(this);
-            formData.append('productUrl', window.location.href);
-
-            fetch('/product-review-submit', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Thank you for your review!');
-                    document.getElementById('productReviewForm').reset();
-                } else {
-                    alert('There was an issue submitting your review. Please try again.');
-                }
-            })
-            .catch(error => {
-                alert('An error occurred while submitting your review. Please try again.');
-            });
-        });
     });
 </script>
+
 {% endblock %}
