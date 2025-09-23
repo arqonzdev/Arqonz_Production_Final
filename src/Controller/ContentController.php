@@ -578,7 +578,10 @@ class ContentController extends BaseController
      */
     public function ProductsListAction(Request $request, Security $security, SessionInterface $session, LoggerInterface $logger)
     {   
-        // Define default values
+        $user = $security->getUser();
+
+        if ($user && $this->isGranted('ROLE_USER')) {
+            // Define default values
         $defaultMin = 0;
         $defaultMax = 10000000;
         $defaultSort = 'default';
@@ -799,6 +802,10 @@ class ContentController extends BaseController
             'metadescription' => $metaDescription,
             'metatitle' => $metaTitle,
         ]);
+        }
+        
+        // If the user is not logged in or doesn't have the required role
+        return $this->render('Architect/NotLogged_signup.html.twig');
     }
         
     
@@ -811,9 +818,10 @@ class ContentController extends BaseController
      */
     public function productsSinglePageAction($url, Security $security, Request $request, PaginatorInterface $paginator, MailerInterface $mailer)
     {   
-        
+        $user = $security->getUser();
 
-        $keyword = $url;
+        if ($user && $this->isGranted('ROLE_USER')) {
+            $keyword = $url;
 
         // Database connection
         $dsn = 'mysql:host=localhost;dbname=pimcore;charset=utf8mb4';
@@ -889,6 +897,10 @@ class ContentController extends BaseController
             'averageRating' => $averageRating,
             'totalReviews' => $totalReviews,
         ]);
+        }
+        
+        // If the user is not logged in or doesn't have the required role
+        return $this->render('Architect/NotLogged_signup.html.twig');
     }
         
 
@@ -4063,30 +4075,81 @@ class ContentController extends BaseController
     public function getSearchSuggestions(Request $request): JsonResponse
     {
         $searchTerm = $request->request->get('searchTerm', '');
-        $category = $request->request->get('category', 'Architect');
+        $category = $request->request->get('category', 'All');
         
-        // Return default suggestions when search term is empty
+        // Return empty array when search term is empty (no preset suggestions)
         if (empty($searchTerm)) {
-            $defaultSuggestions = [
-                "Best $category in Chennai",
-                "Top $category in Delhi",
-                "$category near me",
-                "Affordable $category",
-                "Professional $category services"
-            ];
-            return new JsonResponse($defaultSuggestions);
+            return new JsonResponse([]);
         }
 
-        $profileListing = new Listing();
-        $profileListing->addConditionParam("PortfolioType = ?", $category);
-        $profileListing->addConditionParam("CompanyName LIKE ?", "%" . $searchTerm . "%");
-        $profileListing->setLimit(10);
-        
-        $profiles = $profileListing->load();
-        
         $suggestions = [];
-        foreach ($profiles as $profile) {
-            $suggestions[] = $profile->getCompanyName();
+        
+        if ($category === 'All' || $category === 'Professionals') {
+            // Search in ProProfile objects
+            $profileListing = new \Pimcore\Model\DataObject\ProProfile\Listing();
+            $profileListing->addConditionParam("(CompanyName LIKE ? OR Description LIKE ?)", ["%" . $searchTerm . "%", "%" . $searchTerm . "%"]);
+            $profileListing->setLimit(5);
+            
+            $profiles = $profileListing->load();
+            
+            foreach ($profiles as $profile) {
+                $suggestions[] = [
+                    'text' => $profile->getCompanyName(),
+                    'type' => 'professional',
+                    'portfolioType' => strtolower($profile->getPortfolioType()),
+                    'url' => $profile->getKey()
+                ];
+            }
+        } elseif ($category === 'Products') {
+            // First search in ProProduct objects
+            $proProductListing = new \Pimcore\Model\DataObject\ProProduct\Listing();
+            $proProductListing->addConditionParam("(ProductName LIKE ? OR ProductDescription LIKE ?)", ["%" . $searchTerm . "%", "%" . $searchTerm . "%"]);
+            $proProductListing->setLimit(5);
+            
+            $proProducts = $proProductListing->load();
+            
+            foreach ($proProducts as $proProduct) {
+                $proProfile = $proProduct->getProfessional();
+                $portfolioType = $proProfile ? strtolower($proProfile->getPortfolioType()) : '';
+                
+                $suggestions[] = [
+                    'text' => $proProduct->getProductName(),
+                    'type' => 'proproduct',
+                    'portfolioType' => $portfolioType,
+                    'url' => $proProduct->getKey()
+                ];
+            }
+            
+            // If we have less than 5 suggestions, fill with database products
+            if (count($suggestions) < 5) {
+                $remainingSlots = 5 - count($suggestions);
+                
+                // Database connection
+                $dsn = 'mysql:host=localhost;dbname=pimcore;charset=utf8mb4';
+                $username = 'pimcoreuser';
+                $password = 'G0H0me@T0day';
+                $pdo = new \PDO($dsn, $username, $password);
+                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+                
+                $sql = "SELECT Unique_ID, Product_Name FROM products 
+                        WHERE (Product_Name LIKE ? OR Product_Description LIKE ?) 
+                        LIMIT ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(1, "%" . $searchTerm . "%", \PDO::PARAM_STR);
+                $stmt->bindValue(2, "%" . $searchTerm . "%", \PDO::PARAM_STR);
+                $stmt->bindValue(3, $remainingSlots, \PDO::PARAM_INT);
+                $stmt->execute();
+                
+                $dbProducts = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                
+                foreach ($dbProducts as $product) {
+                    $suggestions[] = [
+                        'text' => $product['Product_Name'],
+                        'type' => 'database',
+                        'url' => $product['Unique_ID']
+                    ];
+                }
+            }
         }
 
         return new JsonResponse($suggestions);
@@ -11266,10 +11329,12 @@ class ContentController extends BaseController
     /**
      * @Route("/{CustomerType}/product/{url}", name="Manufacturer_product_single")
      */
-    public function ManufacturerProductDetails($url, $CustomerType, Request $request, PaginatorInterface $paginator)
+    public function ManufacturerProductDetails($url, $CustomerType, Request $request, PaginatorInterface $paginator, Security $security)
     {
-       
-        // Load ArchitectProfile based on the URL
+        $user = $security->getUser();
+
+        if ($user && $this->isGranted('ROLE_USER')) {
+            // Load ArchitectProfile based on the URL
         $ProProduct = ProProduct::getByPath("/Services/".ucfirst($CustomerType)."s/Products/$url");
 
         if (!$ProProduct) {
@@ -11368,6 +11433,10 @@ class ContentController extends BaseController
             'averageRating' => $averageRating,
             'totalReviews' => $totalReviews,
         ]);
+        }
+        
+        // If the user is not logged in or doesn't have the required role
+        return $this->render('Architect/NotLogged_signup.html.twig');
     }
 
 

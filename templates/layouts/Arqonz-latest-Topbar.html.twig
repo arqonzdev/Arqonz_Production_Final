@@ -14,8 +14,7 @@
             </div>
             <div class="suggestions-list"></div> 
         </div> -->
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <div class="HeroSearch">
+        <div class="HeroSearch">
                 <div class="searchoptions">
                     <div class="SearchCOl1">
                         <img src="/static/images/icons/Category.svg" alt="Categories">
@@ -87,7 +86,6 @@
                         
                         let currentRequest = null;
                         let activeSuggestionIndex = -1;
-                        let showDefaultSuggestions = false;
                         
                         // Debounce function to limit API calls
                         function debounce(func, delay) {
@@ -130,7 +128,7 @@
                         
                         // Display suggestions in dropdown
                         function displaySuggestions(suggestions) {
-                            if (suggestions.length === 0 && !showDefaultSuggestions) {
+                            if (suggestions.length === 0) {
                                 suggestionsDropdown.style.display = 'none';
                                 return;
                             }
@@ -140,12 +138,21 @@
                             suggestions.forEach((suggestion, index) => {
                                 const suggestionItem = document.createElement('div');
                                 suggestionItem.className = 'suggestion-item';
-                                suggestionItem.textContent = suggestion;
+                                suggestionItem.textContent = suggestion.text;
+                                suggestionItem.dataset.suggestion = JSON.stringify(suggestion);
                                 
                                 suggestionItem.addEventListener('click', function() {
-                                    searchInput.value = suggestion;
+                                    searchInput.value = suggestion.text;
                                     suggestionsDropdown.style.display = 'none';
-                                    performSearch();
+                                    
+                                    // Navigate based on suggestion type
+                                    if (suggestion.type === 'professional') {
+                                        window.location.href = `/${suggestion.portfolioType}/portfolio/${suggestion.url}`;
+                                    } else if (suggestion.type === 'proproduct') {
+                                        window.location.href = `/${suggestion.portfolioType}/product/${suggestion.url}`;
+                                    } else if (suggestion.type === 'database') {
+                                        window.location.href = `/products/${suggestion.url}`;
+                                    }
                                 });
                                 
                                 suggestionsDropdown.appendChild(suggestionItem);
@@ -155,11 +162,7 @@
                             activeSuggestionIndex = -1;
                         }
                         
-                        // Show default suggestions
-                        function showDefaultSearchSuggestions() {
-                            showDefaultSuggestions = true;
-                            fetchSuggestions('');
-                        }
+                        // No default suggestions needed
                         
                         // Perform the search
                         function performSearch() {
@@ -192,14 +195,11 @@
                         
                         // Event listeners
                         searchInput.addEventListener('input', function() {
-                            showDefaultSuggestions = false;
                             fetchSuggestions(this.value);
                         });
                         
                         searchInput.addEventListener('focus', function() {
-                            if (this.value === '') {
-                                showDefaultSearchSuggestions();
-                            }
+                            // No default suggestions on focus
                         });
                         
                         searchButton.addEventListener('click', performSearch);
@@ -225,9 +225,18 @@
                                 e.preventDefault();
                                 if (activeSuggestionIndex >= 0 && suggestions.length > 0) {
                                     const selectedSuggestion = suggestions[activeSuggestionIndex];
+                                    const suggestionData = JSON.parse(selectedSuggestion.dataset.suggestion || '{}');
                                     searchInput.value = selectedSuggestion.textContent;
                                     suggestionsDropdown.style.display = 'none';
-                                    performSearch();
+                                    
+                                    // Navigate based on suggestion type
+                                    if (suggestionData.type === 'professional') {
+                                        window.location.href = `/${suggestionData.portfolioType}/portfolio/${suggestionData.url}`;
+                                    } else if (suggestionData.type === 'proproduct') {
+                                        window.location.href = `/${suggestionData.portfolioType}/product/${suggestionData.url}`;
+                                    } else if (suggestionData.type === 'database') {
+                                        window.location.href = `/products/${suggestionData.url}`;
+                                    }
                                 } else {
                                     performSearch();
                                 }
@@ -252,7 +261,6 @@
                         document.addEventListener('click', function(e) {
                             if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
                                 suggestionsDropdown.style.display = 'none';
-                                showDefaultSuggestions = false;
                             }
                         });
                         
@@ -260,20 +268,13 @@
                         professionDropdown.addEventListener('change', function() {
                             suggestionsDropdown.style.display = 'none';
                             searchInput.value = '';
-                            showDefaultSuggestions = false;
                         });
                         
-                        // Show default suggestions when search input is empty and clicked
-                        searchInput.addEventListener('click', function() {
-                            if (this.value === '') {
-                                showDefaultSearchSuggestions();
-                            }
-                        });
+                        // No default suggestions on click
                     });
                 </script>
                 
             </div>
-        {% endif %}
         <style>
             .suggestions-list {
                 position: absolute;
