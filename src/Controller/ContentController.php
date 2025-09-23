@@ -319,24 +319,44 @@ class ContentController extends BaseController
      */
     public function submitProductReview(Request $request, Security $security)
     {
+        // Get the logged-in user
+        $user = $security->getUser();
+
         // Retrieve the form data
         $rating = $request->request->get('rating');
         $review = $request->request->get('review');
         $productUrl = $request->request->get('productUrl');
 
-        $fullName = $request->get('fullName');
-        $email = $request->get('email');
-        $phone = $request->get('phone');
-
-        // Assuming the product ID is passed as a hidden input or can be retrieved from the URL
-        // $ProfileId = $this->getProductIdFromUrl($productUrl);
-
+        // Get the product ID from URL
         $productId = $this->getProductIdFromUrl($productUrl);
 
-
-
-        // Fetch the product object
+        // Determine if this is a ProProduct or db product based on URL structure
+        $parsedUrl = parse_url($productUrl, PHP_URL_PATH);
+        $segments = explode('/', trim($parsedUrl, '/'));
         
+        // Check if this is a ProProduct URL (e.g., /manufacturer/product/product-key)
+        $isProProduct = false;
+        $proProduct = null;
+        if (count($segments) >= 3) {
+            $customerType = $segments[0];
+            $productSegment = $segments[1];
+            
+            // Check if it's a ProProduct URL pattern
+            if (in_array($customerType, ['manufacturer', 'dealer', 'distributor', 'supplier', 'retailer']) && 
+                $productSegment === 'product') {
+                $isProProduct = true;
+                
+                // Get the ProProduct object
+                $proProductPath = "/Services/" . ucfirst($customerType) . "s/Products/$productId";
+                $proProduct = \Pimcore\Model\DataObject\ProProduct::getByPath($proProductPath);
+                
+                // If not found in the specific customer type, try Suppliers as fallback
+                if (!$proProduct) {
+                    $proProductPath = "/Services/Suppliers/Products/$productId";
+                    $proProduct = \Pimcore\Model\DataObject\ProProduct::getByPath($proProductPath);
+                }
+            }
+        }
 
         if ($productId) {
             // Create the new ProductReview object
@@ -346,9 +366,18 @@ class ContentController extends BaseController
             $dbProductReview->setRating($rating);
             $dbProductReview->setReview($review);
             $dbProductReview->setUniqueId($productId); 
-            $dbProductReview->setFullName($fullName);
-            $dbProductReview->setEmail($email);
-            $dbProductReview->setPhone($phone);
+            
+            // Set the customer - the user object should be the Customer data object
+            if ($user instanceof \Pimcore\Model\DataObject\Customer) {
+                $dbProductReview->setCustomer($user);
+            }
+            
+            // Set the ProProduct if this is a ProProduct review
+            if ($isProProduct && $proProduct) {
+                $dbProductReview->setProProduct($proProduct);
+            }
+            
+            $dbProductReview->setPublished(true);
             // Save the object
             $dbProductReview->save();
 
@@ -829,12 +858,22 @@ class ContentController extends BaseController
             } 
         }     
 
+        // Fetch and paginate reviews for this product
+        $reviewsList = new \Pimcore\Model\DataObject\DbProductReview\Listing();
+        $reviewsList->setCondition("UniqueId = ?", [$keyword]);
+        
+        $pagination = $paginator->paginate(
+            $reviewsList,
+            $request->query->getInt('page', 1),
+            5 // 5 reviews per page
+        );
     
         return $this->render('Professional/ProductsSinglePage.html.twig', [
             'product' => $product,
             'PriceData' => $priceData,
             'ImageDatas' => $imageDatas,
             'specifications' => $specifications,
+            'reviews' => $pagination,
         ]);
     }
         
@@ -11286,6 +11325,13 @@ class ContentController extends BaseController
             $this->addFlash('success', 'Enquiry submitted succesfully.');
         }
         
+        // Fetch and paginate reviews
+        $reviews = $ProProduct->getProductReviews();
+        $pagination = $paginator->paginate(
+            $reviews,
+            $request->query->getInt('page', 1),
+            5 // 5 reviews per page
+        );
 
         return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
@@ -11293,6 +11339,7 @@ class ContentController extends BaseController
             'listingtype' => $ProProfile->getPortfolioType(),
             'form' => $form->createView(),
             'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
+            'reviews' => $pagination,
         ]);
     }
 
