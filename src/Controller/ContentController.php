@@ -867,6 +867,18 @@ class ContentController extends BaseController
             $request->query->getInt('page', 1),
             5 // 5 reviews per page
         );
+
+        // Calculate average rating
+        $averageRating = 0;
+        $totalReviews = $reviewsList->getCount();
+        if ($totalReviews > 0) {
+            $totalRating = 0;
+            $allReviews = $reviewsList->load();
+            foreach ($allReviews as $review) {
+                $totalRating += $review->getRating();
+            }
+            $averageRating = round($totalRating / $totalReviews, 1);
+        }
     
         return $this->render('Professional/ProductsSinglePage.html.twig', [
             'product' => $product,
@@ -874,6 +886,8 @@ class ContentController extends BaseController
             'ImageDatas' => $imageDatas,
             'specifications' => $specifications,
             'reviews' => $pagination,
+            'averageRating' => $averageRating,
+            'totalReviews' => $totalReviews,
         ]);
     }
         
@@ -11333,6 +11347,17 @@ class ContentController extends BaseController
             5 // 5 reviews per page
         );
 
+        // Calculate average rating
+        $averageRating = 0;
+        $totalReviews = count($reviews);
+        if ($totalReviews > 0) {
+            $totalRating = 0;
+            foreach ($reviews as $review) {
+                $totalRating += $review->getRating();
+            }
+            $averageRating = round($totalRating / $totalReviews, 1);
+        }
+
         return $this->render('Professional/ProProductSinglePage.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProduct,
@@ -11340,6 +11365,8 @@ class ContentController extends BaseController
             'form' => $form->createView(),
             'metadescription' => $ProProduct->getProductDescription() ? substr($ProProduct->getProductDescription(), 0, 160) : 'Product details from ' . $ProProfile->getCompanyName(),
             'reviews' => $pagination,
+            'averageRating' => $averageRating,
+            'totalReviews' => $totalReviews,
         ]);
     }
 

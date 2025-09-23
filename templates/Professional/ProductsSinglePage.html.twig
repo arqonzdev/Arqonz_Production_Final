@@ -53,8 +53,13 @@
         <div class="productMainDetails">
             <h2>{{ product.Product_Name }}</h2>
             <div class="ProdReviewRatings">
-                <img src="/static/icons/ProdStars.svg" alt="">
-                <p>(24 Reviews)</p>
+                <div class="rating-stars" style="display: flex; align-items: center; margin-bottom: 5px;">
+                    {% for i in 1..5 %}
+                        <span style="color: {{ i <= averageRating ? '#ffc107' : '#e1e5e9' }}; font-size: 18px; margin-right: 2px;">★</span>
+                    {% endfor %}
+                    <span style="margin-left: 8px; font-weight: 600; color: #333;">{{ averageRating }}/5</span>
+                </div>
+                <p style="color: #666; font-size: 14px; margin: 0;">({{ totalReviews }} Review{{ totalReviews != 1 ? 's' : '' }})</p>
             </div>
             <!-- <div class="productPrice"><p>₹ {{ PriceData.Product_Price }} / {{ PriceData.Product_Unit }}</p></div> -->
             {# <div class="productPrice"><p>₹ {{ PriceData.Product_Price }} / {{ PriceData.Product_Unit }}</p></div> #}
