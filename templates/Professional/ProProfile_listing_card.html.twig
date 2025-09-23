@@ -39,7 +39,7 @@
                             {% endif %}
                             {% if listingtype == 'Manufacturer' %}
                             <h3>
-                            <a href="/manufacturer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}">{{ ProProfile.getCompanyName is defined ? ProProfile.getCompanyName() : ProProfile.company_name }}</a>
+                            <a href="/manufacturer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.s_no }}">{{ ProProfile.getCompanyName is defined ? ProProfile.getCompanyName() : ProProfile.company }}</a>
                             </h3>
                             {% endif %}
                             {% if listingtype == 'Engineer' %}
@@ -76,7 +76,17 @@
                             <div class="ProfileDescription"><p>{{ (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|slice(0, 220) }} {% if (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|length > 220 %}... <a href="/builder/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
                         {% endif %}
                         {% if listingtype == 'Manufacturer' %}
-                            <div class="ProfileDescription"><p>{{ (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|slice(0, 220) }} {% if (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|length > 220 %}... <a href="/manufacturer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
+                            <div class="ProfileDescription">
+                                {% if ProProfile.getDescription is defined %}
+                                    <p>{{ ProProfile.getDescription()|slice(0, 220) }}{% if ProProfile.getDescription()|length > 220 %}... <a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p>
+                                {% else %}
+                                    <p>
+                                        {% if ProProfile.category %}<strong>Category:</strong> {{ ProProfile.category }}{% endif %}
+                                        {% if ProProfile.sub_category %}{% if ProProfile.category %} | {% endif %}<strong>Sub Category:</strong> {{ ProProfile.sub_category }}{% endif %}
+                                        {% if ProProfile.city %}{% if ProProfile.category or ProProfile.sub_category %} | {% endif %}<strong>Location:</strong> {{ ProProfile.city }}{% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
                         {% endif %}
                         {% if listingtype == 'Engineer' %}
                             <div class="ProfileDescription"><p>{{ (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|slice(0, 220) }} {% if (ProProfile.getDescription is defined ? ProProfile.getDescription() : ProProfile.description)|length > 220 %}... <a href="/engineer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" style="color:#48a89e;">Read More</a>{% endif %}</p></div>
@@ -148,7 +158,7 @@
                     <div class="viewarchitect"><p><a href="/builder/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
                 {% endif %}
                 {% if listingtype == 'Manufacturer' %}
-                    <div class="viewarchitect"><p><a href="/manufacturer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+                    <div class="viewarchitect"><p><a href="/manufacturer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.s_no }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
                 {% endif %}
                 {% if listingtype == 'Engineer' %}
                     <div class="viewarchitect"><p><a href="/engineer/portfolio/{{ ProProfile.getKey is defined ? ProProfile.getKey() : ProProfile.id }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>

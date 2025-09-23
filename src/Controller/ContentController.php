@@ -9599,17 +9599,9 @@ class ContentController extends BaseController
     /**
      * @Route("/manufacturers/listing", name="Manufacturers-Listing")
      */
-   /**
- * @Route("/manufacturers/listing", name="Manufacturers-Listing")
- */
-public function ManufacturerlistingAction(
-    Request $request, 
-    LoggerInterface $logger, 
-    Security $security, 
-    PaginatorInterface $paginator, 
-    \Doctrine\DBAL\Connection $connection
-) {
-    // ---- 1. Load Pimcore Manufacturer Objects ----
+    public function ManufacturerlistingAction(Request $request, LoggerInterface $logger, Security $security, PaginatorInterface $paginator)
+    {
+        // ---- 1. Load Pimcore Manufacturer Objects ----
         $ProProfileList = new \Pimcore\Model\DataObject\ProProfile\Listing();
         $ProProfileList->addConditionParam("PortfolioType = ?", "Manufacturer");
 
@@ -9621,49 +9613,55 @@ public function ManufacturerlistingAction(
             $ProProfileList->addConditionParam("FIND_IN_SET(?, CitiesServed) > 0", $FilterCity);
         }
 
+        // Load and ensure all objects are fully hydrated
         $ProProfiles = $ProProfileList->load();
 
+        // Build sortable array
         $sortableProfiles = [];
+
         foreach ($ProProfiles as $profile) {
             try {
-            \Pimcore\Model\DataObject::setGetInheritedValues(true);
+                \Pimcore\Model\DataObject::setGetInheritedValues(true);
                 $rating = (float) $profile->getCalculatedRating();
                 $sortableProfiles[] = [
                     'rating' => $rating,
-                'object' => $profile,
-                'type'   => 'pimcore'
+                    'object' => $profile
                 ];
             } catch (\Throwable $e) {
-                $logger->error('Rating fetch failed: ' . $e->getMessage());
+                $logger->error('Manufacturer rating fetch failed: ' . $e->getMessage());
             }
         }
 
-    // ---- 2. Load Supplier Table Data ----
-    $supplierRows = $connection->fetchAllAssociative("SELECT * FROM supplier");
-    foreach ($supplierRows as $row) {
-        $sortableProfiles[] = [
-            'rating' => 0, // suppliers don’t have rating
-            'object' => $row,
-            'type'   => 'supplier'
-        ];
-    }
-
-    // ---- 3. Sort by rating DESC ----
+        // Sort by rating DESC
         usort($sortableProfiles, fn($a, $b) => $b['rating'] <=> $a['rating']);
 
-    // ---- 4. Extract objects for pagination ----
-        $sortedObjects = array_column($sortableProfiles, 'object');
+        // Extract sorted ProProfile objects
+        $sortedProProfiles = array_column($sortableProfiles, 'object');
 
-    // ---- 5. Pagination ----
+        // ---- 2. Load Supplier Table Data ----
+        $dsn = 'mysql:host=localhost;dbname=pimcore;charset=utf8mb4';
+        $username = 'pimcoreuser';
+        $password = 'G0H0me@T0day';
+        $pdo = new \PDO($dsn, $username, $password);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        $sql = "SELECT * FROM supplier";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $suppliers = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Merge ProProfile manufacturers with database suppliers
+        $finalProfiles = array_merge($sortedProProfiles, $suppliers);
+
         $pagination = $paginator->paginate(
-        $sortedObjects,
+            $finalProfiles,
             $request->query->getInt('page', 1),
             10
         );
 
-        return $this->render('Professional/professional_listing.html.twig', [
-            'ProProfiles' => $pagination,
+        return $this->render('Professional/ProProfile_Listing_Cart_Manufacturers.html.twig', [
             'form' => $form->createView(),
+            'ProProfiles' => $pagination,
             'customertype' => 'Manufacturer',
             'filterform' => '1',
             'paginationVariables' => $pagination->getPaginationData(),
