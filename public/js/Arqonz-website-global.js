@@ -25,17 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Menu open and close for mobile
-    menuOpen.addEventListener('click', () => {
-        dashNavMain.style.display = 'flex';
-        menuOpen.style.display = 'none';
-        menuClose.style.display = 'block';
-    });
+    if (menuOpen && menuClose && dashNavMain) {
+        menuOpen.addEventListener('click', () => {
+            dashNavMain.style.display = 'flex';
+            menuOpen.style.display = 'none';
+            menuClose.style.display = 'block';
+        });
 
-    menuClose.addEventListener('click', () => {
-        dashNavMain.style.display = 'none';
-        menuOpen.style.display = 'block';
-        menuClose.style.display = 'none';
-    });
+        menuClose.addEventListener('click', () => {
+            dashNavMain.style.display = 'none';
+            menuOpen.style.display = 'block';
+            menuClose.style.display = 'none';
+        });
+    }
 
     // Mobile menu click to open submenus
     mobileMenus.forEach(menu => {
@@ -92,17 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const notifDropdown = document.querySelector('.notif-dropdown');
 
     // Toggle the visibility of the notification dropdown
-    notifIcon.addEventListener('click', (event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the document
-        notifDropdown.classList.toggle('show');
-    });
+    if (notifIcon && notifDropdown) {
+        notifIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent the click event from bubbling up to the document
+            notifDropdown.classList.toggle('show');
+        });
 
-    // Close the dropdown if clicking outside
-    document.addEventListener('click', (event) => {
-        if (!event.target.closest('.notification-item')) {
-            notifDropdown.classList.remove('show');
-        }
-    });
+        // Close the dropdown if clicking outside
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.notification-item')) {
+                notifDropdown.classList.remove('show');
+            }
+        });
+    }
 
     // Add click event handler to notification links
     document.querySelectorAll('.notif-link').forEach(function(link) {
