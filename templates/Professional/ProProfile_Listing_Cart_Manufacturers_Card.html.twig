@@ -1,0 +1,93 @@
+{% if ProProfile.CompanyName is defined or ProProfile.company is defined or ProProfile.getCompanyName is defined or ProProfile.s_no is defined %}
+<div class="architect-item">
+    <div class="custom-icon-box">
+            <div class="ImageandTitle">
+                <div class="Featureimage"> 
+                    {% if ProProfile.getCompanyName is defined %}
+                        {# Pimcore object - show profile image if available #}
+                        {% if ProProfile.ProfileImage %} 
+                            {{ ProProfile.ProfileImage.thumbnail('Architects').html | raw }}
+                        {% else %}
+                            {# Pimcore object without profile image - show default #}
+                            {% set defaultImage = "/static/images/default.png" %}
+                            {% set image = pimcore_asset(defaultImage) %}
+                            {# {{ image.thumbnail('Architects').html|raw }} #}
+                            {{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').thumbnail('Architects').html|raw }}
+                        {% endif %}
+                    {% else %}
+                        {# Database supplier - always show default image #}
+                        {{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').thumbnail('Architects').html|raw }}
+                    {% endif %}  
+                </div>
+                <div class="TitleDescriptionContact">
+                    <div class="TitleAndDescription">
+                        <div class="ProfileTitle">
+                            <h3>
+                            {% if ProProfile.getCompanyName is defined %}
+                                {# Pimcore object - with link #}
+                                <a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}">{{ ProProfile.getCompanyName() }}</a>
+                            {% else %}
+                                {# Database supplier - no link #}
+                                {{ ProProfile.company ?? ProProfile.name ?? 'Manufacturer' }}
+                            {% endif %}
+                            </h3>
+                        </div>
+                        <div class="ProfileDescription">
+                            {% if ProProfile.getDescription is defined %}
+                                <p>{{ ProProfile.getDescription()|slice(0, 220) }}{% if ProProfile.getDescription()|length > 220 %}... <a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}" style="color:#48a89e;">Read More</a>{% endif %}</p>
+                            {% else %}
+                                <p>
+                                    {% if ProProfile.category %}<strong>Category:</strong> {{ ProProfile.category }}{% endif %}
+                                    {% if ProProfile.sub_category %}{% if ProProfile.category %} | {% endif %}<strong>Sub Category:</strong> {{ ProProfile.sub_category }}{% endif %}
+                                    {% if ProProfile.city %}{% if ProProfile.category or ProProfile.sub_category %} | {% endif %}<strong>Location:</strong> {{ ProProfile.city }}{% endif %}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {# <div class="ProfileContact"><p><i class="fab fa-whatsapp" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getCountryCode() }} {{ ProProfile.getPhoneNumber() }}</p></div> #}
+                </div>
+            </div>
+            <div class="YearStarsReadmore">
+                <div class="yearprojects">
+                    {% if ProProfile.getYearEstablished is defined %}
+                        <div class="EstYear"><b><i class="fa fa-calendar" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getYearEstablished() }}</b><p>Est.Year</p></div>
+                    {% endif %}
+                    {% if ProProfile.getProductsNumber is defined %}
+                        <div class="TotalProjects"><b><i class="fa fa-rocket" style="font-size:15px;color:#48a89e"></i>{{ ProProfile.getProductsNumber() }}</b><p>{{ ProProfile.getProductsNumber() <= 1 ? 'Product' : 'Products' }}</p></div>
+                    {% endif %}
+                </div>
+               
+                <div class="StarsRating">
+                    {% if ProProfile.getCalculatedRating is defined %}
+                        {% set rating = ProProfile.getCalculatedRating() %}
+                        {% set fullStars = rating | round(0, 'floor') %}
+                        {% set hasHalfStar = (rating - fullStars) >= 0.5 %}
+                        
+                        {% for i in range(1, 5) %}
+                            {% if i <= fullStars %}
+                                <span class="fa fa fa-star checked" style="color: orange;"></span>
+                            {% elseif hasHalfStar %}
+                                {% set hasHalfStar = false %}
+                                <span class="fa-solid fa-star-half-stroke" style="color: orange;"></span>
+                            {% else %}
+                                <span class="fa fa-regular fa-star"></span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {# Default stars for database suppliers #}
+                        {% for i in range(1, 5) %}
+                            <span class="fa fa-regular fa-star"></span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% if ProProfile.getCompanyName is defined %}
+                    {# Pimcore object - with link #}
+                    <div class="viewarchitect"><p><a href="/manufacturer/portfolio/{{ ProProfile.getKey() }}" class="btn btn-lg btn-block btn-success btn"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</a></p></div>
+                {% else %}
+                    {# Database supplier - no link, just show button without functionality #}
+                    <div class="viewarchitect"><p><span class="btn btn-lg btn-block btn-secondary btn" style="cursor: not-allowed;"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i>View</span></p></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}
