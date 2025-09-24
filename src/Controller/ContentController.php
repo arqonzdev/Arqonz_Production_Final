@@ -9991,32 +9991,48 @@ class ContentController extends BaseController
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
             
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $customertype = $customer->getcustomertype();
-            if ($customertype === 'Contractor') {
-                $form = $this->createForm(ContractorAddProjectFormType::class);
-            }
-            if ($customertype === 'Designer') {
-                $form = $this->createForm(DesignerAddProjectFormType::class);
-            }
-            if ($customertype === 'Architect') {
-                $form = $this->createForm(ArchitectAddProjectFormType::class);
-            }
-            if ($customertype === 'Builder') {
-                $form = $this->createForm(BuilderAddProjectFormType::class);
-            }
-            if ($customertype === 'Engineer') {
-                $form = $this->createForm(EngineerAddProjectFormType::class);
-            }
-            
-
-            
-            $form->handleRequest($request);
-            if ($customer->getPortfolioActivate() === 'true') {
-
-                if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                $customertype = $customer->getcustomertype();
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                // Create appropriate form based on customer type
+                $form = null;
+                if ($customertype === 'Contractor') {
+                    $form = $this->createForm(ContractorAddProjectFormType::class);
+                } elseif ($customertype === 'Designer') {
+                    $form = $this->createForm(DesignerAddProjectFormType::class);
+                } elseif ($customertype === 'Architect') {
+                    $form = $this->createForm(ArchitectAddProjectFormType::class);
+                } elseif ($customertype === 'Builder') {
+                    $form = $this->createForm(BuilderAddProjectFormType::class);
+                } elseif ($customertype === 'Engineer') {
+                    $form = $this->createForm(EngineerAddProjectFormType::class);
+                } else {
+                    throw new \Exception('Invalid customer type: ' . $customertype);
+                }
+                
+                if (!$form) {
+                    throw new \Exception('Failed to create form for customer type: ' . $customertype);
+                }
+                
+                $form->handleRequest($request);
+                
+                // Check portfolio activation
+                if ($customer->getPortfolioActivate() === 'true') {
+                    if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
                     $ProProject->setParent(Service::createFolderByPath('/Services/'.$customertype.'s/Projects'));
@@ -10096,10 +10112,21 @@ class ContentController extends BaseController
                     'customertype' => $customertype,
                     'customer' => $customer,
                 ]);
+                } else {
+                    // Portfolio not activated
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('ProProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
     
-        // If user is not an architect or architect is not activated
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10115,16 +10142,30 @@ class ContentController extends BaseController
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
-                'is_builder' => false
-            ]);
-            $form->handleRequest($request);
             
-            if ($customertype === 'Contractor' && $PortfolioActivate === 'true') {
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
+                    'is_builder' => false
+                ]);
+                $form->handleRequest($request);
+                
+                if ($customertype === 'Contractor' && $PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
@@ -10198,9 +10239,21 @@ class ContentController extends BaseController
                     'ProProfile' => $ProProfile,
                     'is_builder' => true,
                 ]);
+                } else {
+                    // Portfolio not activated or wrong customer type
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('ContractorProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
 
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10215,13 +10268,28 @@ class ContentController extends BaseController
     
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class);
-            $form->handleRequest($request);
-            if ($PortfolioActivate === 'true') {
+            
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class);
+                $form->handleRequest($request);
+                
+                if ($PortfolioActivate === 'true') {
 
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
@@ -10277,10 +10345,21 @@ class ContentController extends BaseController
                     'customertype' => $customertype,
                     'customer' => $customer,
                 ]);
+                } else {
+                    // Portfolio not activated
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('ProfessionalProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
     
-        // If user is not an architect or architect is not activated
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10294,16 +10373,30 @@ class ContentController extends BaseController
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
-                'is_builder' => false
-            ]);
-            $form->handleRequest($request);
             
-            if ($customertype === 'Designer' && $PortfolioActivate === 'true') {
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
+                    'is_builder' => false
+                ]);
+                $form->handleRequest($request);
+                
+                if ($customertype === 'Designer' && $PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
@@ -10376,9 +10469,21 @@ class ContentController extends BaseController
                     'customer' => $customer,
                     'is_builder' => true,
                 ]);
+                } else {
+                    // Portfolio not activated or wrong customer type
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('DesignerProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
 
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10392,16 +10497,30 @@ class ContentController extends BaseController
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
-                'is_builder' => false
-            ]);
-            $form->handleRequest($request);
             
-            if ($PortfolioActivate === 'true') {
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
+                    'is_builder' => false
+                ]);
+                $form->handleRequest($request);
+                
+                if ($PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
@@ -10475,9 +10594,21 @@ class ContentController extends BaseController
                     'customer' => $customer,
                     'is_builder' => false, 
                 ]);
+                } else {
+                    // Portfolio not activated
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('ArchitectProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
 
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10491,16 +10622,31 @@ class ContentController extends BaseController
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
-                'is_builder' => true
-            ]);
             
-            $form->handleRequest($request);
-            if ($customertype === 'Builder' && $PortfolioActivate === 'true') {
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
+                    'is_builder' => true
+                ]);
+                
+                $form->handleRequest($request);
+                
+                if ($customertype === 'Builder' && $PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
@@ -10575,11 +10721,23 @@ class ContentController extends BaseController
                     'form' => $form->createView(),
                     'customertype' => $customertype,
                     'customer' => $customer,
-                    'is_builder' => true, 
+                    'is_builder' => true,
                 ]);
+                } else {
+                    // Portfolio not activated or wrong customer type
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('BuilderProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
 
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10594,16 +10752,30 @@ class ContentController extends BaseController
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
-            $customertype = $customer->getcustomertype();
-            $PortfolioActivate = $customer->getPortfolioActivate();
-            $ProProfiles = $customer->getPortfolio();
-            $ProProfile = $ProProfiles[0];
-            $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
-                'is_builder' => false
-            ]);
-            $form->handleRequest($request);
             
-            if ($customertype === 'Engineer' && $PortfolioActivate === 'true') {
+            try {
+                $customertype = $customer->getcustomertype();
+                $PortfolioActivate = $customer->getPortfolioActivate();
+                $ProProfiles = $customer->getPortfolio();
+                
+                // Check if portfolio exists
+                if (empty($ProProfiles)) {
+                    throw new \Exception('No portfolio found for user');
+                }
+                
+                $ProProfile = $ProProfiles[0];
+                
+                // Check if customertype is valid
+                if (empty($customertype)) {
+                    throw new \Exception('Customer type not set');
+                }
+                
+                $form = $this->createForm(ProfessionalAddProjectFormType::class, null, [
+                    'is_builder' => false
+                ]);
+                $form->handleRequest($request);
+                
+                if ($customertype === 'Engineer' && $PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
                     $formData = $form->getData();
                     $ProProject = new ProProject();
@@ -10676,9 +10848,21 @@ class ContentController extends BaseController
                     'customer' => $customer,
                     'is_builder' => true,
                 ]);
+                } else {
+                    // Portfolio not activated or wrong customer type
+                    return $this->render('Professional/NotLogged_signup.html.twig');
+                }
+                
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                error_log('EngineerProjectSubmitAction Error: ' . $e->getMessage());
+                
+                // Show error page or redirect
+                return $this->render('Professional/NotLogged_signup.html.twig');
             }
         }
 
+        // If user is not authenticated
         return $this->render('Professional/NotLogged_signup.html.twig');
     }
 
@@ -10749,7 +10933,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'designer',
@@ -10823,7 +11007,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'designer',
@@ -10896,7 +11080,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'engineer',
@@ -10966,7 +11150,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'architect',
@@ -11036,7 +11220,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'contractor',
@@ -11107,7 +11291,7 @@ class ContentController extends BaseController
         }
         
 
-        return $this->render('Professional/ProProductSinglePage.html.twig', [
+        return $this->render('Professional/professional_project_single.html.twig', [
             'architectProfile' => $ProProfile,
             'ProProject' => $ProProject,
             'listingtype' => 'Builder',
