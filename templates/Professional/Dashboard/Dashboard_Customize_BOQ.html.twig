@@ -54,9 +54,9 @@
             <div class="SortCol Size">
                 <p>Specification</p>
             </div>
-            <!-- <div class="SortCol unit">
+            <div class="SortCol unit">
                 <p>Size</p>
-            </div> -->
+            </div>
             <div class="SortCol unit">
                 <p>UNIT</p>
             </div>
@@ -64,9 +64,9 @@
             <div class="SortCol Qty">
                 <p>Qty</p>
             </div>
-            <!-- <div class="SortCol price">
+            <div class="SortCol price">
                 <p>Price</p>
-            </div> -->
+            </div>
         </div>
     </div>
 
@@ -76,18 +76,7 @@
                 <div class="CustProdCard">
                     <div class="BOQProdCol1">
                         <div class="BOQprodimage">
-                        {% if product.getProductImage() and product.getProductImage().getItems()|length > 0 %}
-                            {% set firstItem = product.getProductImage().getItems()[0] %}
-                            {% if firstItem.getImage().getMimeType() starts with 'video/' %}
-                                <video style="width:178px;" muted>
-                                    <source src="{{ firstItem.getImage().getFullPath() }}" type="{{ firstItem.getImage().getMimeType() }}">
-                                </video>
-                            {% else %}
-                                <img style="width:178px;" src="{{ firstItem.getImage().getThumbnail('product_listing').getPath() }}" alt="BOQ_ProductImage">
-                            {% endif %}
-                        {% else %}
-                                <img style="width:178px;" src="{{ pimcore_asset_by_path('/Static/DefaultImage.jpeg').getThumbnail('product_listing').getPath() }}" alt="Default Product Image">
-                            {% endif %}
+                            <img src="/static/images/NewProdFeature.png" alt="BOQ_ProductImage">
                         </div>
                     </div>
                     <div class="BOQProdRightCOL">
@@ -107,23 +96,23 @@
                         <div class="BOQProdCol">
                             <p class="BOQProdMaterial" style="font-size: 18px; font-weight: 500;" >{{ product.getMaterial() }}</p>
                         </div>
-                        <!-- <div class="BOQProdCol">
+                        <div class="BOQProdCol">
                             <p class="BOQProdSize currentSpec" style="font-size: 18px; font-weight: 500;">{{ product.getQuantity() }}</p>
-                        </div> -->
+                        </div>
                         
                         <div class="BOQProdCol">
                             <p class="BOQProdUnit" style="font-size: 18px; font-weight: 500;">{{ product.getUnit() }}</p>
                         </div>
                         <div class="BOQProdCol">
-                            <!-- <p class="ReduceQuantity">-</p> -->
+                            <p class="ReduceQuantity">-</p>
                             
                             <input type="text" class="BOQProdQuantity" style="font-size: 18px; font-weight: 500; text-align: center; width: 68px; border: 0px;;" value="{{ product.getQuantity() }}" >
-                            <!-- <p class="IncreaseQuantity">+</p> -->
+                            <p class="IncreaseQuantity">+</p>
                         </div>
-                        <!-- <div class="BOQProdCol">
+                        <div class="BOQProdCol">
                             <p class="BOQProdUnitPrice" style="display:none">{{ product.getProductPrice() }}</p>
                             <p class="BOQProdStock" style="font-size: 18px; font-weight: 500;"></p> {# Replace with actual price if available #}
-                        </div> -->
+                        </div>
                         <div class="BOQCustomize_Options BOQCustomizeopts">
                         {% set bids = product.getSupplierBid() %}
                         {% if product.getQuoteStatus() != 'Started' %}
@@ -146,13 +135,13 @@
                 
                 
 
-                {% if bids is not empty %}
+                {% if product.getQuoteStatus() == 'Started' %}
                     <div class="RecievedBids" data-type="Bids">
-                        <!-- <div class="countdown-container">
+                        <div class="countdown-container">
                             {# CAMPAIGN ENDS IN {{ product.getEndDate().format("Y-m-d H:i:s") }} #}
 
                             <div class="ExpiresinText">
-                                <p>Ends In : </p>
+                                <p>Expires In : </p>
                             </div>
                             <div id="countdown-timer-{{ loop.index }}" class="countdown-timer" data-end-date="{{ product.getEndDate().format("Y-m-d H:i:s") }}">
                                 <div class="time-section">
@@ -173,7 +162,7 @@
                                 </div>
                             </div>
                             
-                        </div> -->
+                        </div>
 
                         
 
@@ -186,9 +175,9 @@
                                         <th>Specification</th>
                                         <th>Qty</th>
                                         <th>Unit</th>
-                                        <th style="background-color:#FFB764;">Q1</th>
-                                        <th style="background: #00A79D;">Q2</th>
-                                        <th style="background: #00A79D;">Q3</th>
+                                        <th style="background-color:#FFB764;">L1</th>
+                                        <th style="background: #00A79D;">L2</th>
+                                        <th style="background: #00A79D;">L3</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -299,7 +288,6 @@
                 function updateCountdown() {
                     const now = new Date().getTime();
                     const distance = endTime - now;
-                    
                     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -312,7 +300,6 @@
                         timerElement.querySelector('.minutes').innerText = String(minutes).padStart(2, '0');
                         timerElement.querySelector('.seconds').innerText = String(seconds).padStart(2, '0');
 
-                        // Stop the countdown if the time has expired
                         if (distance < 0) {
                             clearInterval(timerInterval);
                             timerElement.innerHTML = "EXPIRED";
@@ -320,12 +307,10 @@
                     }
                 }
 
-                // Update the countdown immediately and set the interval for each timer independently
                 updateCountdown();
                 const timerInterval = setInterval(updateCountdown, 1000);
             }
 
-            // Select each countdown timer and initialize them individually
             const countdownTimers = document.querySelectorAll('.countdown-timer');
             countdownTimers.forEach(function(timerElement) {
                 const elementId = timerElement.id;
@@ -460,10 +445,10 @@
                     <label for="brandName">Brand Name:</label>
                     <input type="text" id="brandName" name="brandName" value="" placeholder="Current Brand">
                 </div>
-                <!-- <div>
+                <div>
                     <label for="specification">Specification:</label>
                     <input type="text" id="specification" name="specification" value="" placeholder="Current Specification">
-                </div> -->
+                </div>
                 <div>
                     <label for="Material">Material:</label>
                     <input type="text" id="Material" name="Material" value="" placeholder="Material">
@@ -472,21 +457,21 @@
                     <label for="quantity">Quantity:</label>
                     <input type="text" id="quantity" name="quantity" value="" placeholder="Quantity">
                 </div>
-                <!-- <div>
+                <div>
                     <label for="location">Location:</label>
                     <input type="text" id="location" name="location" value="" placeholder="{{ ProRequirement.City()}}">
-                </div> -->
-                <!-- <div>
+                </div>
+                <div>
                     <label for="expiryDate">Expiry Date:</label>
                     <input type="datetime-local" id="expiryDate" name="expiryDate" value="{{ ProRequirement.getExpireDate()|date('Y-m-d\\TH:i', 'Asia/Kolkata') }}">
-                </div> -->
+                </div>
                 <input type="hidden" id="productUnit" name="productUnit" value="">
                 <input type="hidden" id="ProRequirementProductPath" name="ProRequirementProductPath" value="">
                 <input type="hidden" id="ProductMaterial" name="ProductMaterial" value="">
-                <button type="submit">Update</button>
+                <button type="submit">Ask For Quote</button>
             </form>
             <div id="quoteSuccess" style="display: none;">
-                <p>Saved Successfully &#10003;</p>
+                <p>Quote Started Successfully &#10003;</p>
             </div>
         </div>
     </div>
@@ -498,14 +483,14 @@
             var productUnit = productCard.querySelector('.BOQProdUnit').textContent;
             var currentBrand = productCard.querySelector('.currentBrand').textContent;
             var currentQuantity = productCard.querySelector('.BOQProdQuantity').value;
-            // var currentSpec = productCard.querySelector('.currentSpec').textContent;
+            var currentSpec = productCard.querySelector('.currentSpec').textContent;
             var currentMaterial = productCard.querySelector('.BOQProdMaterial').textContent;
             
             
 
             document.getElementById('productName').textContent = productName;
             document.getElementById('brandName').placeholder = currentBrand;
-            // document.getElementById('specification').placeholder = currentSpec;
+            document.getElementById('specification').placeholder = currentSpec;
             document.getElementById('quantity').placeholder = currentQuantity;
             document.getElementById('productUnit').value = productUnit;
             document.getElementById('ProRequirementProductPath').value = productPath;
@@ -541,7 +526,7 @@
 
             formData.set('productName', document.getElementById('productName').textContent);
             
-            // formData.set('location', document.getElementById('location').placeholder);
+            formData.set('location', document.getElementById('location').placeholder);
             
 
             if (formData.get('quantity') === '') {
@@ -577,38 +562,15 @@
 
 
 
-    <!-- Updated Unlock Contact Popup with Bid Details -->
+    <!-- Unlock Contact Popup -->
     <div class="popup popup-unlock-contact">
-        <div class="popup-content" style="max-width: 700px;">
+        <div class="popup-content" style="max-width: 616px;">
             <span class="close">&times;</span>
             <div class="Row1">
                 <h2 style="text-transform: capitalize;">Credits</h2>
 
                 <div class="profile">
                     <img src="/static/images/icons/DefaultDP.jpg" alt="">
-                </div>
-            </div>
-
-            <!-- Bid Details Section -->
-            <div class="bid-details-section" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
-                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 24px; font-weight: 600;">Terms Of Bid</h3>
-                <div class="bid-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Bid Amount:</label>
-                        <span class="bid-amount-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Delivery Duration:</label>
-                        <span class="bid-delivery-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Warranty Period:</label>
-                        <span class="bid-warranty-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Payment Terms:</label>
-                        <span class="bid-payment-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
                 </div>
             </div>
 
@@ -632,44 +594,23 @@
                 </div>
             </div>
 
+
+
             <div class="Row5">
                 <button class="unlock-contact-btn">Unlock Now</button>
             </div>
         </div>
     </div>
 
-    <!-- Updated Buy Credits Popup with Bid Details -->
+    <!-- Buy Credits Popup -->
     <div class="popup popup-buy-credits">
-        <div class="popup-content" style="max-width: 700px;">
+        <div class="popup-content">
             <span class="close">&times;</span>
             <div class="Row1">
                 <h2 style="text-transform: capitalize;">Credits</h2>
 
                 <div class="profile">
                     <img src="/static/images/icons/DefaultDP.jpg" alt="">
-                </div>
-            </div>
-
-            <!-- Bid Details Section -->
-            <div class="bid-details-section" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
-                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 18px; font-weight: 600;">BID Details</h3>
-                <div class="bid-details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Bid Amount:</label>
-                        <span class="bid-amount-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Delivery Duration:</label>
-                        <span class="bid-delivery-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Warranty Period:</label>
-                        <span class="bid-warranty-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
-                    <div class="bid-detail-item">
-                        <label style="font-weight: 500; color: #666; display: block; margin-bottom: 5px;">Payment Terms:</label>
-                        <span class="bid-payment-value" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
-                    </div>
                 </div>
             </div>
 
@@ -694,6 +635,9 @@
                 <p style="text-align: center;">Please buy credits and come back here to unlock the supplier contact.</p>
             </div>
 
+
+
+
             <div class="Row5">
                 <button onclick="window.open('/account/pricing', '_blank')" class="buy-credits-button">Buy Credits</button>
             </div>          
@@ -706,79 +650,26 @@
             console.log('DOM fully loaded and parsed');
             const bids = document.querySelectorAll('.bidamt');
             console.log('Bid elements found:', bids);
-        
+
             let customerCreditPoints = {{ customer.getCreditPoints() | json_encode | raw }};
             let currentBidKey = null; // Track the current bid key being interacted with
             const contactPopup = document.querySelector('.popup-unlock-contact');
             const buyCreditsPopup = document.querySelector('.popup-buy-credits');
             const creditPointsDisplay = contactPopup.querySelector('.Row2 p');
-        
+
             function formatCreditPoints(points) {
                 return points < 10 ? '0' + points : points;
             }
-        
-            function updateBidDetails(bidData) {
-                // Update bid details in both popups
-                const popups = [contactPopup, buyCreditsPopup];
-                
-                popups.forEach(popup => {
-                    const bidAmountElement = popup.querySelector('.bid-amount-value');
-                    const bidDeliveryElement = popup.querySelector('.bid-delivery-value');
-                    const bidWarrantyElement = popup.querySelector('.bid-warranty-value');
-                    const bidPaymentElement = popup.querySelector('.bid-payment-value');
-        
-                    if (bidAmountElement) bidAmountElement.textContent = bidData.bidAmount || '-';
-                    if (bidDeliveryElement) bidDeliveryElement.textContent = bidData.deliveryDuration || '-';
-                    if (bidWarrantyElement) bidWarrantyElement.textContent = bidData.warrantyPeriod || '-';
-                    if (bidPaymentElement) bidPaymentElement.textContent = bidData.paymentTerms || '-';
-                });
-            }
-    
-            function fetchBidDetails(bidKey) {
-                return fetch('/get-bid-details', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ bidKey: bidKey })
-                }).then(response => response.json());
-            }
-    
-            function checkUnlockStatus(bidKey) {
-                return fetch('/check-unlock-status', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ bidKey: bidKey })
-                }).then(response => response.json());
-            }
-    
-            function showContactInfo(data) {
-                contactPopup.querySelector('.Row4').innerHTML = `
-                    <div class="supplier-contact-reveal">
-                        <div class="Cont-Unlocked"><p>Contact Unlocked</p></div>
-                        <div class="supplier-Name">${data.CompanyName} (<a href="${data.ProfileUrl}" target="_blank">View Profile</a>)</div>
-                        <div class="supplier-phone">
-                            <a target="_blank" href="https://wa.me/+91${data.phoneNumber}"><img src="/static/images/Whatsapp.png" alt=""></a>
-                            <p>Supplier Contact: ${data.phoneNumber}</p>
-                        </div>
-                    </div>`;
-                contactPopup.querySelector('.Row5').style.display = 'none';
-                contactPopup.querySelector('.Row2').style.display = 'none';
-                contactPopup.querySelector('.Row3').style.display = 'none';
-                contactPopup.style.display = 'block';
-            }
-        
+
             bids.forEach(bid => {
                 bid.addEventListener('click', function () {
                     const bidValue = this.textContent.trim();
                     console.log('Bid clicked:', bidValue);
-        
+
                     if (bidValue !== '-') {
                         currentBidKey = this.getAttribute('data-key');
                         console.log('Bid key:', currentBidKey);
-        
+
                         // Reset the popup content
                         contactPopup.querySelector('.Row4').innerHTML = '<div class="row4wrapper"><img src="/static/images/pound_sterling_coin.png" alt=""><p>Unlock this contact for 1 coin</p></div>';
                         contactPopup.querySelector('.Row5').style.display = 'flex';
@@ -786,55 +677,47 @@
                         buyCreditsPopup.style.display = 'none';
                         contactPopup.querySelector('.Row2').style.display = 'flex';
                         contactPopup.querySelector('.Row3').style.display = 'flex';
-        
-                        // Fetch fresh bid details and check unlock status in sequence
-                        fetchBidDetails(currentBidKey)
-                            .then(bidData => {
-                                if (bidData.success) {
-                                    updateBidDetails({
-                                        bidAmount: bidData.bidAmount || '-',
-                                        deliveryDuration: bidData.deliveryDuration || '-',
-                                        warrantyPeriod: bidData.warrantyPeriod || '-',
-                                        paymentTerms: bidData.paymentTerms || '-'
-                                    });
-                                    return checkUnlockStatus(currentBidKey);
-                                }
-                                throw new Error('Failed to fetch bid details');
-                            })
-                            .then(unlockData => {
-                                if (unlockData && unlockData.success) {
-                                    showContactInfo(unlockData);
+
+                        // Check if the bid is already unlocked
+                        fetch('/check-unlock-status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ bidKey: currentBidKey })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // If already unlocked, display the contact information directly
+                                contactPopup.querySelector('.Row4').innerHTML = `<div class="supplier-contact-reveal"><div class="Cont-Unlocked"><p>Contact Unlocked</p></div><div class="supplier-Name">${data.CompanyName} (<a href="${data.ProfileUrl}" target="_blank">View Profile</a>)</div><div class="supplier-phone"><a target="_blank" href="https://wa.me/+91${data.phoneNumber}"><img src="/static/images/Whatsapp.png" alt=""></a> <p>Supplier Contact: ${data.phoneNumber}</p></div></div>`;
+                                contactPopup.querySelector('.Row5').style.display = 'none';
+                                contactPopup.querySelector('.Row2').style.display = 'none';
+                                contactPopup.querySelector('.Row3').style.display = 'none';
+                                contactPopup.style.display = 'block';
+                                
+                            } else {
+                                if (customerCreditPoints > 0) {
+                                    // If not unlocked, show the unlock contact popup
+                                    contactPopup.style.display = 'block';
                                 } else {
-                                    if (customerCreditPoints > 0) {
-                                        contactPopup.style.display = 'block';
-                                    } else {
-                                        buyCreditsPopup.style.display = 'block';
-                                    }
+                                    // Show the buy credits popup if no credits are available
+                                    buyCreditsPopup.style.display = 'block';
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
+                            }
+                        })
+                        .catch(error => console.error('Error checking unlock status:', error));
                     }
                 });
             });
-        
+
             // Close popup functionality
             document.querySelectorAll('.close, .close-popup').forEach(closeButton => {
                 closeButton.addEventListener('click', function () {
-                    const popup = this.closest('.popup');
-                    popup.style.display = 'none';
-                    
-                    // Reset the popup content when closing
-                    if (popup.classList.contains('popup-unlock-contact')) {
-                        popup.querySelector('.Row4').innerHTML = '<div class="row4wrapper"><img src="/static/images/pound_sterling_coin.png" alt=""><p>Unlock this contact for 1 coin</p></div>';
-                        popup.querySelector('.Row5').style.display = 'flex';
-                        popup.querySelector('.Row2').style.display = 'flex';
-                        popup.querySelector('.Row3').style.display = 'flex';
-                    }
+                    this.closest('.popup').style.display = 'none';
                 });
             });
-        
+
             // Handle the unlock contact button click
             document.querySelector('.unlock-contact-btn').addEventListener('click', function () {
                 if (currentBidKey && customerCreditPoints > 0) {
@@ -850,10 +733,11 @@
                         if (data.success) {
                             // Deduct 1 from the displayed customer credits
                             customerCreditPoints -= 1;
-        
+
                             creditPointsDisplay.textContent = formatCreditPoints(customerCreditPoints);
-        
+
                             // Display the contact information
+                            
                             contactPopup.querySelector('.Row4').innerHTML = `<div class="supplier-contact-reveal"><div class="Cont-Unlocked"><p>Contact Unlocked</p></div><div class="supplier-Name">${data.CompanyName} (<a href="${data.ProfileUrl}" target="_blank">View Profile</a>)</div><div class="supplier-phone"><a target="_blank" href="https://wa.me/+91${data.phoneNumber}"><img src="/static/images/Whatsapp.png" alt=""></a> <p>Supplier Contact: ${data.phoneNumber}</p></div></div>`;
                             contactPopup.querySelector('.Row5').style.display = 'none';
                             contactPopup.querySelector('.Row2').style.display = 'none';
