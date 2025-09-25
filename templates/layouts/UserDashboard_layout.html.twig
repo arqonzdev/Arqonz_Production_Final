@@ -138,20 +138,16 @@
                     <div class="SearchCOl1">
                         <img src="/static/images/icons/Category.svg" alt="Categories">
                         <select name="profession" id="profession-dropdown">
-                            <option value="Architect">Architect</option>
-                            <option value="Builder">Builder</option>
-                            <option value="Contractor">Contractor</option>
-                            <option value="Designer">Designer</option>
-                            <option value="distributor">Distributor</option>
-                            <option value="dealer">Dealer</option>
-                            <option value="Engineer">Engineer</option>
-                            <option value="Manufacturer">Manufacturer</option>
-                            <option value="Retailer">Retailer</option>
-                            <option value="Products">Products</option> 
+                            <option value="All" selected>Professionals</option>
+                            <option value="Products">Products</option>                            
                         </select>
                     </div>
                     <div class="SearchCOl2">
-                        <input class="pro-search-input" type="text" placeholder="Search">
+                        <div class="search-container">
+                            <input class="pro-search-input" type="text" placeholder="Search" autocomplete="off">
+                            <div class="suggestions-dropdown"></div>
+                        </div>
+                        <!-- <input class="pro-search-input" type="text" placeholder="Search"> -->
                     </div>
                 </div>
     
@@ -161,55 +157,202 @@
                 
             </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Get elements
-                    const professionDropdown = document.getElementById('profession-dropdown');
-                    const searchInput = document.querySelector('.pro-search-input');
-                    const searchButton = document.getElementById('HerosearchButton');
-            
-                    // Function to handle the search action
-                    function performSearch() {
-                        const selectedOption = professionDropdown.value;
-                        const searchValue = searchInput.value.trim();
-            
-                        if (searchValue) {
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const searchInput = document.querySelector('.pro-search-input');
+                        const suggestionsDropdown = document.querySelector('.suggestions-dropdown');
+                        const professionDropdown = document.getElementById('profession-dropdown');
+                        const searchButton = document.getElementById('HerosearchButton');
+                        
+                        let currentRequest = null;
+                        let activeSuggestionIndex = -1;
+                        
+                        // Debounce function to limit API calls
+                        function debounce(func, delay) {
+                            let timeout;
+                            return function() {
+                                const context = this;
+                                const args = arguments;
+                                clearTimeout(timeout);
+                                timeout = setTimeout(() => func.apply(context, args), delay);
+                            };
+                        }
+                        
+                        // Fetch suggestions from server
+                        const fetchSuggestions = debounce(function(searchTerm) {
+                            if (currentRequest) {
+                                currentRequest.abort();
+                            }
+                            
+                            const category = professionDropdown.value;
+                            
+                            currentRequest = new XMLHttpRequest();
+                            currentRequest.open('POST', '{{ path("search_suggestions") }}', true);
+                            currentRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            currentRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                            
+                            currentRequest.onload = function() {
+                                if (this.status >= 200 && this.status < 400) {
+                                    const suggestions = JSON.parse(this.responseText);
+                                    displaySuggestions(suggestions);
+                                }
+                                currentRequest = null;
+                            };
+                            
+                            currentRequest.onerror = function() {
+                                currentRequest = null;
+                            };
+                            
+                            currentRequest.send(`searchTerm=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(category)}`);
+                        }, 300);
+                        
+                        // Display suggestions in dropdown
+                        function displaySuggestions(suggestions) {
+                            if (suggestions.length === 0) {
+                                suggestionsDropdown.style.display = 'none';
+                                return;
+                            }
+                            
+                            suggestionsDropdown.innerHTML = '';
+                            
+                            suggestions.forEach((suggestion, index) => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.className = 'suggestion-item';
+                                suggestionItem.textContent = suggestion.text;
+                                suggestionItem.dataset.suggestion = JSON.stringify(suggestion);
+                                
+                                suggestionItem.addEventListener('click', function() {
+                                    searchInput.value = suggestion.text;
+                                    suggestionsDropdown.style.display = 'none';
+                                    
+                                    // Navigate based on suggestion type
+                                    if (suggestion.type === 'professional') {
+                                        window.location.href = `/${suggestion.portfolioType}/portfolio/${suggestion.url}`;
+                                    } else if (suggestion.type === 'proproduct') {
+                                        window.location.href = `/${suggestion.portfolioType}/product/${suggestion.url}`;
+                                    } else if (suggestion.type === 'database') {
+                                        window.location.href = `/products/${suggestion.url}`;
+                                    }
+                                });
+                                
+                                suggestionsDropdown.appendChild(suggestionItem);
+                            });
+                            
+                            suggestionsDropdown.style.display = 'block';
+                            activeSuggestionIndex = -1;
+                        }
+                        
+                        // No default suggestions needed
+                        
+                        // Perform the search
+                        function performSearch() {
+                            const selectedOption = professionDropdown.value;
+                            const searchValue = searchInput.value.trim();
+                            
+                            if (!searchValue) {
+                                return;
+                            }
+                            
                             if (selectedOption === 'Products') {
-                                // Create a form dynamically and submit with POST for Products search
-                                let form = document.createElement('form');
+                                const form = document.createElement('form');
                                 form.method = 'POST';
                                 form.action = '/products-search';
-            
-                                let input = document.createElement('input');
+                                
+                                const input = document.createElement('input');
                                 input.type = 'hidden';
                                 input.name = 'search';
                                 input.value = searchValue;
-            
+                                
                                 form.appendChild(input);
                                 document.body.appendChild(form);
                                 form.submit();
+                            } else if (selectedOption === 'All') {
+                                window.location.href = `/Search/All/${encodeURIComponent(searchValue)}`;
                             } else {
-                                // Default search for other categories
-                                const searchURL = `/Search/${selectedOption}/${encodeURIComponent(searchValue)}`;
-                                window.location.href = searchURL;
+                                window.location.href = `/Search/${selectedOption}/${encodeURIComponent(searchValue)}`;
                             }
-                        } else {
-                            alert('Please enter a search term.');
                         }
-                    }
-            
-                    // Add event listener to the search button
-                    searchButton.addEventListener('click', performSearch);
-            
-                    // Add event listener for 'Enter' key on the search input
-                    searchInput.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter') {
-                            event.preventDefault();
-                            performSearch();
+                        
+                        // Event listeners
+                        searchInput.addEventListener('input', function() {
+                            fetchSuggestions(this.value);
+                        });
+                        
+                        searchInput.addEventListener('focus', function() {
+                            // No default suggestions on focus
+                        });
+                        
+                        searchButton.addEventListener('click', performSearch);
+                        
+                        searchInput.addEventListener('keydown', function(e) {
+                            const suggestions = suggestionsDropdown.querySelectorAll('.suggestion-item');
+                            
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                if (suggestions.length > 0) {
+                                    if (activeSuggestionIndex < suggestions.length - 1) {
+                                        activeSuggestionIndex++;
+                                        updateActiveSuggestion(suggestions);
+                                    }
+                                }
+                            } else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                if (activeSuggestionIndex > 0) {
+                                    activeSuggestionIndex--;
+                                    updateActiveSuggestion(suggestions);
+                                }
+                            } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                                if (activeSuggestionIndex >= 0 && suggestions.length > 0) {
+                                    const selectedSuggestion = suggestions[activeSuggestionIndex];
+                                    const suggestionData = JSON.parse(selectedSuggestion.dataset.suggestion || '{}');
+                                    searchInput.value = selectedSuggestion.textContent;
+                                    suggestionsDropdown.style.display = 'none';
+                                    
+                                    // Navigate based on suggestion type
+                                    if (suggestionData.type === 'professional') {
+                                        window.location.href = `/${suggestionData.portfolioType}/portfolio/${suggestionData.url}`;
+                                    } else if (suggestionData.type === 'proproduct') {
+                                        window.location.href = `/${suggestionData.portfolioType}/product/${suggestionData.url}`;
+                                    } else if (suggestionData.type === 'database') {
+                                        window.location.href = `/products/${suggestionData.url}`;
+                                    }
+                                } else {
+                                    performSearch();
+                                }
+                            } else if (e.key === 'Escape') {
+                                suggestionsDropdown.style.display = 'none';
+                            }
+                        });
+                        
+                        // Update active suggestion highlight
+                        function updateActiveSuggestion(suggestions) {
+                            suggestions.forEach((suggestion, index) => {
+                                if (index === activeSuggestionIndex) {
+                                    suggestion.classList.add('highlighted');
+                                    suggestion.scrollIntoView({ block: 'nearest' });
+                                } else {
+                                    suggestion.classList.remove('highlighted');
+                                }
+                            });
                         }
+                        
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(e) {
+                            if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                                suggestionsDropdown.style.display = 'none';
+                            }
+                        });
+                        
+                        // Clear suggestions when category changes
+                        professionDropdown.addEventListener('change', function() {
+                            suggestionsDropdown.style.display = 'none';
+                            searchInput.value = '';
+                        });
+                        
+                        // No default suggestions on click
                     });
-                });
-            </script>
+                </script>
 
             <style>
                 .HeroSearch {
@@ -292,6 +435,81 @@
                 .HeroSearch .SearchCOl3 {
                     display: flex;
                     justify-content: end;
+                }
+                
+                .search-container {
+                    position: relative;
+                    width: 100%;
+                }
+                
+                .suggestions-dropdown {
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 100%;
+                    max-height: 400px;
+                    overflow-y: auto;
+                    background: #ffffff;
+                    border: 1px solid #e1e5e9;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+                    z-index: 1000;
+                    display: none;
+                    margin-top: 4px;
+                    overflow: hidden;
+                }
+                
+                .suggestion-item {
+                    padding: 16px 20px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    border-bottom: 1px solid #f1f5f9;
+                    display: flex;
+                    align-items: center;
+                    font-size: 14px;
+                    color: #374151;
+                    font-weight: 500;
+                    position: relative;
+                }
+                
+                .suggestion-item:last-child {
+                    border-bottom: none;
+                }
+                
+                .suggestion-item:hover {
+                    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+                    color: #1f2937;
+                    transform: translateX(4px);
+                }
+                
+                .suggestion-item.highlighted {
+                    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+                    color: #1d4ed8;
+                    border-left: 4px solid #3b82f6;
+                }
+                
+                /* Modern scrollbar for dropdown */
+                .suggestions-dropdown::-webkit-scrollbar {
+                    width: 6px;
+                }
+                
+                .suggestions-dropdown::-webkit-scrollbar-track {
+                    background: #f1f5f9;
+                    border-radius: 3px;
+                }
+                
+                .suggestions-dropdown::-webkit-scrollbar-thumb {
+                    background: #cbd5e1;
+                    border-radius: 3px;
+                }
+                
+                .suggestions-dropdown::-webkit-scrollbar-thumb:hover {
+                    background: #94a3b8;
+                }
+                .search-container{
+                    margin-left: 0px !important;
+                    padding-left: 14px !important;
+
                 }
             </style>
             
@@ -874,7 +1092,7 @@
 
                             
 
-                            My Customers
+                            Know your customer
                             </a>
                         </div>
                     {% endif %}
