@@ -2245,11 +2245,21 @@ class ContentController extends BaseController
             $portfolioType = strtolower($profile->getPortfolioType());
             $companyName = strtolower($profile->getCompanyName());
             $description = strtolower($profile->getDescription());
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
     
             // "OR" condition: If the keyword is present in any of the fields, include the profile
             return strpos($portfolioType, $keyword) !== false ||
                    strpos($companyName, $keyword) !== false ||
-                   strpos($description, $keyword) !== false;
+                   strpos($description, $keyword) !== false ||
+                   strpos($citiesServed, $keyword) !== false ||
+                   strpos($city, $keyword) !== false ||
+                   strpos($country, $keyword) !== false ||
+                   strpos($state, $keyword) !== false ||
+                   strpos($specialization, $keyword) !== false;
         });
         $ProProfiles = $filteredProfiles;
 
@@ -2294,6 +2304,11 @@ class ContentController extends BaseController
             $companyName = strtolower($profile->getCompanyName());
             $description = strtolower($profile->getDescription());
             $portfolioType = strtolower($profile->getPortfolioType());
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
             
             // Exact match boost (highest priority)
             if (strtolower($keyword) === $companyName) {
@@ -2306,7 +2321,7 @@ class ContentController extends BaseController
             }
             
             // All terms match anywhere (medium priority)
-            $fullText = "$companyName $description $portfolioType";
+            $fullText = "$companyName $description $portfolioType $citiesServed $city $country $state $specialization";
             if ($this->allTermsMatch($searchTerms, $fullText)) {
                 $score += 30;
             }
@@ -2323,6 +2338,21 @@ class ContentController extends BaseController
                 } elseif (strpos($portfolioType, $term) !== false) {
                     $matchedTerms++;
                     $score += 3;
+                } elseif (strpos($citiesServed, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 8; // High weight for location matches
+                } elseif (strpos($city, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 8; // High weight for city matches
+                } elseif (strpos($country, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 7; // Good weight for country matches
+                } elseif (strpos($state, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 7; // Good weight for state matches
+                } elseif (strpos($specialization, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 6; // Good weight for specialization matches
                 }
             }
             
@@ -21093,11 +21123,21 @@ class ContentController extends BaseController
             $portfolioType = strtolower($profile->getPortfolioType() ?? '');
             $companyName = strtolower($profile->getCompanyName() ?? '');
             $description = strtolower($profile->getDescription() ?? '');
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
             
             // "OR" condition: If the keyword is present in any of the fields, include the profile
             return strpos($portfolioType, $keyword) !== false ||
                    strpos($companyName, $keyword) !== false ||
-                   strpos($description, $keyword) !== false;
+                   strpos($description, $keyword) !== false ||
+                   strpos($citiesServed, $keyword) !== false ||
+                   strpos($city, $keyword) !== false ||
+                   strpos($country, $keyword) !== false ||
+                   strpos($state, $keyword) !== false ||
+                   strpos($specialization, $keyword) !== false;
         });
         
         // Calculate pagination
