@@ -349,49 +349,46 @@
 
                 <ul class="Parent-Menu">
                     <li><a href="/">Home</a></li>
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        <li>
-                            <a href="/architects">Professionals <span class="dropIcon">▼</span></a>
-                            <ul class="Children-Menu">
-                                <li>
-                                    <a class="nav-link" href="/architects">Architects</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/builders">Builders</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/contractors">Contractors</a>
+                    <li>
+                        <a href="/architects">Professionals <span class="dropIcon">▼</span></a>
+                        <ul class="Children-Menu">
+                            <li>
+                                <a class="nav-link" href="/architects">Architects</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/builders">Builders</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/contractors">Contractors</a>
 
-                                    <!-- Sub-submenu for "Contractors" -->
-                                    <ul class="Sub-Children-Menu">
-                                        <li><a class="nav-link" href="/earth-movers/listing">Earth Movers</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/designers">Designers</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/engineers">Engineers</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/manufacturers">Manufacturers</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/distributors">Distributors</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/dealers">Dealers</a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="/retailers">Retailer</a>
-                                </li>
-                            </ul>
-                        </li>
-                    {% endif %}
+                                <!-- Sub-submenu for "Contractors" -->
+                                <ul class="Sub-Children-Menu">
+                                    <li><a class="nav-link" href="/earth-movers/listing">Earth Movers</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/designers">Designers</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/engineers">Engineers</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/manufacturers">Manufacturers</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/distributors">Distributors</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/dealers">Dealers</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/retailers">Retailer</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- <li>
                         <a href="https://quboyd.accubate.app/ext/form/2306/1/apply">Placements</a>
                     </li> -->
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li>
                         <a href="/products" class="parent-link">Products <span class="dropIcon">▼</span></a>
                         <ul class="Children-Menu">
@@ -437,7 +434,6 @@
                             });
                         });
                     </script>
-                    {% endif %}
                     <li>
                         <a href="#">Tools <span class="dropIcon">▼</span></a>
                         <ul class="Children-Menu">

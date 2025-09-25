@@ -578,10 +578,7 @@ class ContentController extends BaseController
      */
     public function ProductsListAction(Request $request, Security $security, SessionInterface $session, LoggerInterface $logger)
     {   
-        $user = $security->getUser();
-
-        if ($user && $this->isGranted('ROLE_USER')) {
-            // Define default values
+        // Define default values
         $defaultMin = 0;
         $defaultMax = 10000000;
         $defaultSort = 'default';
@@ -802,10 +799,6 @@ class ContentController extends BaseController
             'metadescription' => $metaDescription,
             'metatitle' => $metaTitle,
         ]);
-        }
-        
-        // If the user is not logged in or doesn't have the required role
-        return $this->render('Architect/NotLogged_signup.html.twig');
     }
         
     
@@ -818,10 +811,7 @@ class ContentController extends BaseController
      */
     public function productsSinglePageAction($url, Security $security, Request $request, PaginatorInterface $paginator, MailerInterface $mailer)
     {   
-        $user = $security->getUser();
-
-        if ($user && $this->isGranted('ROLE_USER')) {
-            $keyword = $url;
+        $keyword = $url;
 
         // Database connection
         $dsn = 'mysql:host=localhost;dbname=pimcore;charset=utf8mb4';
@@ -897,10 +887,6 @@ class ContentController extends BaseController
             'averageRating' => $averageRating,
             'totalReviews' => $totalReviews,
         ]);
-        }
-        
-        // If the user is not logged in or doesn't have the required role
-        return $this->render('Architect/NotLogged_signup.html.twig');
     }
         
 
@@ -2259,11 +2245,21 @@ class ContentController extends BaseController
             $portfolioType = strtolower($profile->getPortfolioType());
             $companyName = strtolower($profile->getCompanyName());
             $description = strtolower($profile->getDescription());
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
     
             // "OR" condition: If the keyword is present in any of the fields, include the profile
             return strpos($portfolioType, $keyword) !== false ||
                    strpos($companyName, $keyword) !== false ||
-                   strpos($description, $keyword) !== false;
+                   strpos($description, $keyword) !== false ||
+                   strpos($citiesServed, $keyword) !== false ||
+                   strpos($city, $keyword) !== false ||
+                   strpos($country, $keyword) !== false ||
+                   strpos($state, $keyword) !== false ||
+                   strpos($specialization, $keyword) !== false;
         });
         $ProProfiles = $filteredProfiles;
 
@@ -2308,6 +2304,11 @@ class ContentController extends BaseController
             $companyName = strtolower($profile->getCompanyName());
             $description = strtolower($profile->getDescription());
             $portfolioType = strtolower($profile->getPortfolioType());
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
             
             // Exact match boost (highest priority)
             if (strtolower($keyword) === $companyName) {
@@ -2320,7 +2321,7 @@ class ContentController extends BaseController
             }
             
             // All terms match anywhere (medium priority)
-            $fullText = "$companyName $description $portfolioType";
+            $fullText = "$companyName $description $portfolioType $citiesServed $city $country $state $specialization";
             if ($this->allTermsMatch($searchTerms, $fullText)) {
                 $score += 30;
             }
@@ -2337,6 +2338,21 @@ class ContentController extends BaseController
                 } elseif (strpos($portfolioType, $term) !== false) {
                     $matchedTerms++;
                     $score += 3;
+                } elseif (strpos($citiesServed, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 8; // High weight for location matches
+                } elseif (strpos($city, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 8; // High weight for city matches
+                } elseif (strpos($country, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 7; // Good weight for country matches
+                } elseif (strpos($state, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 7; // Good weight for state matches
+                } elseif (strpos($specialization, $term) !== false) {
+                    $matchedTerms++;
+                    $score += 6; // Good weight for specialization matches
                 }
             }
             
@@ -4085,9 +4101,17 @@ class ContentController extends BaseController
         $suggestions = [];
         
         if ($category === 'All' || $category === 'Professionals') {
-            // Search in ProProfile objects
+            // Search in ProProfile objects - expanded to include more fields
             $profileListing = new \Pimcore\Model\DataObject\ProProfile\Listing();
-            $profileListing->addConditionParam("(CompanyName LIKE ? OR Description LIKE ?)", ["%" . $searchTerm . "%", "%" . $searchTerm . "%"]);
+            $profileListing->addConditionParam("(CompanyName LIKE ? OR Description LIKE ? OR CitiesServed LIKE ? OR City LIKE ? OR Country LIKE ? OR State LIKE ? OR Specialization LIKE ?)", [
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%"
+            ]);
             $profileListing->setLimit(5);
             
             $profiles = $profileListing->load();
@@ -11306,17 +11330,14 @@ class ContentController extends BaseController
      */
     public function ContractorProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Contractors/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Contractors/Profiles/$url");
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
 
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-
-            $customer = $ProProfile->getCustomer();
+        $customer = $ProProfile->getCustomer();
 
             $ProProjectsList = new \Pimcore\Model\DataObject\ProProject\Listing();
             $ProProjectsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -11383,19 +11404,16 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProjects' => $numberOfProjects,
-                'customer' => $customer,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProjects' => $numberOfProjects,
+            'customer' => $customer,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
     /**
@@ -11403,17 +11421,13 @@ class ContentController extends BaseController
      */
     public function EngineerProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Engineers/Profiles/$url");
 
-        
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Engineers/Profiles/$url");
-
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-            $customer  = $ProProfile->getCustomer();
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
+        $customer  = $ProProfile->getCustomer();
 
             $ProProjectsList = new \Pimcore\Model\DataObject\ProProject\Listing();
             $ProProjectsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -11480,20 +11494,8 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            if ($url === 'Sambath-Engineers-1753428110') {
-                    return $this->render('Professional/sambath_professional_profile.html.twig', [
-                    'architectProfile' => $ProProfile,
-                    'numberOfProjects' => $numberOfProjects,
-                    'form' => $form->createView(),
-                    'customer' => $customer,
-                    'creationdate' =>  $formattedCreationDate,
-                    'pagination' => $pagination,
-                    'paginationVariables' => $paginationVariables,
-                    'reviews' => $ProProfile->getProRatings(),
-                ]);
-            }
-
-            return $this->render('Professional/professional_profile.html.twig', [
+        if ($url === 'Sambath-Engineers-1753428110') {
+                return $this->render('Professional/sambath_professional_profile.html.twig', [
                 'architectProfile' => $ProProfile,
                 'numberOfProjects' => $numberOfProjects,
                 'form' => $form->createView(),
@@ -11505,8 +11507,16 @@ class ContentController extends BaseController
             ]);
         }
 
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProjects' => $numberOfProjects,
+            'form' => $form->createView(),
+            'customer' => $customer,
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
 
@@ -11515,10 +11525,7 @@ class ContentController extends BaseController
      */
     public function ManufacturerProductDetails($url, $CustomerType, Request $request, PaginatorInterface $paginator, Security $security)
     {
-        $user = $security->getUser();
-
-        if ($user && $this->isGranted('ROLE_USER')) {
-            // Load ArchitectProfile based on the URL
+        // Load ArchitectProfile based on the URL
         $ProProduct = ProProduct::getByPath("/Services/".ucfirst($CustomerType)."s/Products/$url");
 
         if (!$ProProduct) {
@@ -11617,10 +11624,6 @@ class ContentController extends BaseController
             'averageRating' => $averageRating,
             'totalReviews' => $totalReviews,
         ]);
-        }
-        
-        // If the user is not logged in or doesn't have the required role
-        return $this->render('Architect/NotLogged_signup.html.twig');
     }
 
 
@@ -11847,17 +11850,14 @@ class ContentController extends BaseController
      */
     public function DesignerProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Designers/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Designers/Profiles/$url");
+        $customer = $ProProfile->getCustomer();
 
-            $customer = $ProProfile->getCustomer();
-
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
 
             $ProProjectsList = new \Pimcore\Model\DataObject\ProProject\Listing();
             $ProProjectsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -11924,20 +11924,16 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProjects' => $numberOfProjects,
-                'customer' => $customer,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProjects' => $numberOfProjects,
+            'customer' => $customer,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
     /**
@@ -12054,17 +12050,14 @@ class ContentController extends BaseController
      */
     public function BuildersProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Builders/Profiles/$url");
+        $customer = $ProProfile->getCustomer();
+        $customertype = $customer->getcustomertype();
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Builders/Profiles/$url");
-            $customer = $ProProfile->getCustomer();
-            $customertype = $customer->getcustomertype();
-
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
 
             $ProProjectsList = new \Pimcore\Model\DataObject\ProProject\Listing();
             $ProProjectsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -12128,22 +12121,17 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/builder_profile.html.twig', [
-                'BuilderProfile' => $ProProfile,
-                'numberOfProjects' => $numberOfProjects,
-                'customer' => $customer,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'paginationVariables' => $paginationVariables,
-                'requirements' => $selectedRequirements,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
-
+        return $this->render('Professional/builder_profile.html.twig', [
+            'BuilderProfile' => $ProProfile,
+            'numberOfProjects' => $numberOfProjects,
+            'customer' => $customer,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'requirements' => $selectedRequirements,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
 
@@ -12152,16 +12140,13 @@ class ContentController extends BaseController
      */
     public function ManufacturersProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Manufacturers/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Manufacturers/Profiles/$url");
-
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-            $customer = $ProProfile->getCustomer();
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
+        $customer = $ProProfile->getCustomer();
 
             $ProProductsList = new \Pimcore\Model\DataObject\ProProduct\Listing();
             $ProProductsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -12236,19 +12221,15 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProducts' => $numberOfProducts,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProducts' => $numberOfProducts,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
     
@@ -12257,17 +12238,14 @@ class ContentController extends BaseController
      */
     public function DistributorProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Distributors/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Distributors/Profiles/$url");
-
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-            
-            $customer = $ProProfile->getCustomer();
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
+        
+        $customer = $ProProfile->getCustomer();
             
             $ProProductsList = new \Pimcore\Model\DataObject\ProProduct\Listing();
             $ProProductsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -12341,19 +12319,16 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProducts' => $numberOfProducts,
-                'form' => $form->createView(),
-                'customer' => $customer,
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProducts' => $numberOfProducts,
+            'form' => $form->createView(),
+            'customer' => $customer,
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
     /**
@@ -12361,17 +12336,14 @@ class ContentController extends BaseController
      */
     public function RetailerProfileAction($url, Request $request, Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Retailers/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Retailers/Profiles/$url");
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
 
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-
-            $customer = $ProProfile->getCustomer();
+        $customer = $ProProfile->getCustomer();
 
             $ProProductsList = new \Pimcore\Model\DataObject\ProProduct\Listing();
             $ProProductsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -12445,19 +12417,16 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProducts' => $numberOfProducts,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'customer' => $customer,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProducts' => $numberOfProducts,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'customer' => $customer,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
     
 
@@ -12466,17 +12435,14 @@ class ContentController extends BaseController
      */
     public function DealerProfileAction($url, Request $request,  Security $security, PaginatorInterface $paginator)
     {   
-        $user = $security->getUser();
-        if ($user && $this->isGranted('ROLE_USER')) {
+        // Load ArchitectProfile based on the URL
+        $ProProfile = ProProfile::getByPath("/Services/Dealers/Profiles/$url");
 
-            // Load ArchitectProfile based on the URL
-            $ProProfile = ProProfile::getByPath("/Services/Dealers/Profiles/$url");
+        if (!$ProProfile) {
+            throw $this->createNotFoundException('profile not found');
+        }
 
-            if (!$ProProfile) {
-                throw $this->createNotFoundException('profile not found');
-            }
-
-            $customer = $ProProfile->getCustomer();
+        $customer = $ProProfile->getCustomer();
 
             $ProProductsList = new \Pimcore\Model\DataObject\ProProduct\Listing();
             $ProProductsList->addConditionParam("ProfessionalPath = ?", $ProProfile);
@@ -12550,20 +12516,16 @@ class ContentController extends BaseController
                 $this->addFlash('success', 'Enquiry submitted succesfully.');
             }
 
-            return $this->render('Professional/professional_profile.html.twig', [
-                'architectProfile' => $ProProfile,
-                'numberOfProducts' => $numberOfProducts,
-                'form' => $form->createView(),
-                'creationdate' =>  $formattedCreationDate,
-                'pagination' => $pagination,
-                'customer' => $customer,
-                'paginationVariables' => $paginationVariables,
-                'reviews' => $ProProfile->getProRatings(),
-            ]);
-        }
-        // If the user is not an architect or the architect is not activated
-        return $this->render('Architect/NotLogged_signup.html.twig');
-
+        return $this->render('Professional/professional_profile.html.twig', [
+            'architectProfile' => $ProProfile,
+            'numberOfProducts' => $numberOfProducts,
+            'form' => $form->createView(),
+            'creationdate' =>  $formattedCreationDate,
+            'pagination' => $pagination,
+            'customer' => $customer,
+            'paginationVariables' => $paginationVariables,
+            'reviews' => $ProProfile->getProRatings(),
+        ]);
     }
 
 
@@ -21161,11 +21123,21 @@ class ContentController extends BaseController
             $portfolioType = strtolower($profile->getPortfolioType() ?? '');
             $companyName = strtolower($profile->getCompanyName() ?? '');
             $description = strtolower($profile->getDescription() ?? '');
+            $citiesServed = strtolower($profile->getCitiesServed() ?? '');
+            $city = strtolower($profile->getCity() ?? '');
+            $country = strtolower($profile->getCountry() ?? '');
+            $state = strtolower($profile->getState() ?? '');
+            $specialization = strtolower($profile->getSpecialization() ?? '');
             
             // "OR" condition: If the keyword is present in any of the fields, include the profile
             return strpos($portfolioType, $keyword) !== false ||
                    strpos($companyName, $keyword) !== false ||
-                   strpos($description, $keyword) !== false;
+                   strpos($description, $keyword) !== false ||
+                   strpos($citiesServed, $keyword) !== false ||
+                   strpos($city, $keyword) !== false ||
+                   strpos($country, $keyword) !== false ||
+                   strpos($state, $keyword) !== false ||
+                   strpos($specialization, $keyword) !== false;
         });
         
         // Calculate pagination

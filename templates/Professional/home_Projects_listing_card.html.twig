@@ -4,19 +4,19 @@
     <img src="{{ architectProfile.getProfileImage().getThumbnail("grid") }}" alt="Profile Image" class="profile-image">
 
     {% if portfolioType == 'Contractor' %}
-        <h3><a href="/en/contractor/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+        <h3><a href="/contractor/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
     {% endif %}
     {% if portfolioType == 'Designer' %}
-        <h3><a href="/en/designer/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+        <h3><a href="/designer/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
     {% endif %}
     {% if portfolioType == 'Architect' %}
-        <h3><a href="/en/architect/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+        <h3><a href="/architect/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
     {% endif %}
     {% if portfolioType == 'Builder' %}
-        <h3><a href="/en/builder/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
+        <h3><a href="/builder/project/{{ project.getKey() }}">{{ project.getProjectName() }}</a></h3>
     {% endif %}
     {% if portfolioType == 'Manufacturer' %}
-        <h3><a href="/en/manufacturer/product/{{ project.getKey() }}">{{ project.getProductName() }}</a></h3>
+        <h3><a href="/manufacturer/product/{{ project.getKey() }}">{{ project.getProductName() }}</a></h3>
     {% endif %}
     {# <p>{{ project.getProjectDescription() }}</p> #}
     {% if portfolioType != 'Manufacturer' %}
