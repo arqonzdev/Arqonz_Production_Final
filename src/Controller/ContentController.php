@@ -4071,9 +4071,17 @@ class ContentController extends BaseController
         $suggestions = [];
         
         if ($category === 'All' || $category === 'Professionals') {
-            // Search in ProProfile objects
+            // Search in ProProfile objects - expanded to include more fields
             $profileListing = new \Pimcore\Model\DataObject\ProProfile\Listing();
-            $profileListing->addConditionParam("(CompanyName LIKE ? OR Description LIKE ?)", ["%" . $searchTerm . "%", "%" . $searchTerm . "%"]);
+            $profileListing->addConditionParam("(CompanyName LIKE ? OR Description LIKE ? OR CitiesServed LIKE ? OR City LIKE ? OR Country LIKE ? OR State LIKE ? OR Specialization LIKE ?)", [
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%", 
+                "%" . $searchTerm . "%"
+            ]);
             $profileListing->setLimit(5);
             
             $profiles = $profileListing->load();
