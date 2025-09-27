@@ -130,6 +130,18 @@ class BuilderEditProjectFormType extends AbstractType
                 'multiple' => 'multiple',
 
             ])
+            ->add('ProjectCategory', ChoiceType::class, [
+                'label' => 'Project Type: ',
+                'placeholder' => 'Select Project Type',
+                'choices' => [
+                    'Residential' => 'Residential',
+                    'Commercial' => 'Commercial',
+                    'Industrial' => 'Industrial',
+                    'Warehouse' => 'Warehouse',
+                    'Plots' => 'Plots'
+                ],
+                'required' => true,
+            ])
             ->add('Location', ChoiceType::class, [
                 'label' => 'Project Location: ',
                 'choices' => $options['choices'],
@@ -147,10 +159,12 @@ class BuilderEditProjectFormType extends AbstractType
                 'label' => 'Project Value: ',
                 'placeholder' => 'Select',
                 'choices' => [
-                    'Less than 1 Lakh' => 'Less than 1 Lakh',
-                    '1 Lakh to 10 Lakhs' => '1 Lakh to 10 Lakhs',
-                    'More than 10 Lakhs' => 'More than 10 Lakhs',
-                    // Add more skills as needed
+                    '10-25 Lakhs' => '10-25 Lakhs',
+                    '25 to 50 Lakhs' => '25 to 50 Lakhs',
+                    '50 to 1 Crore' => '50 to 1 Crore',
+                    '1 crore to 3 crore' => '1 crore to 3 crore',
+                    '3-5 crore' => '3-5 crore',
+                    'Above 5 crore' => 'Above 5 crore'
                 ],
                 'required' => false,
             ])
@@ -166,7 +180,7 @@ class BuilderEditProjectFormType extends AbstractType
                 'attr' => [
                     'maxlength' => 100,
                 ],
-                'required' => true
+                'required' => false
             ])
             ->add('Collaborations', TextareaType::class, [
                 'label' => 'Collaborations & Credits',

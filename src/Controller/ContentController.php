@@ -5595,17 +5595,57 @@ class ContentController extends BaseController
                 }
             }
             
+            // Get existing Floor Maps for builders
+            $existingFloorMaps = [];
+            $existingFloorMapVideos = [];
+            
+            if ($customertype === 'Builder') {
+                $floorMapsGallery = $ProProject->getFloorMaps();
+                if ($floorMapsGallery instanceof ImageGallery) {
+                    foreach ($floorMapsGallery->getItems() as $item) {
+                        if ($item instanceof Hotspotimage) {
+                            $image = $item->getImage();
+                            if ($image instanceof Image) {
+                                $existingFloorMaps[] = [
+                                    'id' => $image->getId(),
+                                    'path' => $image->getFullPath(),
+                                    'thumbnail' => $image->getThumbnail('gallery_preview')
+                                ];
+                            }
+                        }
+                    }
+                }
+                
+                // Get existing Floor Maps videos
+                $floorMapsVideoPaths = $ProProject->getFloorMapsVideoPaths();
+                if (!empty($floorMapsVideoPaths)) {
+                    $floorMapsVideoArray = explode('|', $floorMapsVideoPaths);
+                    foreach ($floorMapsVideoArray as $videoPath) {
+                        if (!empty($videoPath)) {
+                            $existingFloorMapVideos[] = $videoPath;
+                        }
+                    }
+                }
+            }
+            
             // Populate form fields
             foreach ($form->all() as $formField) {
                 $fieldName = $formField->getName();
         
-                // Exclude ProjectGallery field
+                // Exclude ProjectGallery field and handle special cases
                 if ($fieldName !== 'ProjectGallery' && $fieldName !== '_submit' && $fieldName !== 'FloorMaps' && $fieldName !== 'ReraApproval') {
-                    $formField->setData($ProProject->{'get' . ucfirst($fieldName)}());
+                    $data = $ProProject->{'get' . ucfirst($fieldName)}();
+                    $formField->setData($data);
+                    error_log("Edit Project - Setting field $fieldName to: " . ($data ?? 'null'));
                 } elseif ($fieldName === 'ReraApproval') {
                     $reraApprovalValue = $ProProject->getReraApproval();
                     $reraApprovalBoolean = $reraApprovalValue === '1';
                     $formField->setData($reraApprovalBoolean);
+                    error_log("Edit Project - Setting ReraApproval to: " . ($reraApprovalBoolean ? 'true' : 'false'));
+                } elseif ($fieldName === 'FloorMaps') {
+                    // FloorMaps field - don't populate as it's handled separately
+                    // This field is for new uploads only
+                    error_log("Edit Project - Skipping FloorMaps field");
                 }
             }
             
@@ -5618,6 +5658,23 @@ class ContentController extends BaseController
                 $ProProject->setProjectDescription($form->get('ProjectDescription')->getData());
                 $ProProject->setLocation($form->get('Location')->getData());
                 $ProProject->setMinPrice($form->get('MinPrice')->getData());
+                
+                // Set builder-specific fields if builder
+                if ($customertype === 'Builder') {
+                    if ($form->has('ProjectCategory')) {
+                        $ProProject->setProjectCategory($form->get('ProjectCategory')->getData());
+                    }
+                    
+                    if ($form->has('ReraApproval')) {
+                        $reraApproval = $form->get('ReraApproval')->getData();
+                        $ProProject->setReraApproval($reraApproval ? '1' : '0');
+                    }
+                    
+                    if ($form->has('PossessionStarts')) {
+                        $ProProject->setPossessionStarts($form->get('PossessionStarts')->getData());
+                    }
+                }
+                
                 $ProProject->setConfiguration($form->get('Configuration')->getData());
                 $ProProject->setCollaborations($form->get('Collaborations')->getData());
                 $ProProject->setProfessionalPath($ProProfile);
@@ -5800,11 +5857,14 @@ class ContentController extends BaseController
 
             return $this->render('Professional/dashboard_project_edit.html.twig', [
                 'ProProfile' => $ProProfile,
+                'profileType' => $customertype,
                 'customer' => $customer,
                 'ProProject' => $ProProject,
                 'form' => $form->createView(),
                 'existingImages' => $existingImages,
-                'existingVideos' => $existingVideos
+                'existingVideos' => $existingVideos,
+                'existingFloorMaps' => $existingFloorMaps,
+                'existingFloorMapVideos' => $existingFloorMapVideos
             ]);
         }
         
@@ -10708,13 +10768,28 @@ class ContentController extends BaseController
                     
                     $ProProject->setMinPrice($form->get('PriceRange')->getData());
                     
-                    // Only set Configuration and Collaborations for non-builders
+                    // Set builder-specific fields
+                    if ($form->has('ReraApproval')) {
+                        $reraApproval = $form->get('ReraApproval')->getData();
+                        $ProProject->setReraApproval($reraApproval ? '1' : '0');
+                        $logger->info('BuilderProjectSubmitAction: ReraApproval set to: ' . ($reraApproval ? '1' : '0'));
+                    }
+                    
+                    if ($form->has('PossessionStarts')) {
+                        $ProProject->setPossessionStarts($form->get('PossessionStarts')->getData());
+                        $logger->info('BuilderProjectSubmitAction: PossessionStarts set to: ' . $form->get('PossessionStarts')->getData());
+                    }
+                    
                     if ($form->has('Configuration')) {
                         $ProProject->setConfiguration($form->get('Configuration')->getData());
+                        $logger->info('BuilderProjectSubmitAction: Configuration set to: ' . $form->get('Configuration')->getData());
                     }
+                    
                     if ($form->has('Collaborations')) {
                         $ProProject->setCollaborations($form->get('Collaborations')->getData());
+                        $logger->info('BuilderProjectSubmitAction: Collaborations set to: ' . $form->get('Collaborations')->getData());
                     }
+                    
                     $ProProject->setProfessionalPath($ProProfile);
 
                     $galleryData = $form->get('ProjectGallery')->getData();

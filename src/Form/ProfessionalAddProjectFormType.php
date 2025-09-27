@@ -95,7 +95,7 @@ class ProfessionalAddProjectFormType extends AbstractType
                 },
             ]);
 
-        // Add Project Category field for builders
+        // Add builder-specific fields
         if ($isBuilder) {
             $builder->add('ProjectCategory', ChoiceType::class, [
                 'label' => 'Project Type: ',
@@ -118,6 +118,35 @@ class ProfessionalAddProjectFormType extends AbstractType
                 ],
                 'required' => false,
                 'multiple' => 'multiple',
+            ])
+            ->add('ReraApproval', CheckboxType::class, [
+                'label' => 'RERA Approval',
+                'required' => false,
+            ])
+            ->add('PossessionStarts', TextType::class, [
+                'label' => 'Possession Starts: ',
+                'attr' => [
+                    'maxlength' => 100,
+                    'placeholder' => 'e.g., Q1 2024, December 2024'
+                ],
+                'required' => false
+            ])
+            ->add('Configuration', TextType::class, [
+                'label' => 'Project Specification: ',
+                'attr' => [
+                    'maxlength' => 100,
+                    'placeholder' => 'e.g., 2BHK, 3BHK, Studio'
+                ],
+                'required' => false
+            ])
+            ->add('Collaborations', TextareaType::class, [
+                'label' => 'Collaborations & Credits: ',
+                'attr' => [
+                    'maxlength' => 500,
+                    'placeholder' => 'Mention any collaborations or credits',
+                    'style' => 'height: 100px;'
+                ],
+                'required' => false
             ]);
         }
 

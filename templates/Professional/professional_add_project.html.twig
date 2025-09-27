@@ -371,9 +371,9 @@
               });
             </script>
             <div class="FormRow1">
-              <div class="form-field ProjectTitle">
-                {{ form_row(form.ProjectName) }}
-              </div>
+            <div class="form-field ProjectTitle">
+              {{ form_row(form.ProjectName, {'label_attr': {'class': 'required'}}) }}
+            </div>
               <div class="form-field ProjectLocation">
                 {{ form_row(form.Location) }}
               </div>
@@ -393,10 +393,24 @@
                   border-radius: 5px;
      
                 }
+                
+                /* Field indicators for required and optional fields */
+                .form-label.required::after {
+                  content: " *";
+                  color: #dc3545;
+                  font-weight: bold;
+                }
+                
+                .form-label.optional::after {
+                  content: " (Optional)";
+                  color: #6c757d;
+                  font-weight: normal;
+                  font-size: 0.9em;
+                }
               </style>
             {% endif %}
             <div class="form-field ProjectDescription">
-              {{ form_row(form.ProjectDescription) }}
+              {{ form_row(form.ProjectDescription, {'label_attr': {'class': 'required'}}) }}
             </div>
             {% if customertype == 'Builder' %}
               <div class="form-group form-field ProjectFloorMaps">
@@ -405,7 +419,7 @@
                     <div class="upload-area" id="floor-maps-dropzone">
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
-                        </div>
+              </div>
                         <div class="upload-text">
                             <span class="drag-text">Drag & drop floor maps here or</span>
                             <button type="button" class="btn btn-primary btn-sm" id="floor-maps-browse-btn">Browse Files</button>
@@ -656,6 +670,26 @@
                   }
               })();
               </script>
+              
+              <!-- RERA Approval Field -->
+              <div class="form-field ReraApproval">
+                {{ form_row(form.ReraApproval) }}
+              </div>
+              
+              <!-- Possession Starts Field -->
+              <div class="form-field PossessionStarts">
+                {{ form_row(form.PossessionStarts, {'label_attr': {'class': 'optional'}}) }}
+              </div>
+              
+              <!-- Configuration Field -->
+              <div class="form-field Configuration">
+                {{ form_row(form.Configuration) }}
+              </div>
+              
+              <!-- Collaborations Field -->
+              <div class="form-field Collaborations">
+                {{ form_row(form.Collaborations) }}
+              </div>
             {% endif %}
             <div class="FormRow2">
               <div class="form-field ProjectValue">
