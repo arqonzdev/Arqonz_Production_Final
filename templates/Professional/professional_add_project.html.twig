@@ -160,6 +160,46 @@
                   font-size: 14px;
                   color: #6c757d;
               }
+              
+              /* Floor Maps specific styles */
+              .preview-item {
+                  position: relative;
+                  width: 120px;
+                  height: 120px;
+                  border-radius: 5px;
+                  overflow: hidden;
+                  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                  margin: 5px;
+                  display: inline-block;
+              }
+              
+              .preview-image {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+              }
+              
+              .remove-btn {
+                  position: absolute;
+                  top: 5px;
+                  right: 5px;
+                  width: 25px;
+                  height: 25px;
+                  background-color: #dc3545;
+                  color: white;
+                  border: none;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  cursor: pointer;
+                  opacity: 0;
+                  transition: opacity 0.3s;
+              }
+              
+              .preview-item:hover .remove-btn {
+                  opacity: 1;
+              }
             </style>
             <script>
               document.addEventListener('DOMContentLoaded', function() {
@@ -359,13 +399,263 @@
               {{ form_row(form.ProjectDescription) }}
             </div>
             {% if customertype == 'Builder' %}
-              <div class="form-field form-group ProjectFloorMaps">
-                {{ form_row(form.FloorMaps) }}
+              <div class="form-group form-field ProjectFloorMaps">
+                <label for="professional_add_project_form_FloorMaps" class="form-label">Floor Maps</label>
+                <div class="image-upload-container">
+                    <div class="upload-area" id="floor-maps-dropzone">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">
+                            <span class="drag-text">Drag & drop floor maps here or</span>
+                            <button type="button" class="btn btn-primary btn-sm" id="floor-maps-browse-btn">Browse Files</button>
+                            {{ form_widget(form.FloorMaps, {'attr': {
+                                'class': 'floor-maps-input',
+                                'style': 'display: none;'
+                            }}) }}
+                        </div>
+                    </div>
+                    <div class="image-preview-container" id="floor-maps-preview-container"></div>
+                    <div class="upload-status">
+                        <span id="floor-maps-file-count">0 files selected</span>
+                    </div>
+                </div>
               </div>
-              <button id="add-floor-maps-button">Add Floor Maps</button>
-              <button id="clear-floor-maps-button">Clear</button>
-              <div id="floor-maps-preview-container"></div>
               
+              <script>
+              // Floor Maps functionality (for builders only) - COMPLETELY INDEPENDENT WITH FULL LOGGING
+              (function() {
+                  'use strict';
+                  
+                  console.log('🔧 Floor Maps Script: Starting initialization...');
+                  
+                  // Wait for DOM to be ready
+                  if (document.readyState === 'loading') {
+                      console.log('🔧 Floor Maps Script: DOM still loading, waiting for DOMContentLoaded...');
+                      document.addEventListener('DOMContentLoaded', initFloorMaps);
+                  } else {
+                      console.log('🔧 Floor Maps Script: DOM already ready, initializing immediately...');
+                      initFloorMaps();
+                  }
+                  
+                  function initFloorMaps() {
+                      console.log('🔧 Floor Maps Script: initFloorMaps() called');
+                      
+                      // Check if Floor Maps elements exist (only for builders)
+                      console.log('🔧 Floor Maps Script: Looking for floor-maps-dropzone...');
+                      const floorMapsDropzone = document.getElementById('floor-maps-dropzone');
+                      console.log('🔧 Floor Maps Script: floorMapsDropzone =', floorMapsDropzone);
+                      
+                      if (!floorMapsDropzone) {
+                          console.log('❌ Floor Maps Script: floor-maps-dropzone not found - user is not a builder');
+                          return;
+                      }
+                      
+                      console.log('🔧 Floor Maps Script: Looking for other elements...');
+                      const floorMapsFileInput = document.getElementById('professional_add_project_form_FloorMaps');
+                      const floorMapsBrowseBtn = document.getElementById('floor-maps-browse-btn');
+                      const floorMapsPreviewContainer = document.getElementById('floor-maps-preview-container');
+                      const floorMapsFileCount = document.getElementById('floor-maps-file-count');
+                      
+                      console.log('🔧 Floor Maps Script: All elements found:', {
+                          dropzone: floorMapsDropzone,
+                          fileInput: floorMapsFileInput,
+                          browseBtn: floorMapsBrowseBtn,
+                          previewContainer: floorMapsPreviewContainer,
+                          fileCount: floorMapsFileCount
+                      });
+                      
+                      console.log('🔧 Floor Maps Script: Elements exist check:', {
+                          dropzone: !!floorMapsDropzone,
+                          fileInput: !!floorMapsFileInput,
+                          browseBtn: !!floorMapsBrowseBtn,
+                          previewContainer: !!floorMapsPreviewContainer,
+                          fileCount: !!floorMapsFileCount
+                      });
+                      
+                      // Initialize Floor Maps functionality
+                      let floorMapsFiles = [];
+                      console.log('🔧 Floor Maps Script: floorMapsFiles array initialized');
+                      
+                      // Drag and drop functionality
+                      function setupDragAndDrop() {
+                          console.log('🔧 Floor Maps Script: setupDragAndDrop() called');
+                          if (!floorMapsDropzone) {
+                              console.log('❌ Floor Maps Script: setupDragAndDrop() - dropzone not found');
+                              return;
+                          }
+                          
+                          console.log('🔧 Floor Maps Script: Adding drag and drop event listeners...');
+                          ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                              console.log('🔧 Floor Maps Script: Adding', eventName, 'listener');
+                              floorMapsDropzone.addEventListener(eventName, preventDefaults, false);
+                          });
+                          
+                          ['dragenter', 'dragover'].forEach(eventName => {
+                              console.log('🔧 Floor Maps Script: Adding', eventName, 'highlight listener');
+                              floorMapsDropzone.addEventListener(eventName, highlightFloorMaps, false);
+                          });
+                          
+                          ['dragleave', 'drop'].forEach(eventName => {
+                              console.log('🔧 Floor Maps Script: Adding', eventName, 'unhighlight listener');
+                              floorMapsDropzone.addEventListener(eventName, unhighlightFloorMaps, false);
+                          });
+                          
+                          console.log('🔧 Floor Maps Script: Adding drop handler');
+                          floorMapsDropzone.addEventListener('drop', handleFloorMapsDrop, false);
+                          console.log('✅ Floor Maps Script: setupDragAndDrop() completed');
+                      }
+                      
+                      function preventDefaults(e) {
+                          console.log('🔧 Floor Maps Script: preventDefaults() called');
+                          e.preventDefault();
+                          e.stopPropagation();
+                      }
+                      
+                      function highlightFloorMaps() {
+                          console.log('🔧 Floor Maps Script: highlightFloorMaps() called');
+                          if (floorMapsDropzone) {
+                              floorMapsDropzone.classList.add('dragover');
+                              console.log('✅ Floor Maps Script: dragover class added');
+                          }
+                      }
+                      
+                      function unhighlightFloorMaps() {
+                          console.log('🔧 Floor Maps Script: unhighlightFloorMaps() called');
+                          if (floorMapsDropzone) {
+                              floorMapsDropzone.classList.remove('dragover');
+                              console.log('✅ Floor Maps Script: dragover class removed');
+                          }
+                      }
+                      
+                      function handleFloorMapsDrop(e) {
+                          console.log('🔧 Floor Maps Script: handleFloorMapsDrop() called');
+                          const dt = e.dataTransfer;
+                          const droppedFiles = dt.files;
+                          console.log('🔧 Floor Maps Script: Dropped files:', droppedFiles.length);
+                          handleFloorMapsFiles(droppedFiles);
+                      }
+                      
+                      // File input functionality
+                      function setupFileInput() {
+                          console.log('🔧 Floor Maps Script: setupFileInput() called');
+                          if (!floorMapsFileInput) {
+                              console.log('❌ Floor Maps Script: setupFileInput() - fileInput not found');
+                              return;
+                          }
+                          
+                          console.log('🔧 Floor Maps Script: Adding change event listener to file input');
+                          floorMapsFileInput.addEventListener('change', function() {
+                              console.log('🔧 Floor Maps Script: File input change event triggered');
+                              console.log('🔧 Floor Maps Script: Files selected:', this.files.length);
+                              handleFloorMapsFiles(this.files);
+                          });
+                          console.log('✅ Floor Maps Script: setupFileInput() completed');
+                      }
+                      
+                      // Browse button functionality
+                      function setupBrowseButton() {
+                          console.log('🔧 Floor Maps Script: setupBrowseButton() called');
+                          if (!floorMapsBrowseBtn) {
+                              console.log('❌ Floor Maps Script: setupBrowseButton() - browseBtn not found');
+                              return;
+                          }
+                          if (!floorMapsFileInput) {
+                              console.log('❌ Floor Maps Script: setupBrowseButton() - fileInput not found');
+                              return;
+                          }
+                          
+                          console.log('🔧 Floor Maps Script: Adding click event listener to browse button');
+                          floorMapsBrowseBtn.addEventListener('click', function(e) {
+                              console.log('🔧 Floor Maps Script: Browse button clicked!');
+                              e.preventDefault();
+                              console.log('🔧 Floor Maps Script: Calling fileInput.click()');
+                              floorMapsFileInput.click();
+                              console.log('✅ Floor Maps Script: fileInput.click() called');
+                          });
+                          console.log('✅ Floor Maps Script: setupBrowseButton() completed');
+                      }
+                      
+                      // File handling
+                      function handleFloorMapsFiles(files) {
+                          console.log('🔧 Floor Maps Script: handleFloorMapsFiles() called with', files.length, 'files');
+                          Array.from(files).forEach((file, index) => {
+                              console.log('🔧 Floor Maps Script: Processing file', index + 1, ':', file.name, file.type);
+                              if (file.type.startsWith('image/')) {
+                                  console.log('✅ Floor Maps Script: File is an image, adding to array');
+                                  floorMapsFiles.push(file);
+                                  displayFloorMapsPreview(file);
+                              } else {
+                                  console.log('❌ Floor Maps Script: File is not an image, skipping');
+                              }
+                          });
+                          updateFloorMapsFileCount();
+                      }
+                      
+                      function displayFloorMapsPreview(file) {
+                          console.log('🔧 Floor Maps Script: displayFloorMapsPreview() called for', file.name);
+                          if (!floorMapsPreviewContainer) {
+                              console.log('❌ Floor Maps Script: displayFloorMapsPreview() - previewContainer not found');
+                              return;
+                          }
+                          
+                          console.log('🔧 Floor Maps Script: Creating FileReader...');
+                          const reader = new FileReader();
+                          reader.onload = function(e) {
+                              console.log('🔧 Floor Maps Script: FileReader onload triggered');
+                              const preview = document.createElement('div');
+                              preview.className = 'preview-item';
+                              preview.innerHTML = `
+                                  <img src="${e.target.result}" alt="Floor Map Preview" class="preview-image">
+                                  <button type="button" class="remove-btn" onclick="removeFloorMapsPreview(this)">×</button>
+                              `;
+                              console.log('🔧 Floor Maps Script: Adding preview to container');
+                              floorMapsPreviewContainer.appendChild(preview);
+                              console.log('✅ Floor Maps Script: Preview added successfully');
+                          };
+                          console.log('🔧 Floor Maps Script: Starting FileReader.readAsDataURL()');
+                          reader.readAsDataURL(file);
+                      }
+                      
+                      function updateFloorMapsFileCount() {
+                          console.log('🔧 Floor Maps Script: updateFloorMapsFileCount() called');
+                          if (floorMapsFileCount) {
+                              floorMapsFileCount.textContent = `${floorMapsFiles.length} files selected`;
+                              console.log('✅ Floor Maps Script: File count updated to', floorMapsFiles.length);
+                          } else {
+                              console.log('❌ Floor Maps Script: updateFloorMapsFileCount() - fileCount element not found');
+                          }
+                      }
+                      
+                      // Global remove function
+                      window.removeFloorMapsPreview = function(button) {
+                          console.log('🔧 Floor Maps Script: removeFloorMapsPreview() called');
+                          if (!floorMapsPreviewContainer) {
+                              console.log('❌ Floor Maps Script: removeFloorMapsPreview() - previewContainer not found');
+                              return;
+                          }
+                          
+                          const preview = button.parentElement;
+                          const index = Array.from(floorMapsPreviewContainer.children).indexOf(preview);
+                          console.log('🔧 Floor Maps Script: Removing preview at index', index);
+                          if (index > -1) {
+                              floorMapsFiles.splice(index, 1);
+                              preview.remove();
+                              updateFloorMapsFileCount();
+                              console.log('✅ Floor Maps Script: Preview removed successfully');
+                          }
+                      };
+                      
+                      // Initialize all functionality
+                      console.log('🔧 Floor Maps Script: Starting initialization of all functions...');
+                      setupDragAndDrop();
+                      setupFileInput();
+                      setupBrowseButton();
+                      
+                      console.log('✅ Floor Maps Script: Floor Maps initialized successfully!');
+                  }
+              })();
+              </script>
             {% endif %}
             <div class="FormRow2">
               <div class="form-field ProjectValue">
@@ -897,6 +1187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 </script>
+
 {% endif %}
 
 {% endblock %}

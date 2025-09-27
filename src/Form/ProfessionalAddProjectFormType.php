@@ -108,6 +108,16 @@ class ProfessionalAddProjectFormType extends AbstractType
                     'Plots' => 'Plots'
                 ],
                 'required' => true,
+            ])
+            ->add('FloorMaps', FileType::class, [
+                'label' => 'Add Floor Maps: ',
+                'attr' => [
+                    'placeholder' => '',
+                    'class' => 'floor-maps-input',
+                    'data-preview-container' => 'floor-maps-preview-container',
+                ],
+                'required' => false,
+                'multiple' => 'multiple',
             ]);
         }
 

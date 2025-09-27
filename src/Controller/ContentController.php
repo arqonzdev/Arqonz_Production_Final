@@ -10640,15 +10640,17 @@ class ContentController extends BaseController
     /**
      * @Route("/builder/portfolio/add-project", name="Builder-Add-Project")
      */
-    public function BuilderProjectSubmitAction(Request $request, Security $security, Translator $translator)
+    public function BuilderProjectSubmitAction(Request $request, Security $security, Translator $translator, LoggerInterface $logger)
     {
+        error_log('BuilderProjectSubmitAction: Method called - DEBUG');
+        $logger->info('BuilderProjectSubmitAction: Method called');
         $user = $security->getUser();
 
         if ($user && $this->isGranted('ROLE_USER')) {
             $customer = $user;
             
             try {
-                $customertype = $customer->getcustomertype();
+                
                 $PortfolioActivate = $customer->getPortfolioActivate();
                 $ProProfiles = $customer->getPortfolio();
                 
@@ -10658,6 +10660,7 @@ class ContentController extends BaseController
                 }
                 
                 $ProProfile = $ProProfiles[0];
+                $customertype = $ProProfile->getPortfolioType();
                 
                 // Check if customertype is valid
                 if (empty($customertype)) {
@@ -10668,11 +10671,30 @@ class ContentController extends BaseController
                     'is_builder' => true
                 ]);
                 
+                $logger->info('BuilderProjectSubmitAction: Form created with is_builder=true');
+                $logger->info('BuilderProjectSubmitAction: Form has Configuration field: ' . ($form->has('Configuration') ? 'true' : 'false'));
+                $logger->info('BuilderProjectSubmitAction: Form has Collaborations field: ' . ($form->has('Collaborations') ? 'true' : 'false'));
+                
                 $form->handleRequest($request);
+                
+                $logger->info('BuilderProjectSubmitAction: Form submitted: ' . ($form->isSubmitted() ? 'true' : 'false'));
+                if ($form->isSubmitted()) {
+                    $logger->info('BuilderProjectSubmitAction: Form valid: ' . ($form->isValid() ? 'true' : 'false'));
+                    if (!$form->isValid()) {
+                        $logger->error('BuilderProjectSubmitAction: Form validation errors: ' . json_encode($form->getErrors(true, false)));
+                    }
+                }
                 
                 if ($customertype === 'Builder' && $PortfolioActivate === 'true') {
                 if ($form->isSubmitted() && $form->isValid()) {
-                    $formData = $form->getData();
+                    $logger->info('BuilderProjectSubmitAction: Form is valid, processing submission');
+                    try {
+                        $formData = $form->getData();
+                        $logger->info('BuilderProjectSubmitAction: Form data retrieved successfully');
+                    } catch (\Exception $e) {
+                        $logger->error('BuilderProjectSubmitAction: Error getting form data: ' . $e->getMessage());
+                        throw $e;
+                    }
                     $ProProject = new ProProject();
                     $ProProject->setParent(Service::createFolderByPath('/Services/Builders/Projects'));
                     $ProProject->setProfessional($ProProfile);
@@ -10685,11 +10707,20 @@ class ContentController extends BaseController
                     $ProProject->setProjectCategory($form->get('ProjectCategory')->getData());
                     
                     $ProProject->setMinPrice($form->get('PriceRange')->getData());
-                    $ProProject->setConfiguration($form->get('Configuration')->getData());
-                    $ProProject->setCollaborations($form->get('Collaborations')->getData());
+                    
+                    // Only set Configuration and Collaborations for non-builders
+                    if ($form->has('Configuration')) {
+                        $ProProject->setConfiguration($form->get('Configuration')->getData());
+                    }
+                    if ($form->has('Collaborations')) {
+                        $ProProject->setCollaborations($form->get('Collaborations')->getData());
+                    }
                     $ProProject->setProfessionalPath($ProProfile);
 
                     $galleryData = $form->get('ProjectGallery')->getData();
+                    $logger->info('BuilderProjectSubmitAction: ProjectGallery data: ' . json_encode($galleryData));
+                    $logger->info('BuilderProjectSubmitAction: ProjectGallery data type: ' . gettype($galleryData));
+                    $logger->info('BuilderProjectSubmitAction: ProjectGallery data count: ' . (is_array($galleryData) ? count($galleryData) : 'not array'));
                     $items = [];
                     $videoPaths = [];
 
@@ -10734,8 +10765,61 @@ class ContentController extends BaseController
                         $ProProject->setProjectVideoPaths(implode('|', $videoPaths));
                     }
                     
+                    // Handle FloorMaps field for builders
+                    $floorMapsData = $form->get('FloorMaps')->getData();
+                    $logger->info('BuilderProjectSubmitAction: FloorMaps data: ' . json_encode($floorMapsData));
+                    $logger->info('BuilderProjectSubmitAction: FloorMaps data type: ' . gettype($floorMapsData));
+                    $logger->info('BuilderProjectSubmitAction: FloorMaps data count: ' . (is_array($floorMapsData) ? count($floorMapsData) : 'not array'));
+                    $floorMapsItems = [];
+                    $floorMapsVideoPaths = [];
+
+                    foreach ($floorMapsData as $file) {
+                        if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                            // Handle images
+                            if (strpos($file->getMimeType(), 'image/') === 0) {
+                                $hotspotImage = new Hotspotimage();
+                                $imageName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                                $image = new Image();
+                                $image->setFilename($imageName);
+                                $image->setData(file_get_contents($file->getPathname()));
+                                $image->setParent(\Pimcore\Model\Asset::getByPath("/Services/Builders/FloorMaps"));
+                                $image->save();
+                                $hotspotImage->setImage($image);
+                                $floorMapsItems[] = $hotspotImage;
+                            }
+                            // Handle videos
+                            elseif (strpos($file->getMimeType(), 'video/') === 0) {
+                                $videoDir = '/var/www/pimcore/public/static/videos/floor-maps';
+                                if (!file_exists($videoDir)) {
+                                    mkdir($videoDir, 0777, true);
+                                }
+                                
+                                $videoName = time() . '_' . uniqid() . '_' . preg_replace('/[^a-zA-Z0-9\.\-_]/', '', $file->getClientOriginalName());
+                                $videoPath = $videoDir . '/' . $videoName;
+                                move_uploaded_file($file->getPathname(), $videoPath);
+                                
+                                // Store relative path
+                                $floorMapsVideoPaths[] = '/static/videos/floor-maps/' . $videoName;
+                            }
+                        }
+                    }
+
+                    // Set FloorMaps image gallery
+                    if (!empty($floorMapsItems)) {
+                        $logger->info('BuilderProjectSubmitAction: Setting FloorMaps image gallery with ' . count($floorMapsItems) . ' items');
+                        $ProProject->setFloorMaps(new ImageGallery($floorMapsItems));
+                    }
+                    
+                    // Set FloorMaps video paths (using pipe delimiter)
+                    if (!empty($floorMapsVideoPaths)) {
+                        $logger->info('BuilderProjectSubmitAction: Setting FloorMaps video paths: ' . implode('|', $floorMapsVideoPaths));
+                        $ProProject->setFloorMapsVideoPaths(implode('|', $floorMapsVideoPaths));
+                    }
+                    
                     $ProProject->setPublished(true);
+                    $logger->info('BuilderProjectSubmitAction: About to save ProProject');
                     $ProProject->save();
+                    $logger->info('BuilderProjectSubmitAction: ProProject saved successfully');
 
                     $this->addFlash('success', $translator->trans('Project submitted successfully.'));
                     return $this->redirectToRoute('account-Projects');
