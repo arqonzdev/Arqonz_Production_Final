@@ -1176,12 +1176,16 @@ class AccountController extends BaseController
             }
         }
 
+        // Get reCAPTCHA configuration
+        $recaptchaConfig = \App\Service\EnvironmentConfigService::getRecaptchaConfig();
+        
         return $this->render('account/register.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
             'errors' => $errors,
             'hideBreadcrumbs' => true,
-            'hidePassword' => false
+            'hidePassword' => false,
+            'recaptcha_site_key' => $recaptchaConfig['site_key']
         ]);
     }
     
@@ -1606,12 +1610,16 @@ class AccountController extends BaseController
             }
         }
 
+        // Get reCAPTCHA configuration
+        $recaptchaConfig = \App\Service\EnvironmentConfigService::getRecaptchaConfig();
+        
         return $this->render('account/register.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
             'errors' => $errors,
             'hideBreadcrumbs' => true,
-            'hidePassword' => false
+            'hidePassword' => false,
+            'recaptcha_site_key' => $recaptchaConfig['site_key']
         ]);
     }
 
@@ -1791,12 +1799,16 @@ class AccountController extends BaseController
             }
         }
 
+        // Get reCAPTCHA configuration
+        $recaptchaConfig = \App\Service\EnvironmentConfigService::getRecaptchaConfig();
+        
         return $this->render('account/register.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
             'errors' => $errors,
             'hideBreadcrumbs' => true,
-            'hidePassword' => false
+            'hidePassword' => false,
+            'recaptcha_site_key' => $recaptchaConfig['site_key']
         ]);
     }
 
@@ -2197,12 +2209,16 @@ class AccountController extends BaseController
             }
         }
 
+        // Get reCAPTCHA configuration
+        $recaptchaConfig = \App\Service\EnvironmentConfigService::getRecaptchaConfig();
+        
         return $this->render('account/register.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
             'errors' => $errors,
             'hideBreadcrumbs' => true,
-            'hidePassword' => false
+            'hidePassword' => false,
+            'recaptcha_site_key' => $recaptchaConfig['site_key']
         ]);
     }
 
@@ -2826,12 +2842,16 @@ class AccountController extends BaseController
             }
         }
 
+        // Get reCAPTCHA configuration
+        $recaptchaConfig = \App\Service\EnvironmentConfigService::getRecaptchaConfig();
+        
         return $this->render('account/register.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
             'errors' => $errors,
             'hideBreadcrumbs' => true,
-            'hidePassword' => false
+            'hidePassword' => false,
+            'recaptcha_site_key' => $recaptchaConfig['site_key']
         ]);
     }
 

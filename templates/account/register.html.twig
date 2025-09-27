@@ -220,10 +220,10 @@
         </div>
     </div>
 
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcCiVcqAAAAAEQuc2ZVdP2RGBdAnpdfEENvJkzG"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
     <script>
         grecaptcha.ready(function() {
-            grecaptcha.execute('6LcCiVcqAAAAAEQuc2ZVdP2RGBdAnpdfEENvJkzG', {action: 'register'}).then(function(token) {
+            grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'register'}).then(function(token) {
                 // Check if the element with ID 'registration_form_recaptchaToken' exists
                 var registrationElement = document.getElementById('registration_form_recaptchaToken');
                 var eventRegistrationElement = document.getElementById('event_registration_form_recaptchaToken');
