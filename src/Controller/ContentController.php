@@ -5201,6 +5201,254 @@ class ContentController extends BaseController
 
     
     /**
+     * Delete a project and its associated assets
+     * @Route("/account/Project/delete/{projectId}", name="account-Project-delete", methods={"POST"})
+     */
+    public function deleteProjectAction($projectId, Security $security, LoggerInterface $logger): JsonResponse
+    {
+        try {
+            $user = $security->getUser();
+            
+            if (!$user || !$this->isGranted('ROLE_USER')) {
+                return new JsonResponse(['success' => false, 'message' => 'Authentication required'], 401);
+            }
+
+            // Get customer and profile info
+            $customer = $user;
+            $ProProfiles = $customer->getPortfolio();
+            $ProProfile = $ProProfiles[0];
+            $customertype = $ProProfile->getPortfolioType();
+
+            $logger->info('Attempting to delete project', [
+                'project_id' => $projectId,
+                'customertype' => $customertype,
+                'user_id' => $customer->getId()
+            ]);
+
+            // Try to find the project using the correct path structure
+            $project = null;
+            $possiblePaths = [
+                "/Services/{$customertype}s/Projects/$projectId",
+                "/Services/Professionals/Projects/$projectId"
+            ];
+
+            foreach ($possiblePaths as $path) {
+                $project = \Pimcore\Model\DataObject\ProProject::getByPath($path);
+                if ($project) {
+                    $logger->info('Project found at path', ['path' => $path]);
+                    break;
+                }
+            }
+            
+            if (!$project) {
+                $logger->error('Project not found', [
+                    'project_id' => $projectId,
+                    'searched_paths' => $possiblePaths
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Project not found'], 404);
+            }
+
+            // Verify ownership - Check if the logged-in customer is the same as the project owner
+            $projectProfessional = $project->getProfessional();
+            if (!$projectProfessional) {
+                $logger->error('Project has no professional associated', [
+                    'project_id' => $projectId
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Project has no professional associated'], 403);
+            }
+            
+            $projectOwnerCustomer = $projectProfessional->getCustomer();
+            if (!$projectOwnerCustomer) {
+                $logger->error('Project professional has no customer associated', [
+                    'project_id' => $projectId,
+                    'professional_id' => $projectProfessional->getId()
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Project professional has no customer associated'], 403);
+            }
+            
+            // Compare customer keys
+            if ($projectOwnerCustomer->getKey() !== $customer->getKey()) {
+                $logger->error('Permission denied for project deletion', [
+                    'project_id' => $projectId,
+                    'project_owner_customer_key' => $projectOwnerCustomer->getKey(),
+                    'current_user_key' => $customer->getKey()
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'You do not have permission to delete this project'], 403);
+            }
+
+            $logger->info('Starting project deletion', [
+                'project_id' => $projectId,
+                'project_name' => $project->getProjectName(),
+                'user_id' => $customer->getId()
+            ]);
+
+            // Delete Project Gallery images
+            if ($project->getProjectGallery() && $project->getProjectGallery()->getItems()) {
+                foreach ($project->getProjectGallery()->getItems() as $asset) {
+                    if ($asset instanceof \Pimcore\Model\Asset) {
+                        $logger->info('Deleting project gallery asset', ['asset_id' => $asset->getId()]);
+                        $asset->delete();
+                    }
+                }
+            }
+
+            // Delete Floor Maps images if they exist
+            if ($project->getFloorMaps() && $project->getFloorMaps()->getItems()) {
+                foreach ($project->getFloorMaps()->getItems() as $asset) {
+                    if ($asset instanceof \Pimcore\Model\Asset) {
+                        $logger->info('Deleting floor map asset', ['asset_id' => $asset->getId()]);
+                        $asset->delete();
+                    }
+                }
+            }
+
+            // Delete the project object
+            $project->delete();
+            
+            $logger->info('Project deleted successfully', [
+                'project_id' => $projectId,
+                'project_name' => $project->getProjectName()
+            ]);
+
+            return new JsonResponse([
+                'success' => true, 
+                'message' => 'Project deleted successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            $logger->error('Error deleting project', [
+                'project_id' => $projectId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return new JsonResponse([
+                'success' => false, 
+                'message' => 'Error deleting project: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a product and its associated assets
+     * @Route("/account/Product/delete/{productId}", name="account-Product-delete", methods={"POST"})
+     */
+    public function deleteProductAction($productId, Security $security, LoggerInterface $logger): JsonResponse
+    {
+        try {
+            $user = $security->getUser();
+            
+            if (!$user || !$this->isGranted('ROLE_USER')) {
+                return new JsonResponse(['success' => false, 'message' => 'Authentication required'], 401);
+            }
+
+            // Get customer and profile info
+            $customer = $user;
+            $ProProfiles = $customer->getPortfolio();
+            $ProProfile = $ProProfiles[0];
+            $customertype = $ProProfile->getPortfolioType();
+
+            $logger->info('Attempting to delete product', [
+                'product_id' => $productId,
+                'customertype' => $customertype,
+                'user_id' => $customer->getId()
+            ]);
+
+            // Try to find the product using the correct path structure
+            $product = null;
+            $possiblePaths = [
+                "/Services/{$customertype}s/Products/$productId",
+                "/Services/Professionals/Products/$productId"
+            ];
+
+            foreach ($possiblePaths as $path) {
+                $product = \Pimcore\Model\DataObject\ProProduct::getByPath($path);
+                if ($product) {
+                    $logger->info('Product found at path', ['path' => $path]);
+                    break;
+                }
+            }
+            
+            if (!$product) {
+                $logger->error('Product not found', [
+                    'product_id' => $productId,
+                    'searched_paths' => $possiblePaths
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Product not found'], 404);
+            }
+
+            // Verify ownership - Check if the logged-in customer is the same as the product owner
+            $productProfessional = $product->getProfessional();
+            if (!$productProfessional) {
+                $logger->error('Product has no professional associated', [
+                    'product_id' => $productId
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Product has no professional associated'], 403);
+            }
+            
+            $productOwnerCustomer = $productProfessional->getCustomer();
+            if (!$productOwnerCustomer) {
+                $logger->error('Product professional has no customer associated', [
+                    'product_id' => $productId,
+                    'professional_id' => $productProfessional->getId()
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'Product professional has no customer associated'], 403);
+            }
+            
+            // Compare customer keys
+            if ($productOwnerCustomer->getKey() !== $customer->getKey()) {
+                $logger->error('Permission denied for product deletion', [
+                    'product_id' => $productId,
+                    'product_owner_customer_key' => $productOwnerCustomer->getKey(),
+                    'current_user_key' => $customer->getKey()
+                ]);
+                return new JsonResponse(['success' => false, 'message' => 'You do not have permission to delete this product'], 403);
+            }
+
+            $logger->info('Starting product deletion', [
+                'product_id' => $productId,
+                'product_name' => $product->getProductName(),
+                'user_id' => $customer->getId()
+            ]);
+
+            // Delete Product Images
+            if ($product->getProductImage() && $product->getProductImage()->getItems()) {
+                foreach ($product->getProductImage()->getItems() as $asset) {
+                    if ($asset instanceof \Pimcore\Model\Asset) {
+                        $logger->info('Deleting product image asset', ['asset_id' => $asset->getId()]);
+                        $asset->delete();
+                    }
+                }
+            }
+
+            // Delete the product object
+            $product->delete();
+            
+            $logger->info('Product deleted successfully', [
+                'product_id' => $productId,
+                'product_name' => $product->getProductName()
+            ]);
+
+            return new JsonResponse([
+                'success' => true, 
+                'message' => 'Product deleted successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            $logger->error('Error deleting product', [
+                'product_id' => $productId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return new JsonResponse([
+                'success' => false, 
+                'message' => 'Error deleting product: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * 
      *
      * @Route("/account/Projects", name="account-Projects")

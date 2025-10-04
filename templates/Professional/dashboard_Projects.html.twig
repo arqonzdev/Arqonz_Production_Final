@@ -101,6 +101,9 @@
                                     <a href="/account/Project/edit/{{ ProProject.getKey() }}" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
+                                    <button class="btn-delete" data-project-id="{{ ProProject.getKey() }}" data-project-name="{{ ProProject.ProjectName() }}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                                 </div>
                             </div>
                             
@@ -182,6 +185,9 @@
                                         <a href="/account/Project/edit/{{ ProProject.getKey() }}" class="btn-action btn-edit-small" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <button class="btn-action btn-delete-small" title="Delete" data-project-id="{{ ProProject.getKey() }}" data-project-name="{{ ProProject.ProjectName() }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -284,7 +290,78 @@
                 }
             });
         }
+
+        // Add event listeners for delete buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-delete, .btn-delete-small')) {
+                e.preventDefault();
+                const button = e.target.closest('.btn-delete, .btn-delete-small');
+                const projectId = button.dataset.projectId;
+                const projectName = button.dataset.projectName;
+                deleteProject(projectId, projectName);
+            }
+        });
     });
+
+    // Delete project function
+    function deleteProject(projectId, projectName) {
+        if (confirm('Are you sure you want to delete the project "' + projectName + '"?\n\nThis action cannot be undone and will permanently remove:\n• All project images and files\n• All project data\n• All associated assets\n\nClick OK to confirm deletion.')) {
+            // Show loading state
+            const deleteButtons = document.querySelectorAll(`[onclick*="${projectId}"]`);
+            deleteButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            });
+
+            // Make AJAX request to delete
+            fetch('/account/Project/delete/' + projectId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the project card/row from DOM
+                    const projectCard = document.querySelector(`[data-project-name*="${projectName}"]`);
+                    if (projectCard) {
+                        projectCard.style.transition = 'all 0.3s ease';
+                        projectCard.style.opacity = '0';
+                        projectCard.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            projectCard.remove();
+                        }, 300);
+                    }
+                    
+                    // Show success message
+                    alert('Project "' + projectName + '" has been successfully deleted.');
+                    
+                    // Reload page to update counters
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error deleting project: ' + (data.message || 'Unknown error'));
+                    // Reset button states
+                    deleteButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting project. Please try again.');
+                // Reset button states
+                deleteButtons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                });
+            });
+        }
+    }
 </script>
 
 <style>
@@ -498,6 +575,28 @@
         text-decoration: none;
     }
 
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-delete:hover {
+        background: #c82333;
+        color: white;
+        text-decoration: none;
+    }
+
     /* Project Info */
     .project-info {
         padding: 20px;
@@ -538,7 +637,9 @@
     }
 
     .project-details {
-        /* space-y: 12px; - This is a Tailwind CSS utility, not standard CSS */
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
 
     .project-meta {
@@ -682,6 +783,28 @@
         text-decoration: none;
     }
 
+    .btn-delete-small {
+        background: #f8d7da;
+        color: #dc3545;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        text-decoration: none;
+        margin-right: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-delete-small:hover {
+        background: #dc3545;
+        color: white;
+        text-decoration: none;
+    }
+
     /* No Projects State */
     .no-projects {
         text-align: center;
@@ -751,7 +874,7 @@
             background: rgba(0, 0, 0, 0.5);
         }
 
-        .btn-view, .btn-edit {
+        .btn-view, .btn-edit, .btn-delete {
             padding: 6px 12px;
             font-size: 12px;
         }
