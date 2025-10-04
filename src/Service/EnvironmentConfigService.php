@@ -144,4 +144,15 @@ class EnvironmentConfigService
             'api_key' => self::get('WHATSAPP_API_KEY')
         ];
     }
+    
+    /**
+     * Get Meta WhatsApp Business API configuration
+     */
+    public static function getMetaWhatsAppConfig(): array
+    {
+        return [
+            'access_token' => self::get('META_WHATSAPP_ACCESS_TOKEN'),
+            'phone_number_id' => self::get('META_WHATSAPP_PHONE_NUMBER_ID')
+        ];
+    }
 }
