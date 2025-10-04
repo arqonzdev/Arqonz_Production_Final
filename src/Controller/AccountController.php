@@ -274,6 +274,17 @@ class AccountController extends BaseController
             $CustomersList = new \Pimcore\Model\DataObject\Customer\Listing();
             $CustomersList->addConditionParam("email = ?", $username);
             $Customers = $CustomersList->load();
+            
+            if (empty($Customers)) {
+                $logger->error('Customer not found for email', ['email' => $username]);
+                $this->addFlash('error', 'Email does not exist in our system. Please check your email address or register for a new account.');
+                return $this->render('account/login.html.twig', [
+                    'form' => $form->createView(),
+                    'error' => 'Email does not exist in our system.',
+                    'hideBreadcrumbs' => true
+                ]);
+            }
+            
             $Customer = $Customers[0];
             $logger->info("OTP From Database ". $Customer-> getOtp());
 
