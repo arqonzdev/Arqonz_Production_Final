@@ -17115,6 +17115,257 @@ class ContentController extends BaseController
         // Optionally log the response for debugging purposes
         // error_log('Gupshup API Response: ' . $response);
     }
+    
+
+
+    private function sendWhatsAppOTPWithMeta($phoneNumber, $otp, LoggerInterface $logger)
+    {
+        try {
+            $logger->info('Starting Meta WhatsApp OTP send process', [
+                'phone_number' => $phoneNumber,
+                'otp' => $otp
+            ]);
+            
+            // Meta WhatsApp API Configuration from environment variables
+            $metaConfig = \App\Service\EnvironmentConfigService::getMetaWhatsAppConfig();
+            $accessToken = $metaConfig['access_token'];
+            $phoneNumberId = $metaConfig['phone_number_id'];
+            $apiVersion = 'v22.0';
+            $templateName = 'arqonzotp';
+            $languageCode = 'en';
+            
+            $logger->info('Meta WhatsApp API Configuration', [
+                'phone_number_id' => $phoneNumberId,
+                'api_version' => $apiVersion,
+                'template_name' => $templateName,
+                'language_code' => $languageCode
+            ]);
+            
+            // First, let's verify the phone number ID and access token
+            $this->verifyWhatsAppConfiguration($accessToken, $phoneNumberId, $apiVersion, $logger);
+            
+            // Construct the API URL
+            $apiUrl = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/messages";
+            
+            // Ensure phone number is in correct format (with country code, no + sign)
+            $formattedPhone = preg_replace('/[^0-9]/', '', $phoneNumber);
+            
+            // Add country code if not present (assuming India +91)
+            if (strlen($formattedPhone) === 10) {
+                $formattedPhone = '91' . $formattedPhone;
+            }
+            
+            $logger->info('Phone number formatting', [
+                'original_phone' => $phoneNumber,
+                'formatted_phone' => $formattedPhone
+            ]);
+            
+            // Prepare the message payload for AUTHENTICATION TEMPLATE
+            $payload = [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => $formattedPhone,
+                'type' => 'template',
+                'template' => [
+                    'name' => $templateName,
+                    'language' => [
+                        'code' => $languageCode
+                    ],
+                    'components' => [
+                        [
+                            'type' => 'body',
+                            'parameters' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => strval($otp)
+                                ]
+                            ]
+                        ],
+                        [
+                            'type' => 'button',
+                            'sub_type' => 'url',
+                            'index' => '0',
+                            'parameters' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => strval($otp)
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+            
+            // Convert payload to JSON
+            $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE);
+            
+            $logger->info('Meta WhatsApp OTP Request prepared', [
+                'api_url' => $apiUrl,
+                'payload' => $jsonPayload,
+                'formatted_phone' => $formattedPhone
+            ]);
+            
+            // Initialize cURL
+            $ch = curl_init($apiUrl);
+            
+            // Set cURL options
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $accessToken,
+                'Content-Type: application/json',
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            $logger->info('Sending Meta WhatsApp API request');
+            
+            // Execute the request
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            
+            $logger->info('Meta WhatsApp API response received', [
+                'http_code' => $httpCode,
+                'response' => $response
+            ]);
+            
+            // Handle cURL errors
+            if (curl_errno($ch)) {
+                $error_msg = curl_error($ch);
+                curl_close($ch);
+                $logger->error('Meta WhatsApp API cURL error', [
+                    'error' => $error_msg
+                ]);
+                throw new \Exception("Meta WhatsApp API cURL error: " . $error_msg);
+            }
+            
+            curl_close($ch);
+            
+            // Parse and validate response
+            $responseData = json_decode($response, true);
+            
+            if ($httpCode !== 200) {
+                $errorMessage = isset($responseData['error']['message']) 
+                    ? $responseData['error']['message'] 
+                    : 'Unknown error occurred';
+                
+                $errorDetails = isset($responseData['error']) 
+                    ? json_encode($responseData['error']) 
+                    : $response;
+                
+                $logger->error('Meta WhatsApp API error', [
+                    'http_code' => $httpCode,
+                    'error_message' => $errorMessage,
+                    'error_details' => $errorDetails,
+                    'response' => $response
+                ]);
+                    
+                throw new \Exception("Meta WhatsApp API error (HTTP {$httpCode}): " . $errorMessage . " | Details: " . $errorDetails);
+            }
+            
+            $logger->info('Meta WhatsApp OTP sent successfully', [
+                'response_data' => $responseData
+            ]);
+            
+            return $responseData;
+            
+        } catch (\Exception $e) {
+            $logger->error('Meta WhatsApp OTP Error', [
+                'error_message' => $e->getMessage(),
+                'phone_number' => $phoneNumber,
+                'otp' => $otp
+            ]);
+            throw $e;
+        }
+    }
+    
+    private function verifyWhatsAppConfiguration($accessToken, $phoneNumberId, $apiVersion, LoggerInterface $logger)
+    {
+        try {
+            $logger->info('Starting WhatsApp configuration verification');
+            
+            // First, verify the access token by getting user info
+            $userInfoUrl = "https://graph.facebook.com/{$apiVersion}/me?access_token={$accessToken}";
+            
+            $logger->info('Verifying access token', ['url' => $userInfoUrl]);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $userInfoUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            $userResponse = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            $logger->info('Access token verification response', [
+                'http_code' => $httpCode,
+                'response' => $userResponse
+            ]);
+            
+            if ($httpCode !== 200) {
+                throw new \Exception("Failed to verify access token. HTTP Code: {$httpCode}");
+            }
+            
+            $userData = json_decode($userResponse, true);
+            
+            if (isset($userData['error'])) {
+                throw new \Exception("Invalid access token: " . $userData['error']['message']);
+            }
+            
+            $logger->info('Access token verified successfully', [
+                'user_name' => $userData['name'] ?? 'Unknown'
+            ]);
+            
+            // Now verify the phone number ID
+            $phoneInfoUrl = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}?access_token={$accessToken}";
+            
+            $logger->info('Verifying phone number ID', ['url' => $phoneInfoUrl]);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $phoneInfoUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            $phoneResponse = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            $logger->info('Phone number ID verification response', [
+                'http_code' => $httpCode,
+                'response' => $phoneResponse
+            ]);
+            
+            if ($httpCode !== 200) {
+                throw new \Exception("Failed to verify phone number ID. HTTP Code: {$httpCode}. Response: " . $phoneResponse);
+            }
+            
+            $phoneData = json_decode($phoneResponse, true);
+            
+            if (isset($phoneData['error'])) {
+                throw new \Exception("Invalid phone number ID: " . $phoneData['error']['message']);
+            }
+            
+            $logger->info('Phone number ID verified successfully', [
+                'display_phone_number' => $phoneData['display_phone_number'] ?? 'Unknown'
+            ]);
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            $logger->error('WhatsApp Configuration Verification Error', [
+                'error_message' => $e->getMessage(),
+                'phone_number_id' => $phoneNumberId,
+                'api_version' => $apiVersion
+            ]);
+            // Don't throw exception here, just log and continue
+            $logger->info('Skipping verification due to error, proceeding with OTP send...');
+            return true;
+        }
+    }
 
 
 
@@ -17207,12 +17458,15 @@ class ContentController extends BaseController
             $Customer -> setOtp($otp);
             $Customer -> save();
 
-            // $OTPtemplateID = "2fb9a88d-847d-41a5-a5b2-9c12df3b82b6";
+            $OTPtemplateID = "2fb9a88d-847d-41a5-a5b2-9c12df3b82b6";
             // $this->GupsendWhatsAppMessage($Customer->getPhone(), $otp, $OTPtemplateID);
+            $this->sendWhatsAppOTPWithMeta($Customer->getPhone(), $otp, $logger);
 
             // Format the WhatsApp message with OTP
-            $whatsAppMessage = "*{$otp}* is your verification code. For your security, do not share this code.";
-            $this->sendWhatsAppMessage($Customer->getPhone(), $whatsAppMessage);
+            // $whatsAppMessage = "*{$otp}* is your verification code. For your security, do not share this code.";
+            // $this->sendWhatsAppMessage($Customer->getPhone(), $whatsAppMessage);
+
+
 
             // Email
             $EmailTemplates = new \Pimcore\Model\DataObject\EmailTemplate\Listing();
