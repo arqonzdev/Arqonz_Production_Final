@@ -17439,12 +17439,20 @@ class ContentController extends BaseController
             $data = json_decode($request->getContent(), true);
             $email = $data['username'] ?? null;
             
-
-            
+            if (!$email) {
+                $logger->error('No email provided in login OTP request');
+                return new JsonResponse(['success' => false, 'message' => 'Email is required'], 400);
+            }
 
             $CustomersList = new \Pimcore\Model\DataObject\Customer\Listing();
             $CustomersList->addConditionParam("email = ?", $email);
             $Customers = $CustomersList->load();
+            
+            if (empty($Customers)) {
+                $logger->error('Customer not found for email', ['email' => $email]);
+                return new JsonResponse(['success' => false, 'message' => 'User not found'], 404);
+            }
+            
             $Customer = $Customers[0];
 
 
@@ -17460,7 +17468,17 @@ class ContentController extends BaseController
 
             $OTPtemplateID = "2fb9a88d-847d-41a5-a5b2-9c12df3b82b6";
             // $this->GupsendWhatsAppMessage($Customer->getPhone(), $otp, $OTPtemplateID);
-            $this->sendWhatsAppOTPWithMeta($Customer->getPhone(), $otp, $logger);
+            
+            try {
+                $this->sendWhatsAppOTPWithMeta($Customer->getPhone(), $otp, $logger);
+                $logger->info('WhatsApp OTP sent successfully', ['phone' => $Customer->getPhone()]);
+            } catch (\Exception $e) {
+                $logger->error('Failed to send WhatsApp OTP', [
+                    'phone' => $Customer->getPhone(),
+                    'error' => $e->getMessage()
+                ]);
+                // Continue with email OTP even if WhatsApp fails
+            }
 
             // Format the WhatsApp message with OTP
             // $whatsAppMessage = "*{$otp}* is your verification code. For your security, do not share this code.";
@@ -17472,6 +17490,12 @@ class ContentController extends BaseController
             $EmailTemplates = new \Pimcore\Model\DataObject\EmailTemplate\Listing();
             $EmailTemplates->addConditionParam("TemplateName = ?", "LoginOTPEmail");
             $EmailTemplate = $EmailTemplates->load();
+            
+            if (empty($EmailTemplate)) {
+                $logger->error('Email template not found', ['template_name' => 'LoginOTPEmail']);
+                return new JsonResponse(['success' => false, 'message' => 'Email template not found'], 500);
+            }
+            
             $EmailTemplate = $EmailTemplate[0];
 
             $subject = $EmailTemplate->getSubject();
