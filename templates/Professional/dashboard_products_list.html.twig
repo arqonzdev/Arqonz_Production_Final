@@ -126,6 +126,9 @@
                                     <a href="/account/Product/edit/{{ ProProduct.getKey() }}" class="btn-edit">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
+                                    <button class="btn-delete" data-product-id="{{ ProProduct.getKey() }}" data-product-name="{{ ProProduct.ProductName() }}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                                 </div>
                             </div>
                             
@@ -242,6 +245,9 @@
                                         <a href="/account/Product/edit/{{ ProProduct.getKey() }}" class="btn-action btn-edit-small" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <button class="btn-action btn-delete-small" title="Delete" data-product-id="{{ ProProduct.getKey() }}" data-product-name="{{ ProProduct.ProductName() }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -411,7 +417,77 @@
             }
         });
 
+        // Add event listeners for delete buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-delete, .btn-delete-small')) {
+                e.preventDefault();
+                const button = e.target.closest('.btn-delete, .btn-delete-small');
+                const productId = button.dataset.productId;
+                const productName = button.dataset.productName;
+                deleteProduct(productId, productName);
+            }
+        });
     });
+
+    // Delete product function
+    function deleteProduct(productId, productName) {
+        if (confirm('Are you sure you want to delete the product "' + productName + '"?\n\nThis action cannot be undone and will permanently remove:\n• All product images and files\n• All product data\n• All associated assets\n\nClick OK to confirm deletion.')) {
+            // Show loading state
+            const deleteButtons = document.querySelectorAll(`[data-product-id="${productId}"]`);
+            deleteButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            });
+
+            // Make AJAX request to delete
+            fetch('/account/Product/delete/' + productId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the product card/row from DOM
+                    const productCard = document.querySelector(`[data-product-name*="${productName}"]`);
+                    if (productCard) {
+                        productCard.style.transition = 'all 0.3s ease';
+                        productCard.style.opacity = '0';
+                        productCard.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            productCard.remove();
+                        }, 300);
+                    }
+                    
+                    // Show success message
+                    alert('Product "' + productName + '" has been successfully deleted.');
+                    
+                    // Reload page to update counters
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error deleting product: ' + (data.message || 'Unknown error'));
+                    // Reset button states
+                    deleteButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting product. Please try again.');
+                // Reset button states
+                deleteButtons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                });
+            });
+        }
+    }
 </script>
 
 <style>
@@ -591,7 +667,7 @@
         opacity: 1;
     }
 
-    .btn-view, .btn-edit {
+    .btn-view, .btn-edit, .btn-delete {
         padding: 8px 16px;
         border-radius: 6px;
         text-decoration: none;
@@ -621,6 +697,19 @@
 
     .btn-edit:hover {
         background: #1e7e34;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background: #c82333;
         color: white;
         text-decoration: none;
     }
@@ -830,6 +919,19 @@
         text-decoration: none;
     }
 
+    .btn-delete-small {
+        background: #f8d7da;
+        color: #dc3545;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-delete-small:hover {
+        background: #dc3545;
+        color: white;
+        text-decoration: none;
+    }
+
     /* No Products State */
     .no-products {
         text-align: center;
@@ -899,7 +1001,7 @@
             background: rgba(0, 0, 0, 0.5);
         }
 
-        .btn-view, .btn-edit {
+        .btn-view, .btn-edit, .btn-delete {
             padding: 6px 12px;
             font-size: 12px;
         }
